@@ -36,7 +36,7 @@
         <!-- Splash screen -->
         <activity
             android:name=".Common.MainActivity"
-            android:theme="@style/CookerAppThemeEntryPoint">
+            android:theme="@style/CookerAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

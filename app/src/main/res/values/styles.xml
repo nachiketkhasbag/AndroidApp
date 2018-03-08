@@ -36,5 +36,9 @@
         <item name="android:colorBackground">@android:color/white</item>
     </style>
 
+    <style name="CookerAppTheme" parent="AppTheme" >
+        <item name="colorPrimary">@color/colorAccent</item>
+    </style>
+
 
 </resources>
