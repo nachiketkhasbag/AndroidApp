@@ -1,0 +1,12 @@
+<android.support.v7.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/order_history_recycler_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_weight="1"
+    android:divider="@android:color/darker_gray"
+    android:dividerHeight="2dp"
+    android:fastScrollEnabled="true"
+    android:footerDividersEnabled="true"
+    android:headerDividersEnabled="true"
+    android:scrollbars="vertical"
+    android:clickable="true"/>
