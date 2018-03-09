@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.cooker.ChefActivityFragments.ContainerClasses.ChefItem;
 import com.example.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
+import com.example.cooker.Common.DebugClass;
 import com.example.cooker.Common.MainActivity;
 import com.example.cooker.Common.ProcessDialogBox;
 import com.example.cooker.R;
@@ -25,6 +26,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 public class ChefActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -50,6 +52,8 @@ public class ChefActivity extends AppCompatActivity
         final Bundle extras = getIntent().getExtras();
 
         setContentView(R.layout.activity_chef);
+
+        PushToken();
 
         final ProcessDialogBox processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
@@ -204,8 +208,9 @@ public class ChefActivity extends AppCompatActivity
         ChefEntity.arrayListOrderHistoryChefItem.clear();
         ChefEntity.arrayListOrderHistoryChefItemDetails.clear();
 
-        mDataBaseRef.child(UserInfo.getuID()).
-                child("isActive").setValue(false);
+        mDataBaseRef.child("isActive").setValue(false);
+
+        mDataBaseRef.child("token").setValue("");
     }
 
     public void setupDrawerAndToolbar(){
@@ -226,6 +231,13 @@ public class ChefActivity extends AppCompatActivity
         TextView textViewUserEmail = (TextView)header.findViewById(R.id.userEmail);
         textViewUserName.setText(UserInfo.getDisplayName());
         textViewUserEmail.setText(UserInfo.getEmailID());
+    }
+
+    private void PushToken()
+    {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        DebugClass.DebugPrint("ChefActivity", "PushToken:New push token");
+        mDataBaseRef.child("token").setValue(token);
     }
 
     @Override

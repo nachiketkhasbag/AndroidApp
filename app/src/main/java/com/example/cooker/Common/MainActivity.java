@@ -166,7 +166,6 @@ public class MainActivity extends AppCompatActivity implements com.example.cooke
                 }
                 else if(dataSnapshot.child("cookProfile").child(UserInfo.getuID()).exists())
                 {
-                    PushToken("cookProfile", UserInfo.getuID());
                     ChefEntity.chefProfile = new ChefProfile();
 
                     Bundle bundle = new Bundle();
@@ -181,7 +180,6 @@ public class MainActivity extends AppCompatActivity implements com.example.cooke
                 }
                 else if(dataSnapshot.child("userProfile").child(UserInfo.getuID()).exists())
                 {
-                    PushToken("userProfile", UserInfo.getuID());
                     GuestEntity.guestProfile = new GuestProfile();
 
                     Intent i = new Intent(getApplicationContext(), GuestActivity.class);
@@ -194,7 +192,6 @@ public class MainActivity extends AppCompatActivity implements com.example.cooke
                 {
                     // TODO: THIS IS TEMPORARY. THIS SHOULD NOT BE PRESENT
                     // TODO: ALL UNKNOWN USERS DIRECTED TO GUEST ACTIVITY
-                    PushToken("userProfile", UserInfo.getuID());
                     GuestEntity.guestProfile = new GuestProfile();
 
                     Intent i = new Intent(getApplicationContext(), GuestActivity.class);
@@ -221,15 +218,15 @@ public class MainActivity extends AppCompatActivity implements com.example.cooke
         mForgotPassword.setVisibility(View.VISIBLE);
     }
 
-    protected void startWelcome(boolean Facebook){
-        if (Facebook)
-        {
-            //extract the name using the file
-            // Dummy comment
-        }
-        Intent intent=new Intent(this,WelcomeActivity.class);
-        startActivity(intent);
-    }
+//    protected void startWelcome(boolean Facebook){
+//        if (Facebook)
+//        {
+//            //extract the name using the file
+//            // Dummy comment
+//        }
+//        Intent intent=new Intent(this,WelcomeActivity.class);
+//        startActivity(intent);
+//    }
 
     public String ValidateInput()
     {
@@ -251,20 +248,5 @@ public class MainActivity extends AppCompatActivity implements com.example.cooke
         }
 
         return "VALID_INPUT";
-    }
-
-    private void PushToken( String profileType, String uID )
-    {
-        final String token = FirebaseInstanceId.getInstance().getToken();
-        DebugClass.DebugPrint(className, "PushToken:New push token");
-        switch (profileType){
-            case "cookProfile":
-                mDataBaseRef.child("cookProfile").child(uID).child("token").setValue(token);
-                break;
-
-            case "userProfile":
-                mDataBaseRef.child("userProfile").child(uID).child("token").setValue(token);
-                break;
-        }
     }
 }

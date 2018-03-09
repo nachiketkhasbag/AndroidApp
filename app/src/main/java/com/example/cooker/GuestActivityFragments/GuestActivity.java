@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.cooker.Common.DebugClass;
 import com.example.cooker.Common.MainActivity;
 import com.example.cooker.Common.ProcessDialogBox;
 import com.example.cooker.GuestActivityFragments.ContainerClasses.ChefsListForGuest;
@@ -27,6 +28,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by nachiket on 4/6/2017.
@@ -53,6 +55,8 @@ public class GuestActivity extends AppCompatActivity
         mActiveFragmentManager = getSupportFragmentManager();
         mDataBaseRefChefs = FirebaseDatabase.getInstance().getReference("cookProfile");
         mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").child(UserInfo.getuID());
+
+        PushToken();
 
         processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
@@ -229,6 +233,15 @@ public class GuestActivity extends AppCompatActivity
         GuestEntity.guestItemArrayList.clear();
         GuestEntity.orderHistoryGuestItemDetails.clear();
         GuestEntity.orderHistoryGuestItemsArrayList.clear();
+
+        mDataBaseRefGuest.child("token").setValue("");
+    }
+
+    private void PushToken()
+    {
+        String token = FirebaseInstanceId.getInstance().getToken();
+        DebugClass.DebugPrint("ChefActivity", "PushToken:New push token");
+        mDataBaseRefGuest.child("token").setValue(token);
     }
 
     @Override
