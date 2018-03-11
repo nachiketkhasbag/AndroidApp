@@ -89,24 +89,31 @@ public class FragmentViewListedItemsChef extends Fragment {
         mSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked && ChefEntity.chefProfile != null )
-                {
-                    if (ChefEntity.chefProfile.getAddress().matches("") ||
-                            ChefEntity.chefProfile.getPhoneNO().matches("") ||
-                            ChefEntity.chefProfile.getCity().matches("") ||
-                            ChefEntity.chefProfile.getZipcode().matches(""))
-                    {
-                        Toast.makeText(getContext(),"Address and phone number not set. Please go to Update Account and set required fields ",
-                                Toast.LENGTH_LONG).show();
-                        buttonView.setChecked(false);
-                        return;
-                    }
-                }
-                else if (ChefEntity.chefProfile == null)
+                if (isChecked && ChefEntity.chefProfile == null )
                 {
                     Toast.makeText(getContext(),"Profile not set. Please go to Update Account",
                             Toast.LENGTH_LONG).show();
+                    mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).
+                            child("isActive").setValue(false);
+                    SetSwitchText(false);
                     buttonView.setChecked(false);
+                    mSwitch.setChecked(false);
+                    return;
+                }
+                else if (isChecked && (ChefEntity.chefProfile.getAddress().matches("") ||
+                        ChefEntity.chefProfile.getPhoneNO().matches("") ||
+                        ChefEntity.chefProfile.getCity().matches("") ||
+                        ChefEntity.chefProfile.getfname().matches("") ||
+                        ChefEntity.chefProfile.getZipcode().matches("") ||
+                        ChefEntity.chefProfile.getlname().matches("")))
+                {
+                    Toast.makeText(getContext(),"Profile not set. Please go to Update Account",
+                            Toast.LENGTH_LONG).show();
+                    mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).
+                            child("isActive").setValue(false);
+                    SetSwitchText(false);
+                    buttonView.setChecked(false);
+                    mSwitch.setChecked(false);
                     return;
                 }
 

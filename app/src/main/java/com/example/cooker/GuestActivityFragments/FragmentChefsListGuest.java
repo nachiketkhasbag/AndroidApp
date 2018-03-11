@@ -13,7 +13,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.cooker.GuestActivityFragments.Adapters.FragmentChefsListGuestAdapter;
+import com.example.cooker.GuestActivityFragments.ContainerClasses.ChefsListForGuest;
 import com.example.cooker.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -32,6 +38,9 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
     private TextView textViewOrderTime;
     RecyclerView.LayoutManager mLayoutManager;
 
+    private ValueEventListener valueEventListenerChef;
+    private DatabaseReference mDataBaseRefChefs;
+
     String dayOfTheWeek[] =
     {
             "", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
@@ -46,6 +55,8 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_cooks_list_for_guest, container, false);
+        mDataBaseRefChefs = FirebaseDatabase.getInstance().getReference("cookProfile");
+
         textViewOrderTime = (TextView)mView.findViewById(R.id.textViewOrderTime);
         String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
 
@@ -64,14 +75,40 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
 
         textViewOrderTime.setText("Currently accepting orders for " + dayOfTheWeek[orderDay]);
 
-        RecyclerView mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
+        final RecyclerView mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
+        final FragmentChefsListGuestAdapter adapter = new FragmentChefsListGuestAdapter(this);
+
+        valueEventListenerChef = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                GuestEntity.chefsListForGuestArrayList.clear();
+                for (DataSnapshot child : dataSnapshot.getChildren()) {
+                    try{
+                        if(dataSnapshot.child(child.getKey()).child("isActive").getValue().toString().matches("true") ) {
+                            ChefsListForGuest chefsListForGuest = child.child("profile").getValue(ChefsListForGuest.class);
+                            chefsListForGuest.SetUnknownFields(dataSnapshot.child(child.getKey()).getKey());
+
+                            GuestEntity.chefsListForGuestArrayList.add(chefsListForGuest);
+                        }
+                        mCooksList.setAdapter(adapter);
+                    }
+                    catch (Exception e)
+                    {
+                        System.out.println("Error retrieving chef details");
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                System.out.println(databaseError.toString());
+            }
+        };
+        mDataBaseRefChefs.addListenerForSingleValueEvent(valueEventListenerChef);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
         mCooksList.setLayoutManager(mLayoutManager);
-
-        FragmentChefsListGuestAdapter adapter = new FragmentChefsListGuestAdapter(this);
-        mCooksList.setAdapter(adapter);
 
         // Inflate the layout for this fragment
         return mView;

@@ -44,16 +44,13 @@ public class GuestActivity extends AppCompatActivity
     TextView mTextViewUserEmail;
     ProcessDialogBox processDialogBox;
 
-    private ValueEventListener valueEventListenerChef;
     private ValueEventListener valueEventListenerGuest;
-    private DatabaseReference mDataBaseRefChefs;
     private DatabaseReference mDataBaseRefGuest;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
         mActiveFragmentManager = getSupportFragmentManager();
-        mDataBaseRefChefs = FirebaseDatabase.getInstance().getReference("cookProfile");
         mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").child(UserInfo.getuID());
 
         PushToken();
@@ -65,6 +62,13 @@ public class GuestActivity extends AppCompatActivity
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 GuestEntity.guestProfile = getGuestProfile(dataSnapshot);
+
+                mActiveFragment = new FragmentChefsListGuest();
+                FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
+                transaction.replace(R.id.guest_page, mActiveFragment);
+                transaction.commit();
+                setTitle(R.string.viewChefs);
+
                 processDialogBox.DismissDialogBox();
             }
 
@@ -83,39 +87,6 @@ public class GuestActivity extends AppCompatActivity
                 }
                 System.out.println("Profile detected");
                 return guestProfile;
-            }
-        };
-
-        valueEventListenerChef = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GuestEntity.chefsListForGuestArrayList.clear();
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    try{
-                        if(dataSnapshot.child(child.getKey()).child("isActive").getValue().toString().matches("true") ) {
-                            ChefsListForGuest chefsListForGuest = child.child("profile").getValue(ChefsListForGuest.class);
-                            chefsListForGuest.SetUnknownFields(dataSnapshot.child(child.getKey()).getKey());
-
-                            GuestEntity.chefsListForGuestArrayList.add(chefsListForGuest);
-                        }
-                    }
-                    catch (Exception e)
-                    {
-                        System.out.println("Error retrieving chef details");
-                    }
-                }
-                processDialogBox.DismissDialogBox();
-
-                mActiveFragment = new FragmentChefsListGuest();
-                FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
-                transaction.replace(R.id.guest_page, mActiveFragment);
-                transaction.commit();
-                setTitle(R.string.viewChefs);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.toString());
             }
         };
 
@@ -264,7 +235,6 @@ public class GuestActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         mDataBaseRefGuest.addListenerForSingleValueEvent(valueEventListenerGuest);
-        mDataBaseRefChefs.addListenerForSingleValueEvent(valueEventListenerChef);
     }
 
     @Override
