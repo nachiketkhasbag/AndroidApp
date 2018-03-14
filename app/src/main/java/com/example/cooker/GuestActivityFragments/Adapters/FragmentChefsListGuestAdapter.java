@@ -29,6 +29,7 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
         public TextView cookName;
         public TextView cookSpeciality;
         public TextView cookAddress;
+        public TextView cookPhoneNumber;
         public ImageView cookImage;
         public ViewHolder(View v) {
             super(v);
@@ -36,6 +37,7 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
             cookSpeciality  = (TextView) v.findViewById(R.id.textViewCookSpeciality);
             cookAddress     = (TextView) v.findViewById(R.id.textViewCookAddress);
             cookImage       = (ImageView) v.findViewById(R.id.imageViewCooksPicture);
+            cookPhoneNumber = (TextView) v.findViewById(R.id.textViewChefPhoneNumber);
         }
     }
 
@@ -58,6 +60,8 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
         holder.cookName.setText(GuestEntity.chefsListForGuestArrayList.get(position).getFullName());
         holder.cookSpeciality.setText("");
         holder.cookAddress.setText(GuestEntity.chefsListForGuestArrayList.get(position).getFullAddress());
+        holder.cookPhoneNumber.setText(GuestEntity.chefsListForGuestArrayList.get(position).getPhoneNO());
+
         final int itemPosition = holder.getAdapterPosition();
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
