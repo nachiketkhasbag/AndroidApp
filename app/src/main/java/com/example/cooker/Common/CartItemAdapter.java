@@ -110,6 +110,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mOnCLickListener.UpdateFields();
                 }
             }
         });
@@ -119,6 +120,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
                     GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mOnCLickListener.UpdateFields();
                 }
             }
         });

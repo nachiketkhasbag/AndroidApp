@@ -37,12 +37,12 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
     TextView textViewTotalPriceLabel;
     TextView textViewNumberOfItemsLabel;
     TextView textViewEmptyCart;
+    Button buttonPlaceOrder;
     CartItemAdapter cartItemAdapter;
     View v;
     int clickCount;
     String time;
     private DatabaseReference mDataBaseRef;
-    private Interfaces.CartDataUpload cartDataUpload;
     RecyclerView.LayoutManager mLayoutManager;
 
     ProcessDialogBox processDialogBox;
@@ -57,14 +57,14 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
 
         processDialogBox = new ProcessDialogBox(getActivity());
 
-        listViewCartItems               = (RecyclerView)v.findViewById(R.id.listViewCartItems);
-        textViewDollarSign3             = (TextView)v.findViewById(R.id.textViewDollarSign3);
-        textViewTotalPrice              = (TextView)v.findViewById(R.id.textViewTotalPrice);
-        textViewTotalPriceLabel         = (TextView)v.findViewById(R.id.textViewTotalPriceLabel);
-        textViewNumberOfItems           = (TextView)v.findViewById(R.id.textViewNumberOfItems);
-        textViewNumberOfItemsLabel      = (TextView)v.findViewById(R.id.textViewNumberOfItemsLabel);
-        textViewEmptyCart               = (TextView)v.findViewById(R.id.textViewEmptyCart);
-        final Button buttonPlaceOrder   = (Button)v.findViewById(R.id.buttonPlaceOrder);
+        listViewCartItems               = v.findViewById(R.id.listViewCartItems);
+        textViewDollarSign3             = v.findViewById(R.id.textViewDollarSign3);
+        textViewTotalPrice              = v.findViewById(R.id.textViewTotalPrice);
+        textViewTotalPriceLabel         = v.findViewById(R.id.textViewTotalPriceLabel);
+        textViewNumberOfItems           = v.findViewById(R.id.textViewNumberOfItems);
+        textViewNumberOfItemsLabel      = v.findViewById(R.id.textViewNumberOfItemsLabel);
+        textViewEmptyCart               = v.findViewById(R.id.textViewEmptyCart);
+        buttonPlaceOrder                = v.findViewById(R.id.buttonPlaceOrder);
 
         listViewCartItems.setVisibility(View.VISIBLE);
         textViewDollarSign3.setVisibility(View.VISIBLE);
@@ -110,59 +110,54 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
                 else
                 {
                     System.out.println("Place Order!!");
-                    cartDataUpload.DataUploadFinished();
+                    DataUpload();
                 }
             }
         });
 
-        cartDataUpload = new Interfaces.CartDataUpload() {
-            @Override
-            public void DataUploadFinished() {
-                int index = 0;
-                Date trialTime = new Date();
-                time = trialTime.toString();
-                while( index < GuestEntity.cartItemArrayList.size())
-                {
-                    CartItem cartItem = GuestEntity.cartItemArrayList.get(index);
-                    String currentItemChefUid  = cartItem.getChefUid();
-                    mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("liveOrders").child(currentItemChefUid);
-                    // setting the time
-                    cartItem.setOrderTime(time);
-                    String key = mDataBaseRef.push().getKey();
-                    processDialogBox.ShowDialogBox();
-                    mDataBaseRef.child(key).setValue(cartItem, new DatabaseReference.CompletionListener() {
-                        //Implies that the data has been committed
-                        @Override
-                        public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                            if (databaseError == null)
-                            {
-                                System.out.println("Chef Data saved successfully.");
-                                System.out.println("Place Order!!");
-                            }
-                            else
-                            {
-                                Toast.makeText(getContext(),"There has been problem connecting to the server" +
-                                                "Please try again in sometime ",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                    index++;
-                }
-                if (index != 0)
-                {
-                    System.out.println("Order Placed successfully!!");
-                    Toast.makeText(getContext(), "Order placed! Please wait for order confirmation", Toast.LENGTH_SHORT).show();
-//                    GuestEntity.cartItemArrayList.clear();
-                    // TODO This is inly for testing
-                    clickCount = 0;
-                    buttonPlaceOrder.setText("PLACE ORDER");
-                    processDialogBox.DismissDialogBox();
-                }
-            }
-        };
-
         return v;
+    }
+
+    public void DataUpload()
+    {
+        int index = 0;
+        Date trialTime = new Date();
+        time = trialTime.toString();
+        while( index < GuestEntity.cartItemArrayList.size())
+        {
+            CartItem cartItem = GuestEntity.cartItemArrayList.get(index);
+            String currentItemChefUid  = cartItem.getChefUid();
+            mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("liveOrders").child(currentItemChefUid);
+            // setting the time
+            cartItem.setOrderTime(time);
+            String key = mDataBaseRef.push().getKey();
+            processDialogBox.ShowDialogBox();
+            mDataBaseRef.child(key).setValue(cartItem, new DatabaseReference.CompletionListener() {
+                //Implies that the data has been committed
+                @Override
+                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                    if (databaseError == null)
+                    {
+                        System.out.println("Chef Data saved successfully.");
+                        System.out.println("Place Order!!");
+                    }
+                    else
+                    {
+                        Toast.makeText(getContext(),"There has been problem connecting to the server" +
+                                        "Please try again in sometime ",
+                                Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
+            index++;
+        }
+
+        System.out.println("Order Placed successfully!!");
+        Toast.makeText(getContext(), "Order placed! Please wait for order confirmation", Toast.LENGTH_SHORT).show();
+        GuestEntity.cartItemArrayList.clear();
+        UpdateCartAndUI();
+        buttonPlaceOrder.setText("PLACE ORDER");
+        processDialogBox.DismissDialogBox();
     }
 
     @Override
@@ -173,11 +168,19 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
 
     @Override
     public void UpdateFields() {
+        TextView buttonPlaceOrder = (TextView)v.findViewById(R.id.buttonPlaceOrder);
+
+        clickCount = 0;
+        buttonPlaceOrder.setText("PLACE ORDER");
+        UpdateCartAndUI();
+    }
+
+    public void UpdateCartAndUI()
+    {
         int numberOfItems = 0;
 
         TextView textViewTotalPrice = (TextView)v.findViewById(R.id.textViewTotalPrice);
         TextView textViewNumberOfItems = (TextView)v.findViewById(R.id.textViewNumberOfItems);
-        TextView buttonPlaceOrder = (TextView)v.findViewById(R.id.buttonPlaceOrder);
 
         BigDecimal itemPrice;
         BigDecimal itemQuantity;
@@ -197,10 +200,6 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
         textViewTotalPrice.setText(String.valueOf(totalValue));
         textViewNumberOfItems.setText(String.valueOf(numberOfItems));
 
-        if(clickCount > 0)
-        {
-            clickCount--;
-            buttonPlaceOrder.setText("PLACE ORDER");
-        }
+        cartItemAdapter.notifyDataSetChanged();
     }
 }

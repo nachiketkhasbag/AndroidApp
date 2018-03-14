@@ -14,8 +14,4 @@ public class Interfaces {
 
         void UserSignedOut();
     }
-
-    public interface CartDataUpload{
-        void DataUploadFinished();
-    }
 }
