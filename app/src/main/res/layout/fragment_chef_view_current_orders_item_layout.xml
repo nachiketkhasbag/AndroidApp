@@ -9,7 +9,6 @@
         android:id="@+id/textViewGuestNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Customer Name:"
@@ -23,7 +22,6 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginRight="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -31,7 +29,6 @@
         android:id="@+id/textViewGuestPhoneNumberLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Customer Contact:"
@@ -42,7 +39,6 @@
         android:id="@+id/textViewItemNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Item:"
@@ -56,7 +52,6 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintTop_toBottomOf="@+id/textViewGuestPhoneNumber"
-        android:layout_marginRight="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -64,7 +59,6 @@
         android:id="@+id/textViewItemQuantityLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:text="Item Quantity:"
@@ -73,13 +67,11 @@
 
     <Button
         android:id="@+id/buttonAcceptOrder"
-        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp"
         android:background="@color/colorAccent"
         android:text="Accept"
         android:textColor="@android:color/white"
@@ -90,21 +82,18 @@
 
     <Button
         android:id="@+id/buttonDeclineOrder"
-        style="@style/Widget.AppCompat.Button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginRight="16dp"
+        android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@color/colorAccent"
         android:text="Decline"
         android:textColor="@android:color/white"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/divider"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemQuantity"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewItemQuantity"/>
 
     <TextView
         android:id="@+id/textViewGuestPhoneNumber"
@@ -113,7 +102,6 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintTop_toBottomOf="@+id/textViewGuestName"
-        android:layout_marginRight="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -124,7 +112,6 @@
         android:layout_marginTop="8dp"
         android:text="TextView"
         app:layout_constraintTop_toBottomOf="@+id/textViewItemName"
-        android:layout_marginRight="32dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintRight_toRightOf="parent" />
 
@@ -134,7 +121,6 @@
         android:layout_height="1dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
