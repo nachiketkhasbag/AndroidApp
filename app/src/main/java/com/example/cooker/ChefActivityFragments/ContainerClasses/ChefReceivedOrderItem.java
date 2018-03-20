@@ -13,23 +13,10 @@ public class ChefReceivedOrderItem {
     String price;
     String orderTime;
     String itemKey;
+    String pickUpTime;
     Integer itemQuantity;
 
     public ChefReceivedOrderItem() {
-    }
-
-    public ChefReceivedOrderItem(String guestName, String guestUid,
-                                 String guestPhoneNumber, String itemName,
-                                 String price, String orderTime,
-                                 Integer itemQuantity, String itemKey) {
-        this.guestName = guestName;
-        this.guestUid = guestUid;
-        this.guestPhoneNumber = guestPhoneNumber;
-        this.itemName = itemName;
-        this.price = price;
-        this.orderTime = orderTime;
-        this.itemQuantity = itemQuantity;
-        this.itemKey = itemKey;
     }
 
     public String getItemKey() {
@@ -94,5 +81,13 @@ public class ChefReceivedOrderItem {
 
     public void setOrderTime(String orderTime) {
         this.orderTime = orderTime;
+    }
+
+    public String getOrderPickupTime() {
+        return pickUpTime;
+    }
+
+    public void setOrderPickupTime(String pickUpTime) {
+        this.pickUpTime = pickUpTime;
     }
 }
