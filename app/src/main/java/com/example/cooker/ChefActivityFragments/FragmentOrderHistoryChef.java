@@ -56,8 +56,7 @@ public class FragmentOrderHistoryChef extends Fragment {
             public void onClick(int position) {
                 Toast.makeText(getContext(), "Item clicked", Toast.LENGTH_LONG).show();
                 DatabaseReference itemDatabaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").
-                        child(UserInfo.getuID()).child("PastOrders").
-                        child(ChefEntity.arrayListOrderHistoryChefItem.get(position).getOrderDate());
+                        child(UserInfo.getuID()).child("orderHistory");
                 processDialogBox.ShowDialogBox();
 
                 ValueEventListener itemClickValueEventListener = new ValueEventListener() {
@@ -91,7 +90,7 @@ public class FragmentOrderHistoryChef extends Fragment {
         mAdapter = new FragmentOrderHistoryChefAdapter(onClickListener);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").
-                child(UserInfo.getuID()).child("PastOrders");
+                child(UserInfo.getuID()).child("orderHistory");
 
         mValueEventListener = new ValueEventListener() {
             @Override
@@ -109,9 +108,16 @@ public class FragmentOrderHistoryChef extends Fragment {
             public void getItems(DataSnapshot dataSnapshot)
             {
                 for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    OrderHistoryChefItem orderHistoryChefItem = new OrderHistoryChefItem(child.getKey(),
-                            String.format("%s", child.getChildrenCount()));
-                    ChefEntity.arrayListOrderHistoryChefItem.add(orderHistoryChefItem);
+//                    OrderHistoryChefItem orderHistoryChefItem = new OrderHistoryChefItem(child.getKey(),
+//                            String.format("%s", child.getChildrenCount()));
+                    OrderHistoryChefItem orderHistoryChefItem = child.getValue(OrderHistoryChefItem.class);
+                    if (orderHistoryChefItem != null)
+                    {
+                        if (!orderHistoryChefItem.getStatus().equals("pending"))
+                        {
+                            ChefEntity.arrayListOrderHistoryChefItem.add(orderHistoryChefItem);
+                        }
+                    }
                 }
                 mRecyclerView.setAdapter(mAdapter);
             }

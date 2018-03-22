@@ -120,7 +120,8 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
                                 GuestEntity.guestItemArrayList.get(key).getitemName(),
                                 GuestEntity.guestProfile.getPhoneNumber(),
                                 GuestEntity.guestItemArrayList.get(key).getItemPrice(),
-                                getString(R.string.dinnerPickUpTime)
+                                getString(R.string.dinnerPickUpTime),
+                                String.valueOf(GuestEntity.guestItemArrayList.get(key).getItemPrice())
                         );
 
                         GuestEntity.cartItemArrayList.add(cartItem);

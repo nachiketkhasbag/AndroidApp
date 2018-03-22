@@ -13,15 +13,17 @@ public class CartItem {
     private String chefAddress;
     private Integer itemQuantity;
     private String itemName;
-    private String price;
+    private String itemPrice;
     private String orderTime;
     private String pickUpTime;
+    private String totalPrice;
 
     public CartItem() {
     }
 
     public CartItem(String chefName, String chefUid, String guestName, String guestUid,
-                    String chefAddress, Integer itemQuantity, String itemName, String guestPhoneNumber, String price, String pickUpTime) {
+                    String chefAddress, Integer itemQuantity, String itemName, String guestPhoneNumber,
+                    String itemPrice, String pickUpTime, String totalPrice) {
         this.chefName = chefName;
         this.chefUid = chefUid;
         this.guestName = guestName;
@@ -29,9 +31,10 @@ public class CartItem {
         this.chefAddress = chefAddress;
         this.itemQuantity = itemQuantity;
         this.itemName = itemName;
-        this.price = price;
+        this.itemPrice = itemPrice;
         this.guestPhoneNumber = guestPhoneNumber;
         this.pickUpTime = pickUpTime;
+        this.totalPrice = totalPrice;
     }
 
     public String getPickUpTime() {
@@ -114,11 +117,19 @@ public class CartItem {
         this.itemName = itemName;
     }
 
-    public String getPrice() {
-        return price;
+    public String getItemPrice() {
+        return itemPrice;
     }
 
-    public void setPrice(String price) {
-        this.price = price;
+    public void setItemPrice(String itemPrice) {
+        this.itemPrice = itemPrice;
+    }
+
+    public String getTotalPrice() {
+        return totalPrice;
+    }
+
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
     }
 }

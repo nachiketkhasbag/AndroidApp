@@ -1,6 +1,5 @@
 package com.example.cooker.Common;
 
-import android.support.annotation.IdRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,8 @@ import android.widget.TextView;
 
 import com.example.cooker.GuestActivityFragments.GuestEntity;
 import com.example.cooker.R;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -81,13 +82,19 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.textViewCartItemName.setText(GuestEntity.cartItemArrayList.get(position).getItemName());
         holder.textViewCartChefName.setText(GuestEntity.cartItemArrayList.get(position).getChefName());
         holder.textViewChefAddress.setText(GuestEntity.cartItemArrayList.get(position).getChefAddress());
-        holder.textViewItemPriceForGuest.setText(String.valueOf(GuestEntity.cartItemArrayList.get(position).getPrice()));
+        holder.textViewItemPriceForGuest.setText(String.valueOf(GuestEntity.cartItemArrayList.get(position).getItemPrice()));
         holder.spinner.setSelection(GuestEntity.cartItemArrayList.get(position).getItemQuantity() - 1);
 
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 GuestEntity.cartItemArrayList.get(itemPosition).setItemQuantity(position+1);
+
+                BigDecimal itemValue = new BigDecimal(GuestEntity.cartItemArrayList.get(itemPosition).getItemPrice());
+                BigDecimal itemQuantity = new BigDecimal(GuestEntity.cartItemArrayList.get(itemPosition).getItemQuantity());
+
+                itemValue = itemValue.multiply(itemQuantity);
+                GuestEntity.cartItemArrayList.get(itemPosition).setTotalPrice(String.valueOf(itemValue));
                 mOnCLickListener.UpdateFields();
             }
 

@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import com.example.cooker.Common.CartItem;
 import com.example.cooker.Common.CartItemAdapter;
-import com.example.cooker.Common.Interfaces;
 import com.example.cooker.Common.ProcessDialogBox;
 import com.example.cooker.R;
 import com.google.firebase.database.DatabaseError;
@@ -183,17 +182,13 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
         TextView textViewNumberOfItems = (TextView)v.findViewById(R.id.textViewNumberOfItems);
 
         BigDecimal itemPrice;
-        BigDecimal itemQuantity;
-        BigDecimal itemValue;
         BigDecimal totalValue = new BigDecimal("0");
 
         for (Integer index = 0; index < GuestEntity.cartItemArrayList.size(); index++)
         {
-            itemPrice = new BigDecimal(GuestEntity.cartItemArrayList.get(index).getPrice());
-            itemQuantity = new BigDecimal(GuestEntity.cartItemArrayList.get(index).getItemQuantity());
-            itemValue = itemPrice.multiply(itemQuantity);
+            itemPrice = new BigDecimal(GuestEntity.cartItemArrayList.get(index).getTotalPrice());
 
-            totalValue = totalValue.add(itemValue);
+            totalValue = totalValue.add(itemPrice);
             numberOfItems += GuestEntity.cartItemArrayList.get(index).getItemQuantity();
         }
 
