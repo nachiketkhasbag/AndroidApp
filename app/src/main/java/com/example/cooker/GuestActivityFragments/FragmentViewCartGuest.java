@@ -106,6 +106,12 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
                 {
                     buttonPlaceOrder.setText("PRESS AGAIN TO CONFIRM ORDER");
                 }
+                else if(GuestEntity.guestProfile.getfname().isEmpty() || GuestEntity.guestProfile.getPhoneNumber().isEmpty())
+                {
+                    System.out.println("Guest information missing!!");
+                    Toast.makeText( getContext(),"Please enter a name and phone number before you place an order ",
+                            Toast.LENGTH_LONG ).show();
+                }
                 else
                 {
                     System.out.println("Place Order!!");
