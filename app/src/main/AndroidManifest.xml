@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.cooker">
+    package="com.khasna.cooker">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -35,7 +35,7 @@
 
         <!-- Splash screen -->
         <activity
-            android:name=".Common.MainActivity"
+            android:name="com.khasna.cooker.Common.MainActivity"
             android:theme="@style/CookerAppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -45,41 +45,41 @@
         </activity>
 
         <!-- [START firebase_iid_service] -->
-        <service android:name=".Common.MyFirebaseInstanceIDService">
+        <service android:name="com.khasna.cooker.Common.MyFirebaseInstanceIDService">
             <intent-filter>
                 <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
         <!-- [START AppFireBaseMessagingService] -->
-        <service android:name=".Common.MyFirebaseMessagingService">
+        <service android:name="com.khasna.cooker.Common.MyFirebaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".Common.SignupActivity"
+            android:name="com.khasna.cooker.Common.SignupActivity"
             android:theme="@style/CookerAppThemeEntryPoint" />
         <activity
-            android:name=".Common.ForgotPassword"
+            android:name="com.khasna.cooker.Common.ForgotPassword"
             android:theme="@style/CookerAppThemeEntryPoint" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_app_id" />
 
-        <activity android:name=".Common.WelcomeActivity" />
+        <activity android:name="com.khasna.cooker.Common.WelcomeActivity" />
         <activity
-            android:name=".GuestActivityFragments.GuestActivity"
+            android:name="com.khasna.cooker.GuestActivityFragments.GuestActivity"
             android:label="GuestActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ChefActivityFragments.ChefActivity"
+            android:name="com.khasna.cooker.ChefActivityFragments.ChefActivity"
             android:label="@string/title_activity_chef"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".Common.UserInformation"
+            android:name="com.khasna.cooker.Common.UserInformation"
             android:label="UserInformation"
             android:theme="@style/CookerAppThemeEntryPoint" />
     </application>

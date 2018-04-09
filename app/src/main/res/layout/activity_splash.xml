@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:focusableInTouchMode="false">
 
-    <com.example.cooker.ImageAdjustments.SetSplashScreenImageView
+    <com.khasna.cooker.ImageAdjustments.SetSplashScreenImageView
         android:id="@+id/logo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"

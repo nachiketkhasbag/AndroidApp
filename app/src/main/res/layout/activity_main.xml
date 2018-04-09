@@ -8,7 +8,7 @@
     android:scrollbarStyle="insideInset"
     android:theme="@style/CookerAppTheme"
     android:visibility="visible"
-    tools:context="com.example.cooker.Common.MainActivity">
+    tools:context="com.khasna.cooker.Common.MainActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

@@ -10,7 +10,7 @@
     android:scrollbarStyle="insideInset"
     android:theme="@style/CookerAppThemeEntryPoint"
     android:visibility="visible"
-    tools:context="com.example.cooker.Common.SignupActivity">
+    tools:context="com.khasna.cooker.Common.SignupActivity">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"

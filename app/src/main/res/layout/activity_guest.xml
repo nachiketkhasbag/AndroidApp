@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.example.cooker.GuestActivityFragments.GuestActivity">
+    tools:context="com.khasna.cooker.GuestActivityFragments.GuestActivity">
 
     <include
         layout="@layout/app_bar_guest"
