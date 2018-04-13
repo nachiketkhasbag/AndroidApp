@@ -41,10 +41,10 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
     private ValueEventListener valueEventListenerChef;
     private DatabaseReference mDataBaseRefChefs;
 
-    String dayOfTheWeek[] =
-    {
-            "", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
-    };
+//    String dayOfTheWeek[] =
+//    {
+//            "", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
+//    };
 
     public FragmentChefsListGuest() {
         // Required empty public constructor
@@ -57,7 +57,7 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
         mView = inflater.inflate(R.layout.fragment_cooks_list_for_guest, container, false);
         mDataBaseRefChefs = FirebaseDatabase.getInstance().getReference("cookProfile");
 
-        textViewOrderTime = (TextView)mView.findViewById(R.id.textViewOrderTime);
+//        textViewOrderTime = (TextView)mView.findViewById(R.id.textViewOrderTime);
         String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
 
         SimpleTimeZone simpleTimeZone = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
@@ -73,7 +73,7 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
             orderDay += 1;
         }
 
-        textViewOrderTime.setText("Currently accepting orders for " + dayOfTheWeek[orderDay]);
+//        textViewOrderTime.setText("Currently accepting orders for " + dayOfTheWeek[orderDay]);
 
         final RecyclerView mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
         final FragmentChefsListGuestAdapter adapter = new FragmentChefsListGuestAdapter(this);

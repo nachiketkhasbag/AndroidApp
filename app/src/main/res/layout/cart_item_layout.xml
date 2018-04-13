@@ -14,7 +14,6 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:text="Chef Address"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewCartChefName" />
@@ -54,7 +53,6 @@
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="7dp"
         android:layout_marginTop="8dp"
         android:text="Price"
         android:textSize="18sp"
@@ -66,7 +64,6 @@
         android:id="@+id/textViewDollarSignForGuest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginRight="9dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="$"
@@ -78,7 +75,6 @@
         android:id="@+id/spinner"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginRight="8dp"
         app:layout_constraintRight_toRightOf="parent"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -89,7 +85,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
         android:text="Quantity"
         app:layout_constraintRight_toLeftOf="@+id/spinner"
         app:layout_constraintBottom_toBottomOf="@+id/spinner"
@@ -99,11 +94,9 @@
 
     <TextView
         android:id="@+id/textViewRemoveItemLink"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="start"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginTop="8dp"
         android:focusable="true"
@@ -112,13 +105,8 @@
         android:textColor="@android:color/holo_blue_dark"
         android:textSize="14sp"
         android:textStyle="italic"
-        app:layout_constraintBottom_toBottomOf="@+id/divider"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddress"
-        app:layout_constraintVertical_bias="0.5"
-        app:layout_constraintLeft_toRightOf="@+id/pickUpTimeConstraintLayout"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintHorizontal_bias="0.8" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddress" />
 
     <View
         android:id="@+id/divider"
@@ -133,20 +121,19 @@
         android:background="@android:color/darker_gray"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/pickUpTimeConstraintLayout"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent" />
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/pickUpTimeConstraintLayout"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginLeft="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="@+id/divider"
+        app:layout_constraintEnd_toStartOf="@+id/textViewRemoveItemLink"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewChefAddress">
 
@@ -154,7 +141,6 @@
             android:id="@+id/textViewPickUpTimeLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
             android:layout_marginStart="0dp"
             android:layout_marginTop="8dp"
             android:text="Pickup Time:"
@@ -167,42 +153,40 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:layout_marginEnd="8dp"
-            android:layout_marginLeft="0dp"
-            android:layout_marginStart="0dp"
             android:layout_marginTop="8dp"
-            android:checkedButton="@+id/first"
             app:layout_constraintBottom_toBottomOf="@+id/pickUpTimeConstraintLayout"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewPickUpTimeLabel">
 
             <RadioButton
-                android:id="@+id/radioButtonLunch"
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButton0"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginStart="2dp"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
-                android:text="@string/lunchPickUpTime"
                 android:textAlignment="center"
-                android:textSize="14sp" />
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@+id/radioGroup"/>
 
             <RadioButton
-                android:id="@+id/radioButtonDinner"
-                android:layout_width="wrap_content"
+                android:id="@+id/radioButton1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:layout_marginLeft="2dp"
-                android:layout_marginRight="4dp"
-                android:layout_marginStart="2dp"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
-                android:text="@string/dinnerPickUpTime"
                 android:textAlignment="center"
-                android:textSize="14sp"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@+id/radioGroup"/>
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleX="0.8"
+                android:scaleY="0.8"
+                android:textAlignment="center"
+                android:textSize="18sp"
+                app:layout_constraintLeft_toLeftOf="@+id/radioGroup"/>
 
         </RadioGroup>
 

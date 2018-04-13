@@ -1,6 +1,7 @@
 package com.khasna.cooker.Common;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 import com.khasna.cooker.R;
 
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -24,6 +28,7 @@ import java.math.BigDecimal;
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder>{
 
     private OnCLickListener mOnCLickListener;
+    private SparseArray<String> orderTimeOptions = new SparseArray<>();
 
     public interface OnCLickListener{
         void RemoveOnClick(int itemPosition);
@@ -42,8 +47,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         public TextView textViewRemoveItemLink;
         public Spinner spinner;
         public ArrayAdapter adapter;
-        public RadioButton radioButtonLunch;
-        public RadioButton radioButtonDinner;
+        public RadioButton radioButton0;
+        public RadioButton radioButton1;
+        public RadioButton radioButton2;
 
         public ViewHolder(View v) {
             super(v);
@@ -52,13 +58,14 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             textViewChefAddress         = (TextView) v.findViewById(R.id.textViewChefAddress);
             textViewItemPriceForGuest   = (TextView) v.findViewById(R.id.textViewItemPriceForGuest);
             textViewRemoveItemLink      = (TextView) v.findViewById(R.id.textViewRemoveItemLink);
-            radioButtonLunch            = (RadioButton) v.findViewById(R.id.radioButtonLunch);
-            radioButtonDinner           = (RadioButton) v.findViewById(R.id.radioButtonDinner);
+            radioButton0 = (RadioButton) v.findViewById(R.id.radioButton0);
+            radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
+            radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
             spinner                     = (Spinner) v.findViewById(R.id.spinner);
 
             adapter                     = ArrayAdapter.createFromResource(v.getContext(), R.array.quantity, android.R.layout.simple_spinner_item);
             spinner.setAdapter(adapter);
-            radioButtonDinner.setChecked(true);
+            radioButton0.setChecked(true);
         }
     }
 
@@ -83,7 +90,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.textViewCartChefName.setText(GuestEntity.cartItemArrayList.get(position).getChefName());
         holder.textViewChefAddress.setText(GuestEntity.cartItemArrayList.get(position).getChefAddress());
         holder.textViewItemPriceForGuest.setText(String.valueOf(GuestEntity.cartItemArrayList.get(position).getItemPrice()));
+        AdjustDatesForRadioButtons(holder);
         holder.spinner.setSelection(GuestEntity.cartItemArrayList.get(position).getItemQuantity() - 1);
+        holder.radioButton0.setText(orderTimeOptions.get(0));
+        holder.radioButton1.setText(orderTimeOptions.get(1));
+        holder.radioButton2.setText(orderTimeOptions.get(2));
 
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -112,7 +123,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             }
         });
 
-        holder.radioButtonLunch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.radioButton0.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -122,7 +133,17 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             }
         });
 
-        holder.radioButtonDinner.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        holder.radioButton1.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mOnCLickListener.UpdateFields();
+                }
+            }
+        });
+
+        holder.radioButton2.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
@@ -136,5 +157,86 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     @Override
     public int getItemCount() {
         return GuestEntity.cartItemArrayList.size();
+    }
+
+    private void AdjustDatesForRadioButtons(CartItemAdapter.ViewHolder holder)
+    {
+        SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
+
+        Calendar now = Calendar.getInstance();
+        Date calendarDateTime = now.getTime();
+        int hour = now.get(Calendar.HOUR_OF_DAY);
+        int lastHourLunch = 10;
+        int lastHourDinner = 18;
+
+        String timeString = sdfTime.format(calendarDateTime);
+        String dateString = sdfDate.format(calendarDateTime);
+
+        if (hour < lastHourLunch)
+        {
+            SimpleDateFormat sdfTemp = new SimpleDateFormat("EEE, dd MMM ");
+            String option0 = sdfTemp.format(calendarDateTime);
+            option0 = option0 + "10 am - 11 am";
+
+            orderTimeOptions.put(0, option0);
+
+            String option1 = sdfTemp.format(calendarDateTime);
+            option1 = option1 + "6 pm - 8 pm";
+
+            orderTimeOptions.put(1, option1);
+
+            now.add(Calendar.DATE, 1);
+            Date calendarTemp = now.getTime();
+            String option2 = sdfTemp.format(calendarTemp);
+            option2 = option2 + "10 am - 11 am";
+
+            orderTimeOptions.put(2, option2);
+
+        }
+        else if( hour < lastHourDinner )
+        {
+            SimpleDateFormat sdfTemp = new SimpleDateFormat("EEE, dd MMM ");
+            String option0 = sdfTemp.format(calendarDateTime);
+            option0 = option0 + "6 pm - 8 pm";
+
+            orderTimeOptions.put(0, option0);
+
+            now.add(Calendar.DATE, 1);
+            Date calendarTemp = now.getTime();
+            String option1 = sdfTemp.format(calendarTemp);
+            option1 = option1 + "10 am - 11 am";
+
+            orderTimeOptions.put(1, option1);
+
+            String option2 = sdfTemp.format(calendarTemp);
+            option2 = option2 + "6 pm - 8 pm";
+
+            orderTimeOptions.put(2, option2);
+        }
+        else
+        {
+            SimpleDateFormat sdfTemp = new SimpleDateFormat("EEE, dd MMM ");
+
+            now.add(Calendar.DATE, 1);
+            Date calendarTemp = now.getTime();
+
+            String option0 = sdfTemp.format(calendarTemp);
+            option0 = option0 + "10 am - 11 am";
+
+            orderTimeOptions.put(0, option0);
+
+            String option1 = sdfTemp.format(calendarTemp);
+            option1 = option1 + "6 pm - 8 pm";
+
+            orderTimeOptions.put(1, option1);
+
+            now.add(Calendar.DATE, 1);
+            calendarTemp = now.getTime();
+            String option2 = sdfTemp.format(calendarTemp);
+            option2 = option2 + "10 am - 11 am";
+
+            orderTimeOptions.put(2, option2);
+        }
     }
 }
