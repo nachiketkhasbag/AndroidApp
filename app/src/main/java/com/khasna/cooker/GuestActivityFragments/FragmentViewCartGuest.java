@@ -200,7 +200,5 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
 
         textViewTotalPrice.setText(String.valueOf(totalValue));
         textViewNumberOfItems.setText(String.valueOf(numberOfItems));
-
-        cartItemAdapter.notifyDataSetChanged();
     }
 }

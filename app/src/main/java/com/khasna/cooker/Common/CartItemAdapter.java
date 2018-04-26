@@ -91,10 +91,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.textViewChefAddress.setText(GuestEntity.cartItemArrayList.get(position).getChefAddress());
         holder.textViewItemPriceForGuest.setText(String.valueOf(GuestEntity.cartItemArrayList.get(position).getItemPrice()));
         AdjustDatesForRadioButtons(holder);
-        holder.spinner.setSelection(GuestEntity.cartItemArrayList.get(position).getItemQuantity() - 1);
         holder.radioButton0.setText(orderTimeOptions.get(0));
         holder.radioButton1.setText(orderTimeOptions.get(1));
         holder.radioButton2.setText(orderTimeOptions.get(2));
+
+        GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(orderTimeOptions.get(0));
 
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -161,17 +162,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     private void AdjustDatesForRadioButtons(CartItemAdapter.ViewHolder holder)
     {
-        SimpleDateFormat sdfDate = new SimpleDateFormat("MM/dd/yyyy");
-        SimpleDateFormat sdfTime = new SimpleDateFormat("hh:mm a");
-
         Calendar now = Calendar.getInstance();
         Date calendarDateTime = now.getTime();
         int hour = now.get(Calendar.HOUR_OF_DAY);
         int lastHourLunch = 10;
         int lastHourDinner = 18;
-
-        String timeString = sdfTime.format(calendarDateTime);
-        String dateString = sdfDate.format(calendarDateTime);
 
         if (hour < lastHourLunch)
         {

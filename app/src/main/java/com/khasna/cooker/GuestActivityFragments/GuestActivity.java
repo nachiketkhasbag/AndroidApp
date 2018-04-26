@@ -42,15 +42,28 @@ public class GuestActivity extends AppCompatActivity
     TextView mTextViewUserName;
     TextView mTextViewUserEmail;
     ProcessDialogBox processDialogBox;
+    NavigationView navigationView;
 
     private ValueEventListener valueEventListenerGuest;
     private DatabaseReference mDataBaseRefGuest;
 
+    public GuestActivity() {
+
+        mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").
+                child(UserInfo.getuID());
+
+        if (UserInfo.getEmailID() == null)
+        {
+            System.out.print("!!!!!!!!!!!!!ALERT - SHOULDN'T COME HERE!!!!!!!!!!!!!");
+            System.out.print("!!!!!!!!!!!!!PLEASE DEBUG THIS!!!!!!!!!!!!!");
+        }
+    }
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
+        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
         mActiveFragmentManager = getSupportFragmentManager();
-        mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").child(UserInfo.getuID());
 
         PushToken();
 
@@ -101,10 +114,11 @@ public class GuestActivity extends AppCompatActivity
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
+
         toggle.syncState();
 
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view_guest);
-        navigationView.setNavigationItemSelectedListener(this);
+        setupNavMenu();
+
         View header = navigationView.getHeaderView(0);
         mTextViewUserName = (TextView)header.findViewById(R.id.userNameGuest);
         mTextViewUserEmail = (TextView)header.findViewById(R.id.userEmailGuest);
@@ -234,10 +248,18 @@ public class GuestActivity extends AppCompatActivity
     protected void onStart() {
         super.onStart();
         mDataBaseRefGuest.addListenerForSingleValueEvent(valueEventListenerGuest);
+        setupNavMenu();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+    }
+
+    void setupNavMenu()
+    {
+        navigationView = (NavigationView) findViewById(R.id.nav_view_guest);
+        navigationView.setNavigationItemSelectedListener(GuestActivity.this);
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 }
