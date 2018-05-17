@@ -12,16 +12,13 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasna.cooker.Common.CartItem;
 import com.khasna.cooker.Common.CartItemAdapter;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.ProcessDialogBox;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 import java.math.BigDecimal;
-import java.util.Date;
 
 /**
  * Created by nachiket on 6/14/2017.
@@ -40,13 +37,13 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
     CartItemAdapter cartItemAdapter;
     View v;
     int clickCount;
-    String time;
-    private DatabaseReference mDataBaseRef;
     RecyclerView.LayoutManager mLayoutManager;
 
     ProcessDialogBox processDialogBox;
+    Collection mCollection;
 
     public FragmentViewCartGuest() {
+        mCollection = Collection.getInstance();
     }
 
     @Nullable
@@ -97,16 +94,14 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
             buttonPlaceOrder.setVisibility(View.GONE);
         }
 
-        clickCount = 0;
         buttonPlaceOrder.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                clickCount++;
-                if(clickCount == 1)
+                if(mCollection.mGuestActivityFunctions.IsClickCount2())
                 {
                     buttonPlaceOrder.setText("PRESS AGAIN TO CONFIRM ORDER");
                 }
-                else if(GuestEntity.guestProfile.getfname().isEmpty() || GuestEntity.guestProfile.getPhoneNumber().isEmpty())
+                else if(mCollection.mGuestActivityFunctions.IsGuestProfileCheckPass())
                 {
                     System.out.println("Guest information missing!!");
                     Toast.makeText( getContext(),"Please enter a name and phone number before you place an order ",
@@ -125,44 +120,24 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
 
     public void DataUpload()
     {
-        int index = 0;
-        Date trialTime = new Date();
-        time = trialTime.toString();
-        while( index < GuestEntity.cartItemArrayList.size())
-        {
-            CartItem cartItem = GuestEntity.cartItemArrayList.get(index);
-            String currentItemChefUid  = cartItem.getChefUid();
-            mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("liveOrders").child(currentItemChefUid);
-            // setting the time
-            cartItem.setOrderTime(time);
-            String key = mDataBaseRef.push().getKey();
-            processDialogBox.ShowDialogBox();
-            mDataBaseRef.child(key).setValue(cartItem, new DatabaseReference.CompletionListener() {
-                //Implies that the data has been committed
-                @Override
-                public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                    if (databaseError == null)
-                    {
-                        System.out.println("Chef Data saved successfully.");
-                        System.out.println("Place Order!!");
-                    }
-                    else
-                    {
-                        Toast.makeText(getContext(),"There has been problem connecting to the server" +
-                                        "Please try again in sometime ",
-                                Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
-            index++;
-        }
+        processDialogBox.ShowDialogBox();
 
-        System.out.println("Order Placed successfully!!");
-        Toast.makeText(getContext(), "Order placed! Please wait for order confirmation", Toast.LENGTH_SHORT).show();
-        GuestEntity.cartItemArrayList.clear();
-        UpdateCartAndUI();
-        buttonPlaceOrder.setText("PLACE ORDER");
-        processDialogBox.DismissDialogBox();
+        mCollection.mGuestActivityFunctions.DataUpload(new Interfaces.DataUploadInterface() {
+            @Override
+            public void UploadComplete() {
+                System.out.println("Order Placed successfully!!");
+                Toast.makeText(getContext(), "Order placed! Please wait for order confirmation", Toast.LENGTH_SHORT).show();
+                UpdateCartAndUI();
+                buttonPlaceOrder.setText("PLACE ORDER");
+                processDialogBox.DismissDialogBox();
+            }
+
+            @Override
+            public void UploadFailed(String error) {
+                processDialogBox.DismissDialogBox();
+                Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     @Override

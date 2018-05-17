@@ -1,5 +1,6 @@
 package com.khasna.cooker.Common;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -14,6 +15,7 @@ import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -24,7 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
  * Created by nachiket on 4/2/2017.
  */
 
-public class SignupActivity extends AppCompatActivity implements Interfaces.UserInterface{
+public class SignupActivity extends AppCompatActivity{
 
     private static final String TAG = "SignUpActivity";
     EditText editTextEmail;
@@ -37,19 +39,25 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
 
     Button buttonSignUpAsGuest;
     Button buttonSignUpAsChef;
-
+    Collection mCollection;
+    ProgressDialog progressDialog;
     private DatabaseReference databaseRef;
 
     private static int MINIMUM_PASSWORD_LENGTH = 5;
     private static final String className = "SignupActivity";
 
-    private enum USER_TYPE
+    public enum USER_TYPE
     {
         CHEF,
         GUEST
     }
 
     USER_TYPE userType;
+
+    public SignupActivity() {
+        mCollection = Collection.getInstance();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,7 +71,13 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
         buttonSignUpAsGuest = (Button)findViewById(R.id.buttonSignUpAsGuest);       // SignUpGuest button listener
         buttonSignUpAsChef = (Button)findViewById(R.id.buttonSignUpAsChef);       // SignUpGuest button listener
 
-        UserInfo.AuthenticateUser(this);
+        progressDialog = new ProgressDialog(this);
+
+        progressDialog.setMax(100); // Progress Dialog Max Value
+        progressDialog.setMessage("Loading..."); // Setting Message
+        progressDialog.setTitle("Processing"); // Setting Title
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Horizontal
+        progressDialog.setCancelable(false);
 
         buttonSignUpAsGuest.setOnClickListener(new View.OnClickListener() {
 
@@ -74,6 +88,7 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
 
                 if (errorCode.compareTo("VALID_INPUT") == 0)
                 {
+                    progressDialog.show(); // Display Progress Dialog
                     DebugClass.DebugPrint(className, "OnClickSignUpGuest:valid input from user");
                     userType = USER_TYPE.GUEST;
                     SignUp();
@@ -95,6 +110,7 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
 
                 if (errorCode.compareTo("VALID_INPUT") == 0)
                 {
+                    progressDialog.show(); // Display Progress Dialog
                     DebugClass.DebugPrint(className, "OnClickSignUpChef:valid input from user");
                     userType = USER_TYPE.CHEF;
                     SignUp();
@@ -112,7 +128,52 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
     {
         editTextEmailText = editTextEmail.getText().toString();
         editTextPasswordText = editTextPassword.getText().toString();
-        FireBaseAuthClass.SignUpWithEmail(this, editTextEmailText, editTextPasswordText);
+        mCollection.mFireBaseFunctions.SignUpWithEmail(userType, editTextEmailText, editTextPasswordText,
+                new Interfaces.SignUpUserInterface() {
+                    @Override
+                    public void SignUpComplete() {
+                        Toast.makeText(getApplicationContext(),
+                                "Signup succeeded", Toast.LENGTH_SHORT).show();
+                        System.out.print("SignUp succeeded");
+                        progressDialog.dismiss();
+                        if (userType == USER_TYPE.CHEF)
+                        {
+                            ChefEntity.chefProfile = new ChefProfile();
+
+                            UpdateDB(ChefEntity.chefProfile);
+
+                            // Take directly to homepage
+                            Intent i = new Intent(getApplicationContext(), ChefActivity.class);
+                            startActivity(i);
+
+                            // close this activity
+                            finish();
+                        }
+                        else
+                        {
+                            GuestEntity.guestProfile = new GuestProfile();
+
+                            UpdateDB(GuestEntity.guestProfile);
+
+                            // Take directly to homepage
+                            Intent i = new Intent(getApplicationContext(), GuestActivity.class);
+                            startActivity(i);
+
+                            // close this activity
+                            finish();
+                        }
+                    }
+
+                    @Override
+                    public void SignUpFailed(String error) {
+                        Toast.makeText(getApplicationContext(), "Signup failed", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Please click on Forgot Password" +
+                                "if you already have an account", Toast.LENGTH_SHORT).show();
+
+                        System.out.print("SignUp failed");
+                        progressDialog.dismiss();
+                    }
+                });
     }
 
     public String ValidateInput()
@@ -146,14 +207,14 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
 
     public void UpdateDB( ChefProfile chefProfile )
     {
-        databaseRef.child("cookProfile").child(UserInfo.getuID()).child("profile").setValue(chefProfile, new DatabaseReference.CompletionListener() {
+        databaseRef.child("cookProfile").child(mCollection.mFireBaseFunctions.getuID()).child("profile").setValue(chefProfile, new DatabaseReference.CompletionListener() {
 
             //Implies that the data has been committed
             @Override
             public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                 if (databaseError == null)
                 {
-                    databaseRef.child("cookProfile").child(UserInfo.getuID()).child("isActive").setValue(false);
+                    databaseRef.child("cookProfile").child(mCollection.mFireBaseFunctions.getuID()).child("isActive").setValue(false);
                     System.out.println("Chef Data saved successfully.");
                     DebugClass.DebugPrint(className, "UpdateDB:Update cookprofile db");
                     return;
@@ -167,7 +228,7 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
     }
     public void UpdateDB( GuestProfile guestProfile )
     {
-        databaseRef.child("userProfile").child(UserInfo.getuID()).child("profile").setValue(guestProfile, new DatabaseReference.CompletionListener() {
+        databaseRef.child("userProfile").child(mCollection.mFireBaseFunctions.getuID()).child("profile").setValue(guestProfile, new DatabaseReference.CompletionListener() {
 
             //Implies that the data has been committed
             @Override
@@ -197,40 +258,5 @@ public class SignupActivity extends AppCompatActivity implements Interfaces.User
     public void onStart() {
         super.onStart();
         databaseRef = FirebaseDatabase.getInstance().getReference();
-    }
-
-    @Override
-    public void UserSignedIn() {
-        if(userType == USER_TYPE.CHEF){
-
-            ChefEntity.chefProfile = new ChefProfile();
-
-            UpdateDB(ChefEntity.chefProfile);
-
-            // Take directly to homepage
-            Intent i = new Intent(getApplicationContext(), ChefActivity.class);
-            startActivity(i);
-
-            // close this activity
-            finish();
-        }
-        else{
-            GuestEntity.guestProfile = new GuestProfile();
-
-            UpdateDB(GuestEntity.guestProfile);
-
-            // Take directly to homepage
-            Intent i = new Intent(getApplicationContext(), GuestActivity.class);
-            startActivity(i);
-
-            // close this activity
-            finish();
-
-        }
-    }
-
-    @Override
-    public void UserSignedOut() {
-
     }
 }

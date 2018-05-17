@@ -15,19 +15,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.khasna.cooker.Common.DebugClass;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.MainActivity;
 import com.khasna.cooker.Common.ProcessDialogBox;
-import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.khasna.cooker.Common.UserInfo;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
 
 /**
  * Created by nachiket on 4/6/2017.
@@ -43,16 +40,16 @@ public class GuestActivity extends AppCompatActivity
     TextView mTextViewUserEmail;
     ProcessDialogBox processDialogBox;
     NavigationView navigationView;
+    Collection mCollection;
 
-    private ValueEventListener valueEventListenerGuest;
     private DatabaseReference mDataBaseRefGuest;
 
     public GuestActivity() {
-
+        mCollection = Collection.getInstance();
         mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").
-                child(UserInfo.getuID());
+                child(mCollection.mFireBaseFunctions.getuID());
 
-        if (UserInfo.getEmailID() == null)
+        if (mCollection.mFireBaseFunctions.getEmailID() == null)
         {
             System.out.print("!!!!!!!!!!!!!ALERT - SHOULDN'T COME HERE!!!!!!!!!!!!!");
             System.out.print("!!!!!!!!!!!!!PLEASE DEBUG THIS!!!!!!!!!!!!!");
@@ -65,16 +62,16 @@ public class GuestActivity extends AppCompatActivity
         final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
         mActiveFragmentManager = getSupportFragmentManager();
 
-        PushToken();
+        mCollection.mGuestActivityFunctions.PushToken(mDataBaseRefGuest);
 
         processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
 
-        valueEventListenerGuest = new ValueEventListener() {
+        mCollection.mGuestActivityFunctions.GetAllGuestData(
+                mDataBaseRefGuest,
+                new Interfaces.ReadGuestDataInterface() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GuestEntity.guestProfile = getGuestProfile(dataSnapshot);
-
+            public void ReadComplete() {
                 mActiveFragment = new FragmentChefsListGuest();
                 FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
                 transaction.replace(R.id.guest_page, mActiveFragment);
@@ -85,22 +82,12 @@ public class GuestActivity extends AppCompatActivity
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
+            public void ReadFailed(DatabaseError databaseError) {
+                processDialogBox.DismissDialogBox();
                 System.out.println(databaseError.toString());
+                Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
             }
-
-            private GuestProfile getGuestProfile(DataSnapshot dataSnapshot )
-            {
-                DataSnapshot snapshot= dataSnapshot.child("profile");
-                GuestProfile guestProfile = snapshot.getValue(GuestProfile.class);
-                if (guestProfile == null)
-                {
-                    guestProfile = new GuestProfile();
-                }
-                System.out.println("Profile detected");
-                return guestProfile;
-            }
-        };
+        });
 
         setupDrawer();
     }
@@ -122,8 +109,8 @@ public class GuestActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         mTextViewUserName = (TextView)header.findViewById(R.id.userNameGuest);
         mTextViewUserEmail = (TextView)header.findViewById(R.id.userEmailGuest);
-        mTextViewUserName.setText(UserInfo.getDisplayName());
-        mTextViewUserEmail.setText(UserInfo.getEmailID());
+        mTextViewUserName.setText(mCollection.mFireBaseFunctions.getDisplayName());
+        mTextViewUserEmail.setText(mCollection.mFireBaseFunctions.getEmailID());
     }
 
     @Override
@@ -193,8 +180,8 @@ public class GuestActivity extends AppCompatActivity
                 break;
 
             case R.id.signOut:
-                UserInfo.signOut();
-                CleanObjects();
+                mCollection.mFireBaseFunctions.signOut();
+                mCollection.mGuestActivityFunctions.CleanObjects(mDataBaseRefGuest);
 
                 Intent signOut = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(signOut);
@@ -207,25 +194,6 @@ public class GuestActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void CleanObjects()
-    {
-        GuestEntity.chefsListForGuestArrayList.clear();
-        GuestEntity.guestProfile = null;
-        GuestEntity.cartItemArrayList.clear();
-        GuestEntity.guestItemArrayList.clear();
-        GuestEntity.orderHistoryGuestItemDetails.clear();
-        GuestEntity.orderHistoryGuestItemsArrayList.clear();
-
-        mDataBaseRefGuest.child("token").setValue("");
-    }
-
-    private void PushToken()
-    {
-        String token = FirebaseInstanceId.getInstance().getToken();
-        DebugClass.DebugPrint("ChefActivity", "PushToken:New push token");
-        mDataBaseRefGuest.child("token").setValue(token);
     }
 
     @Override
@@ -247,7 +215,6 @@ public class GuestActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        mDataBaseRefGuest.addListenerForSingleValueEvent(valueEventListenerGuest);
         setupNavMenu();
     }
 

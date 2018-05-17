@@ -13,14 +13,14 @@ import android.widget.Switch;
 import android.widget.Toast;
 
 import com.khasna.cooker.ChefActivityFragments.Adapters.FragmentViewListedItemsChefAdapter;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.ProcessDialogBox;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.khasna.cooker.Common.UserInfo;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by nachiket on 4/18/2017.
@@ -30,8 +30,10 @@ public class FragmentViewListedItemsChef extends Fragment {
 
     private Switch mSwitch;
     private static DatabaseReference mDatabaseRef;
+    private Collection mCollection;
 
     public FragmentViewListedItemsChef() {
+        mCollection = Collection.getInstance();
     }
 
     @Nullable
@@ -45,24 +47,29 @@ public class FragmentViewListedItemsChef extends Fragment {
         final ProcessDialogBox mProcessDialogBox = new ProcessDialogBox(getActivity());
         mProcessDialogBox.ShowDialogBox();
 
-        mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).
-                child("isActive").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Boolean isActive = (Boolean)dataSnapshot.getValue();
-                if (isActive == null){
-                    isActive = false;
+        mCollection.mDataBaseFunctions.ReadDataBase(
+                mDatabaseRef,
+                "cookProfile/" + mCollection.mFireBaseFunctions.getuID() + "/isActive",
+                new Interfaces.DataBaseReadInterface() {
+                    @Override
+                    public void ReadSucceeded(DataSnapshot dataSnapshot) {
+                        Boolean isActive = (Boolean)dataSnapshot.getValue();
+                        if (isActive == null){
+                            isActive = false;
+                        }
+                        mSwitch.setChecked(isActive);
+                        SetSwitchText(isActive);
+                        mProcessDialogBox.DismissDialogBox();
+                    }
+
+                    @Override
+                    public void ReadFailed(DatabaseError databaseError) {
+                        mProcessDialogBox.DismissDialogBox();
+                        Toast.makeText(getContext(),"Read failed" + databaseError.toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
                 }
-                mSwitch.setChecked(isActive);
-                SetSwitchText(isActive);
-                mProcessDialogBox.DismissDialogBox();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        );
 
         ListView itemListView = (ListView) view.findViewById(R.id.itemsList);
         FragmentViewListedItemsChefAdapter adapter = new FragmentViewListedItemsChefAdapter(getContext());
@@ -91,10 +98,9 @@ public class FragmentViewListedItemsChef extends Fragment {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked && ChefEntity.chefProfile == null )
                 {
-                    Toast.makeText(getContext(),"Profile not set. Please go to Update Account",
+                    Toast.makeText(getContext(),"Profile is empty",
                             Toast.LENGTH_LONG).show();
-                    mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).
-                            child("isActive").setValue(false);
+                    mCollection.mChefActivityFunctions.SetChefStatus(mDatabaseRef, false);
                     SetSwitchText(false);
                     buttonView.setChecked(false);
                     mSwitch.setChecked(false);
@@ -109,16 +115,14 @@ public class FragmentViewListedItemsChef extends Fragment {
                 {
                     Toast.makeText(getContext(),"Profile not set. Please go to Update Account",
                             Toast.LENGTH_LONG).show();
-                    mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).
-                            child("isActive").setValue(false);
+                    mCollection.mChefActivityFunctions.SetChefStatus(mDatabaseRef, false);
                     SetSwitchText(false);
                     buttonView.setChecked(false);
                     mSwitch.setChecked(false);
                     return;
                 }
 
-                mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).
-                        child("isActive").setValue(mSwitch.isChecked());
+                mCollection.mChefActivityFunctions.SetChefStatus(mDatabaseRef, mSwitch.isChecked());
                 SetSwitchText(isChecked);
             }
         });
@@ -132,7 +136,7 @@ public class FragmentViewListedItemsChef extends Fragment {
     public void UpdateItemState(String itemName, Boolean isAvailable)
     {
         //itemListCollectionIsAvailable.set(position, isAvailable);
-        mDatabaseRef.child("cookProfile").child(UserInfo.getuID()).child("items").
+        mDatabaseRef.child("cookProfile").child(mCollection.mFireBaseFunctions.getuID()).child("items").
                 child(itemName).child("isAvailable").setValue(isAvailable);
 
     }

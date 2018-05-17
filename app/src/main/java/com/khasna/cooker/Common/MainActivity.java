@@ -16,14 +16,13 @@ import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-public class MainActivity extends AppCompatActivity implements com.khasna.cooker.Common.Interfaces.UserInterface{
+public class MainActivity extends AppCompatActivity implements
+        com.khasna.cooker.Common.Interfaces.UserInterface,
+        Interfaces.AppUserInterface,
+        Interfaces.AppUserLocatorInterface{
     private static final String TAG = "LoginActivity";
     private static final String className = "MainActivity";
 
@@ -33,15 +32,16 @@ public class MainActivity extends AppCompatActivity implements com.khasna.cooker
     Button mLoginButton;
     Button mSignUpButton;
     TextView mForgotPassword;
-
-    private DatabaseReference mDataBaseRef;
-    private ValueEventListener mValueEventListener;
+    Collection mCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DebugClass.DebugPrint(className, "onCreate:Activity created");
+
+        mCollection = Collection.getInstance();
+        mCollection.mFireBaseFunctions.WaitForUserLogin(this);
 
         mLoginButton = (Button)findViewById(R.id.loginButton);   // Login button listener
         mSignUpButton = (Button)findViewById(R.id.signupButton); // Signup button listener
@@ -53,8 +53,6 @@ public class MainActivity extends AppCompatActivity implements com.khasna.cooker
 //        mFbLoginButton.setVisibility(View.GONE);
 //        mFbLoginButton.setClickable(false);
         mForgotPassword.setVisibility(View.GONE);
-
-        UserInfo.AuthenticateUser(this);
 
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
 
@@ -129,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements com.khasna.cooker
         if (errorCode.compareTo("VALID_INPUT") == 0)
         {
             DebugClass.DebugPrint(className, "login:valid input from user");
-            FireBaseAuthClass.SignInWithEmail(this, email.getText().toString(), password.getText().toString() );
+            mCollection.mFireBaseFunctions.SignInWithEmail(this, email.getText().toString(), password.getText().toString() );
         }
         else
         {
@@ -146,64 +144,7 @@ public class MainActivity extends AppCompatActivity implements com.khasna.cooker
 
     @Override
     public void UserSignedIn() {
-
-        mDataBaseRef = FirebaseDatabase.getInstance().getReference();
-        mValueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                if(dataSnapshot.child("cookProfile").child(UserInfo.getuID()).exists() &&
-                        dataSnapshot.child("userProfile").child(UserInfo.getuID()).exists())
-                {
-                    //Toast.makeText(android.content.Context.getApplicationContext(), "THERE HAS BEEN A SERIOUS PROBLEM. PLEASE REPORT THIS", Toast.LENGTH_LONG).show();
-                    System.out.print("!!!!!!!!!!!!!!!!THERE HAS BEEN A SERIOUS PROBLEM. NEEDS DEBUG!!!!!!!!!!!!!!!!!!!!!!");
-                    Toast.makeText(getApplicationContext(),"Serious problem with account. Please contact customer service. Signing out...", Toast.LENGTH_LONG).show();
-                    UserInfo.signOut();
-                }
-                else if(dataSnapshot.child("cookProfile").child(UserInfo.getuID()).exists())
-                {
-                    ChefEntity.chefProfile = new ChefProfile();
-
-                    Bundle bundle = new Bundle();
-                    bundle.putString("source", "MainActivity");
-
-                    Intent i = new Intent(getApplicationContext(), ChefActivity.class);
-                    i.putExtras(bundle);
-                    startActivity(i);
-
-                    // close this activity
-                    finish();
-                }
-                else if(dataSnapshot.child("userProfile").child(UserInfo.getuID()).exists())
-                {
-                    GuestEntity.guestProfile = new GuestProfile();
-
-                    Intent i = new Intent(getApplicationContext(), GuestActivity.class);
-                    startActivity(i);
-
-                    // close this activity
-                    finish();
-                }
-                else
-                {
-                    // TODO: THIS IS TEMPORARY. THIS SHOULD NOT BE PRESENT
-                    // TODO: ALL UNKNOWN USERS DIRECTED TO GUEST ACTIVITY
-                    GuestEntity.guestProfile = new GuestProfile();
-
-                    Intent i = new Intent(getApplicationContext(), GuestActivity.class);
-                    startActivity(i);
-
-                    // close this activity
-                    finish();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.toString());
-            }
-        };
-        mDataBaseRef.addListenerForSingleValueEvent(mValueEventListener);
+        mCollection.mDataBaseFunctions.LocateUser(this);
     }
 
     @Override
@@ -244,5 +185,42 @@ public class MainActivity extends AppCompatActivity implements com.khasna.cooker
         }
 
         return "VALID_INPUT";
+    }
+
+    @Override
+    public void UserIsChef() {
+        ChefEntity.chefProfile = new ChefProfile();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("source", "MainActivity");
+
+        Intent i = new Intent(getApplicationContext(), ChefActivity.class);
+        i.putExtras(bundle);
+        startActivity(i);
+
+        // close this activity
+        finish();
+    }
+
+    @Override
+    public void UserIsGuest() {
+        GuestEntity.guestProfile = new GuestProfile();
+
+        Intent i = new Intent(getApplicationContext(), GuestActivity.class);
+        startActivity(i);
+
+        // close this activity
+        finish();
+    }
+
+    @Override
+    public void ForceUserSignOut() {
+        //Toast.makeText(android.content.Context.getApplicationContext(), "THERE HAS BEEN A SERIOUS PROBLEM. PLEASE REPORT THIS", Toast.LENGTH_LONG).show();
+        System.out.print("!!!!!!!!!!!!!!!!THERE HAS BEEN A SERIOUS PROBLEM. NEEDS DEBUG!!!!!!!!!!!!!!!!!!!!!!");
+        mLoginButton.setVisibility(View.VISIBLE);
+        mSignUpButton.setVisibility(View.VISIBLE);
+//        mFbLoginButton.setVisibility(View.GONE);
+        mForgotPassword.setVisibility(View.VISIBLE);
+        mCollection.mFireBaseFunctions.signOut();
     }
 }

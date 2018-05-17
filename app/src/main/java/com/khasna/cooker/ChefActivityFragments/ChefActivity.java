@@ -13,32 +13,32 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefItem;
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
-import com.khasna.cooker.Common.DebugClass;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.FirebaseDatabase;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.MainActivity;
 import com.khasna.cooker.Common.ProcessDialogBox;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.khasna.cooker.Common.UserInfo;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.iid.FirebaseInstanceId;
+
 
 public class ChefActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     DatabaseReference mDataBaseRef;
+    Collection mCollection;
 
     public ChefActivity() {
 
-        mDataBaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").
-                child(UserInfo.getuID());
+        mCollection = Collection.getInstance();
 
-        if (UserInfo.getEmailID() == null)
+        mDataBaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").
+                child(mCollection.mFireBaseFunctions.getuID());
+
+        if (mCollection.mFireBaseFunctions.getEmailID() == null)
         {
             System.out.print("!!!!!!!!!!!!!ALERT - SHOULDN'T COME HERE!!!!!!!!!!!!!");
             System.out.print("!!!!!!!!!!!!!PLEASE DEBUG THIS!!!!!!!!!!!!!");
@@ -53,65 +53,43 @@ public class ChefActivity extends AppCompatActivity
 
         setContentView(R.layout.activity_chef);
 
-        PushToken();
+        mCollection.mChefActivityFunctions.PushToken(mDataBaseRef);
 
         final ProcessDialogBox processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
 
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                getExistingItems(dataSnapshot);
-                processDialogBox.DismissDialogBox();
-                Fragment mActiveFragment;
+        mCollection.mChefActivityFunctions.GetAllChefData(
+                mDataBaseRef,
+                new Interfaces.ReadChefDataInterface() {
+                    @Override
+                    public void ReadComplete(String message) {
+                        if (message.equals("start"))
+                        {
+                            processDialogBox.DismissDialogBox();
+                            Fragment mActiveFragment;
+                            FragmentManager supportFragmentManager = getSupportFragmentManager();
+                            mActiveFragment = new FragmentViewListedItemsChef();
+                            supportFragmentManager.beginTransaction().replace(R.id.chefs_page, mActiveFragment).commitNow();
+                            setTitle(R.string.viewListedItems);
+                        }
+                        else
+                        {
+                            Fragment mActiveFragment;
+                            FragmentManager supportFragmentManager = getSupportFragmentManager();
+                            mActiveFragment = new FragmentReceivedOrdersChef();
+                            mActiveFragment.setArguments(extras);
+                            supportFragmentManager.beginTransaction().replace(R.id.chefs_page, mActiveFragment).commit();
+                            setTitle(R.string.receivedOrders);
+                        }
+                    }
 
-                ChefEntity.chefProfile = getChefProfile(dataSnapshot);
-                String message = "start";
-                FragmentManager supportFragmentManager = getSupportFragmentManager();
-
-                if( extras != null )
-                {
-                    message = extras.getString("source");
-                }
-                if (message.equals("notification")) {
-                    mActiveFragment = new FragmentReceivedOrdersChef();
-                    mActiveFragment.setArguments(extras);
-                    supportFragmentManager.beginTransaction().replace(R.id.chefs_page, mActiveFragment).commit();
-                    setTitle(R.string.receivedOrders);
-                } else {
-                    mActiveFragment = new FragmentViewListedItemsChef();
-                    supportFragmentManager.beginTransaction().replace(R.id.chefs_page, mActiveFragment).commitNow();
-                    setTitle(R.string.viewListedItems);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.toString());
-            }
-
-            public void getExistingItems(DataSnapshot dataSnapshot){
-                ChefEntity.ChefItemArrayList.clear();
-                for (DataSnapshot child : dataSnapshot.child("items").getChildren()) {
-                    ChefItem chefItem = child.getValue(ChefItem.class);
-                    ChefEntity.ChefItemArrayList.add(chefItem);
-                    System.out.println("Data detected");
-                }
-            }
-
-            public ChefProfile getChefProfile(DataSnapshot dataSnapshot){
-                DataSnapshot snapshot= dataSnapshot.child("profile");
-                ChefProfile chefProfile = snapshot.getValue(ChefProfile.class);
-                if (chefProfile == null)
-                {
-                    chefProfile = new ChefProfile();
-                }
-                System.out.println("Profile detected");
-                return chefProfile;
-            }
-        };
-
-        mDataBaseRef.addListenerForSingleValueEvent(valueEventListener);
+                    @Override
+                    public void ReadFailed(DatabaseError databaseError) {
+                        processDialogBox.DismissDialogBox();
+                        Toast.makeText(getApplicationContext(), databaseError.toString(),
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
 
         setupDrawerAndToolbar();
     }
@@ -184,9 +162,8 @@ public class ChefActivity extends AppCompatActivity
                 setTitle(R.string.orderHistory);
                 break;
             case R.id.signOut:
-                UserInfo.signOut();
-                CleanObjects();
-                ChefEntity.ChefItemArrayList.clear();
+                mCollection.mFireBaseFunctions.signOut();
+                mCollection.mChefActivityFunctions.CleanObjects(mDataBaseRef);
                 Intent signOut = new Intent(getApplicationContext(), MainActivity.class);
                 startActivity(signOut);
 
@@ -198,19 +175,6 @@ public class ChefActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    public void CleanObjects()
-    {
-        ChefEntity.ChefItemArrayList.clear();
-        ChefEntity.chefProfile = null;
-        ChefEntity.chefReceivedOrderItemsArrayList.clear();
-        ChefEntity.arrayListOrderHistoryChefItem.clear();
-        ChefEntity.arrayListOrderHistoryChefItemDetails.clear();
-
-        mDataBaseRef.child("isActive").setValue(false);
-
-        mDataBaseRef.child("token").setValue("");
     }
 
     public void setupDrawerAndToolbar(){
@@ -229,19 +193,7 @@ public class ChefActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         TextView textViewUserName = (TextView)header.findViewById(R.id.userName);
         TextView textViewUserEmail = (TextView)header.findViewById(R.id.userEmail);
-        textViewUserName.setText(UserInfo.getDisplayName());
-        textViewUserEmail.setText(UserInfo.getEmailID());
-    }
-
-    private void PushToken()
-    {
-        String token = FirebaseInstanceId.getInstance().getToken();
-        DebugClass.DebugPrint("ChefActivity", "PushToken:New push token");
-        mDataBaseRef.child("token").setValue(token);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
+        textViewUserName.setText(mCollection.mFireBaseFunctions.getDisplayName());
+        textViewUserEmail.setText(mCollection.mFireBaseFunctions.getEmailID());
     }
 }

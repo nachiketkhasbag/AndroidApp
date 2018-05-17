@@ -14,7 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefItem;
-import com.khasna.cooker.Common.FireBaseAuthClass;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -33,8 +33,10 @@ public class FragmentDeleteItemChef extends Fragment {
     Button buttonDeleteItem;
     private DatabaseReference mDataBaseRef;
     private ArrayList<String> itemName;
+    private Collection mCollection;
 
     public FragmentDeleteItemChef() {
+        mCollection = Collection.getInstance();
     }
 
     @Nullable
@@ -42,7 +44,7 @@ public class FragmentDeleteItemChef extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_chef_delete_items, container, false);
 
-        mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("cookProfile").child(FireBaseAuthClass.GetFirebaseUser().getUid());
+        mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("cookProfile").child(mCollection.mFireBaseFunctions.getuID());
         itemName = new ArrayList<>();
         for (ChefItem item : ChefEntity.ChefItemArrayList)
         {
@@ -66,7 +68,7 @@ public class FragmentDeleteItemChef extends Fragment {
 
         buttonDeleteItem.setOnClickListener(new View.OnClickListener(){
             @Override
-            public void onClick(View v) {
+            public void onClick(View v){
                 if(clickedItemPositions != null) {
                     for (int index = clickedItemPositions.size() - 1; index >= 0; index--) {
                         // Get the checked status of the current item
@@ -75,9 +77,9 @@ public class FragmentDeleteItemChef extends Fragment {
                         if (checked) {
                             // If the current item is checked
                             int key = clickedItemPositions.keyAt(index);
-                            RemoveFromDataBase(itemName.get(key));
-                            ChefEntity.ChefItemArrayList.remove(key);
-
+                            mCollection.mChefActivityFunctions.RemoveItemFromList(
+                                    mDataBaseRef,
+                                    key);
                             mItemListView.setItemChecked(key, false);
                             mItemListView.removeViewInLayout(mItemListView.getChildAt(key));
                             Toast.makeText(getContext(),"Items removed",Toast.LENGTH_LONG).show();
@@ -92,14 +94,9 @@ public class FragmentDeleteItemChef extends Fragment {
                         .detach(fragment)
                         .attach(fragment)
                         .commit();
-            }
+        }
         });
 
         return mView;
-    }
-
-    void RemoveFromDataBase(String itemName)
-    {
-        mDataBaseRef.child("items").child(itemName).removeValue();
     }
 }

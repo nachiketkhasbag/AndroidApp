@@ -13,14 +13,11 @@ import android.widget.Button;
 import android.widget.CheckedTextView;
 import android.widget.Toast;
 
-import com.khasna.cooker.Common.CartItem;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.ProcessDialogBox;
-import com.khasna.cooker.Common.UserInfo;
 import com.khasna.cooker.GuestActivityFragments.Adapters.ViewListedItemsGuestAdapter;
-import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestItem;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
@@ -40,9 +37,10 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
     private int position;
     RecyclerView.LayoutManager mLayoutManager;
     ProcessDialogBox processDialogBox;
+    Collection mCollection;
 
     public ViewListedItemsGuest(){
-
+        mCollection = Collection.getInstance();
     }
 
     @Nullable
@@ -67,68 +65,31 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
         processDialogBox = new ProcessDialogBox(getActivity());
         processDialogBox.ShowDialogBox();
 
-        valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot child : dataSnapshot.child("items").getChildren()) {
-                    try{
-                        GuestItem guestItem = child.getValue(GuestItem.class);
+        mCollection.mGuestActivityFunctions.GetChefItems(
+                mDataBaseRef,
+                new Interfaces.ReadChefItemsInterface() {
+                    @Override
+                    public void ReadComplete() {
+                        adapter.notifyDataSetChanged();
+                        processDialogBox.DismissDialogBox();
+                    }
 
-                        if(guestItem.getIsAvailable()) {
-                            GuestEntity.guestItemArrayList.add(guestItem);
-                        }
+                    @Override
+                    public void ReadFailed(String error) {
+                        System.out.println(error);
+                        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+                        processDialogBox.DismissDialogBox();
                     }
-                    catch (Exception e)
-                    {
-                        System.out.println("Error in reading item");
-                    }
-                    adapter.notifyDataSetChanged();
                 }
-                processDialogBox.DismissDialogBox();
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.toString());
-            }
-        };
-
-        mDataBaseRef.addListenerForSingleValueEvent(valueEventListener);
+        );
 
         adapter.notifyDataSetChanged();
 
         buttonAddItemToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                boolean toast = false;
-                for(int index = 0; index < clickedItemPositions.size(); index++){
-                    // Get the checked status of the current item
-                    boolean checked = clickedItemPositions.valueAt(index);
-
-                    if(checked){
-                        // If the current item is checked
-                        int key = clickedItemPositions.keyAt(index);
-                        System.out.println("Item selected to add to cart");
-
-                        CartItem cartItem = new CartItem(
-                                GuestEntity.chefsListForGuestArrayList.get(position).getFullName(),
-                                GuestEntity.chefsListForGuestArrayList.get(position).getuID(),
-                                GuestEntity.guestProfile.getfname() + " " + GuestEntity.guestProfile.getlname(),
-                                UserInfo.getuID(),
-                                GuestEntity.chefsListForGuestArrayList.get(position).getFullAddress(),
-                                1,
-                                GuestEntity.guestItemArrayList.get(key).getitemName(),
-                                GuestEntity.guestProfile.getPhoneNumber(),
-                                GuestEntity.guestItemArrayList.get(key).getItemPrice(),
-                                getString(R.string.dinnerPickUpTime),
-                                String.valueOf(GuestEntity.guestItemArrayList.get(key).getItemPrice())
-                        );
-
-                        GuestEntity.cartItemArrayList.add(cartItem);
-                        toast = true;
-                    }
-                }
-                if(toast)
+                mCollection.mGuestActivityFunctions.AddItemToCart(clickedItemPositions, position);
+                if(GuestEntity.guestItemArrayList.size() != 0)
                 {
                     Toast.makeText(getContext(), "Item(s) added to cart", Toast.LENGTH_SHORT).show();
                 }

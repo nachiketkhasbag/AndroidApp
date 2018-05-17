@@ -35,7 +35,7 @@ public class ForgotPassword extends AppCompatActivity {
                 if (errorCode.compareTo("VALID_INPUT") != 0)
                 {
                     // Write your code here
-                    debugClass.DebugPrint("InForgotPassword", errorCode);
+//                    debugClass.DebugPrint("InForgotPassword", errorCode);
                     Toast.makeText(getApplicationContext(),"Invalid Input",Toast.LENGTH_LONG).show();
                 }
                 else

@@ -1,7 +1,6 @@
 package com.khasna.cooker.ChefActivityFragments;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,17 +12,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
-import com.khasna.cooker.Common.FireBaseAuthClass;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.ProcessDialogBox;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.khasna.cooker.Common.UserInfo;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.UserProfileChangeRequest;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by nachiket on 4/24/2017.
@@ -31,7 +25,6 @@ import com.google.firebase.database.ValueEventListener;
 
 public class FragmentUpdateAccountChef extends Fragment {
     View mView;
-    DatabaseReference databaseRef;
     Button buttonUpdateChefProfile;
     Button buttonChefChangePassword;
     EditText editTextUpdateChefEmailAddress;
@@ -44,20 +37,24 @@ public class FragmentUpdateAccountChef extends Fragment {
     EditText editTextUpdatePhoneNumber;
     Fragment mActiveFragment;
     FragmentManager mActiveFragmentManager;
-    ValueEventListener valueEventListener;
     DatabaseReference mDataBaseRef;
     ChefProfile chefProfile;
     ProcessDialogBox processDialogBox;
+    Collection mCollection;
+
+    public FragmentUpdateAccountChef() {
+        mCollection = Collection.getInstance();
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_chef_update_account, container, false);
 
-        mDataBaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").
-                child(UserInfo.getuID()).child("profile");
+        mDataBaseRef = FirebaseDatabase.getInstance().getReference();
+
         mActiveFragmentManager          = getFragmentManager();
-        buttonUpdateChefProfile = (Button)mView.findViewById(R.id.buttonUpdateChefProfile);
+        buttonUpdateChefProfile         = (Button)mView.findViewById(R.id.buttonUpdateChefProfile);
         buttonChefChangePassword        = (Button)mView.findViewById(R.id.buttonChefChangePassword);
         editTextUpdateChefEmailAddress  = (EditText)mView.findViewById(R.id.editTextUpdateChefEmailAddress);
         editTextUpdateChefFName         = (EditText)mView.findViewById(R.id.editTextUpdateChefFName);
@@ -78,7 +75,7 @@ public class FragmentUpdateAccountChef extends Fragment {
 
         processDialogBox = new ProcessDialogBox(getActivity());
 
-        setKnownFields();
+        editTextUpdateChefEmailAddress.setText(mCollection.mFireBaseFunctions.getEmailID());
 
         buttonUpdateChefProfile.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -87,22 +84,22 @@ public class FragmentUpdateAccountChef extends Fragment {
                 if (errorCode.equals("VALID_INPUT")){
                     processDialogBox.ShowDialogBox();
 
-                    OnCompleteListener onCompleteListener = new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            if (task.isSuccessful()) {
-                                UpdateNewFields();
-                                Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
-                            }
-                            else
-                            {
-                                Toast.makeText(getContext(),
-                                        "This email address is already in use", Toast.LENGTH_LONG).show();
-                            }
-                            processDialogBox.DismissDialogBox();
-                        }
-                    };
-                    FireBaseAuthClass.UpdateEmail(onCompleteListener, editTextUpdateChefEmailAddress.getText().toString());
+                    mCollection.mFireBaseFunctions.UpdateEmail(
+                            editTextUpdateChefEmailAddress.getText().toString(),
+                            new Interfaces.UpdateEmailInterface() {
+                                @Override
+                                public void UpdateEmailComplete() {
+                                    UpdateNewFields();
+                                    Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
+                                    processDialogBox.DismissDialogBox();
+                                }
+
+                                @Override
+                                public void UpdateEmailFailed(String error) {
+                                    Toast.makeText(getContext(),error, Toast.LENGTH_LONG).show();
+                                    processDialogBox.DismissDialogBox();
+                                }
+                            });
                     return;
                 }
                 Toast.makeText(getContext(), errorCode, Toast.LENGTH_LONG).show();
@@ -118,11 +115,6 @@ public class FragmentUpdateAccountChef extends Fragment {
         });
 
         return mView;
-    }
-
-    public void setKnownFields(){
-        String emailAddress = UserInfo.getEmailID();
-        editTextUpdateChefEmailAddress.setText(emailAddress);
     }
 
     public String ValidateInput()
@@ -149,9 +141,10 @@ public class FragmentUpdateAccountChef extends Fragment {
 
     public void UpdateNewFields()
     {
-        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                .setDisplayName(editTextUpdateChefFName.getText().toString() + editTextUpdateChefLName.getText().toString()).build();
-        FireBaseAuthClass.UpdateProfile(profileUpdates);
+        mCollection.mFireBaseFunctions.UpdateProfileName(
+                editTextUpdateChefFName.getText().toString(),
+                editTextUpdateChefLName.getText().toString()
+        );
 
         chefProfile = new ChefProfile(editTextUpdateStreetAddress.getText().toString(),
                 editTextUpdateAptNo.getText().toString(),
@@ -161,29 +154,23 @@ public class FragmentUpdateAccountChef extends Fragment {
                 editTextUpdatePhoneNumber.getText().toString(),
                 editTextUpdateZipCode.getText().toString());
 
-        databaseRef.child("cookProfile").child(FireBaseAuthClass.GetFirebaseUser().getUid()).child("profile").
-                setValue(chefProfile, new DatabaseReference.CompletionListener() {
+        mCollection.mDataBaseFunctions.UpdateProfileAddress(
+                mDataBaseRef,
+                chefProfile,
+                new Interfaces.UpdateProfileInterface() {
+                    @Override
+                    public void UpdateProfileComplete() {
+                        ChefEntity.chefProfile = chefProfile;
+                        Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
+                    }
 
-            //Implies that the data has been committed
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null)
-                {
-                    ChefEntity.chefProfile = chefProfile;
-                    Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
-                    return;
-                }
-
-                Toast.makeText(getContext(),"There has been problem connecting to the server" +
-                                "Please try again in sometime ",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        databaseRef = FirebaseDatabase.getInstance().getReference();
+                    @Override
+                    public void UpdateProfileFailed(String error) {
+                        Toast.makeText(getContext(),"There has been problem connecting to the server" +
+                                        "Please try again in sometime ",
+                                Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(),error, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 }

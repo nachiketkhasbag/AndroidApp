@@ -78,10 +78,6 @@
             android:name="com.khasna.cooker.ChefActivityFragments.ChefActivity"
             android:label="@string/title_activity_chef"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name="com.khasna.cooker.Common.UserInformation"
-            android:label="UserInformation"
-            android:theme="@style/CookerAppThemeEntryPoint" />
     </application>
 
 </manifest>

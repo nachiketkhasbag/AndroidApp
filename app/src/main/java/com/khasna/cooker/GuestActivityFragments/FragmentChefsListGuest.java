@@ -10,16 +10,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.GuestActivityFragments.Adapters.FragmentChefsListGuestAdapter;
-import com.khasna.cooker.GuestActivityFragments.ContainerClasses.ChefsListForGuest;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -35,11 +32,10 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
     private Fragment mActiveFragment;
     private View mView;
     private int orderDay;
-    private TextView textViewOrderTime;
     RecyclerView.LayoutManager mLayoutManager;
 
-    private ValueEventListener valueEventListenerChef;
     private DatabaseReference mDataBaseRefChefs;
+    private Collection mCollection;
 
 //    String dayOfTheWeek[] =
 //    {
@@ -48,6 +44,7 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
 
     public FragmentChefsListGuest() {
         // Required empty public constructor
+        mCollection = Collection.getInstance();
     }
 
     @Override
@@ -73,38 +70,23 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
             orderDay += 1;
         }
 
-//        textViewOrderTime.setText("Currently accepting orders for " + dayOfTheWeek[orderDay]);
-
         final RecyclerView mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
         final FragmentChefsListGuestAdapter adapter = new FragmentChefsListGuestAdapter(this);
 
-        valueEventListenerChef = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                GuestEntity.chefsListForGuestArrayList.clear();
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    try{
-                        if(dataSnapshot.child(child.getKey()).child("isActive").getValue().toString().matches("true") ) {
-                            ChefsListForGuest chefsListForGuest = child.child("profile").getValue(ChefsListForGuest.class);
-                            chefsListForGuest.SetUnknownFields(dataSnapshot.child(child.getKey()).getKey());
-
-                            GuestEntity.chefsListForGuestArrayList.add(chefsListForGuest);
-                        }
+        mCollection.mGuestActivityFunctions.GetActiveChefs(
+                mDataBaseRefChefs,
+                new Interfaces.ReadActiveChefsInterface() {
+                    @Override
+                    public void ReadComplete() {
                         mCooksList.setAdapter(adapter);
                     }
-                    catch (Exception e)
-                    {
-                        System.out.println("Error retrieving chef details");
+
+                    @Override
+                    public void ReadFailed(String error) {
+                        System.out.println(error);
                     }
                 }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println(databaseError.toString());
-            }
-        };
-        mDataBaseRefChefs.addListenerForSingleValueEvent(valueEventListenerChef);
+        );
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());

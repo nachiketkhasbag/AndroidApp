@@ -12,17 +12,12 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.khasna.cooker.ChefActivityFragments.Adapters.FragmentReceivedOrdersChefAdapter;
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefReceivedOrderItem;
+import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.ProcessDialogBox;
-import com.khasna.cooker.Common.UserInfo;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 
 /**
@@ -34,8 +29,10 @@ public class FragmentReceivedOrdersChef extends Fragment implements FragmentRece
     DatabaseReference mDatabaseRef;
     RecyclerView.Adapter mAdapter;
     ProcessDialogBox mProcessDialogBox;
+    Collection mCollection;
 
     public FragmentReceivedOrdersChef() {
+        mCollection = Collection.getInstance();
     }
 
     @Nullable
@@ -58,77 +55,75 @@ public class FragmentReceivedOrdersChef extends Fragment implements FragmentRece
         mAdapter = new FragmentReceivedOrdersChefAdapter(this);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("liveOrders").
-                child(UserInfo.getuID());
-        ValueEventListener valueEventListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                getItems(dataSnapshot);
-                mProcessDialogBox.DismissDialogBox();
-            }
+                child(mCollection.mFireBaseFunctions.getuID());
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                System.out.println("Error in reading item");
-                Toast.makeText(getContext(), "Error in reading current orders", Toast.LENGTH_LONG).show();
-            }
+        mCollection.mChefActivityFunctions.GetReceivedOrders(
+                mDatabaseRef,
+                new Interfaces.ReceivedOrdersInterface() {
+                    @Override
+                    public void ReadSuccessful() {
+                        mProcessDialogBox.DismissDialogBox();
+                        recyclerView.setAdapter(mAdapter);
+                    }
 
-            private void getItems(DataSnapshot dataSnapshot)
-            {
-                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                    ChefReceivedOrderItem chefCurrentOrderItem = child.getValue(ChefReceivedOrderItem.class);
-                    chefCurrentOrderItem.setItemKey(child.getKey());
-                    ChefEntity.chefReceivedOrderItemsArrayList.add(chefCurrentOrderItem);
+                    @Override
+                    public void ReadFailed(String error) {
+                        mProcessDialogBox.DismissDialogBox();
+                        System.out.println("Error in reading item");
+                        Toast.makeText(getContext(), "Error in reading current orders", Toast.LENGTH_LONG).show();
+                        Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
+                    }
                 }
-                recyclerView.setAdapter(mAdapter);
-            }
-        };
-
-        mDatabaseRef.addListenerForSingleValueEvent(valueEventListener);
+        );
 
         return mView;
     }
 
     @Override
     public void OnAcceptOrder( int itemPosition ) {
+
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("liveOrders")
-                .child(UserInfo.getuID()).child(ChefEntity.chefReceivedOrderItemsArrayList.get(itemPosition).getItemKey())
+                .child(mCollection.mFireBaseFunctions.getuID()).child(ChefEntity.chefReceivedOrderItemsArrayList.get(itemPosition).getItemKey())
                 .child("status");
         mProcessDialogBox.ShowDialogBox();
 
-        mDatabaseRef.setValue("Accepted").addOnCompleteListener(new OnCompleteListener<Void>() {
+        mCollection.mChefActivityFunctions.SetOrderStatus(mDatabaseRef,
+                "Accepted",
+                itemPosition,
+                new Interfaces.OrderStatusInterface() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void OrderSetStatusSuccessful() {
                 mProcessDialogBox.DismissDialogBox();
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void OrderSetStatusFailed(String error) {
+                mProcessDialogBox.DismissDialogBox();
+                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
             }
         });
-        ChefEntity.chefReceivedOrderItemsArrayList.remove(itemPosition);
-        mAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void OnDeclineOrder( int itemPosition ) {
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("liveOrders")
-                .child(UserInfo.getuID()).child(ChefEntity.chefReceivedOrderItemsArrayList.get(itemPosition).getItemKey())
+                .child(mCollection.mFireBaseFunctions.getuID()).child(ChefEntity.chefReceivedOrderItemsArrayList.get(itemPosition).getItemKey())
                 .child("status");
         mProcessDialogBox.ShowDialogBox();
 
-        mDatabaseRef.setValue("Declined").addOnCompleteListener(new OnCompleteListener<Void>() {
+        mCollection.mChefActivityFunctions.SetOrderStatus(mDatabaseRef, "Declined", itemPosition, new Interfaces.OrderStatusInterface() {
             @Override
-            public void onComplete(@NonNull Task<Void> task) {
+            public void OrderSetStatusSuccessful() {
                 mProcessDialogBox.DismissDialogBox();
+                mAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void OrderSetStatusFailed(String error) {
+                mProcessDialogBox.DismissDialogBox();
+                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
             }
         });
-        ChefEntity.chefReceivedOrderItemsArrayList.remove(itemPosition);
-        mAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
     }
 }

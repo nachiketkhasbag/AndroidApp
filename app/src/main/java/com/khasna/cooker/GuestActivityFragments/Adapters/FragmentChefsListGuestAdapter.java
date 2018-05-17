@@ -70,7 +70,6 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
                 mOnClickListener.OnClick(itemPosition);
             }
         });
-
     }
 
     @Override
