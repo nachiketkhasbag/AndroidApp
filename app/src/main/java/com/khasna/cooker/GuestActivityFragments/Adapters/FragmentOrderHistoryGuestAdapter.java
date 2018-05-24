@@ -32,10 +32,10 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
 
         public ViewHolder(View v) {
             super(v);
-            textViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
-            Quantity = (TextView)v.findViewById(R.id.Quantity);
+            textViewItemName = (TextView)v.findViewById(R.id.textViewChefNameLabel);
+            //Quantity = (TextView)v.findViewById(R.id.Quantity);
             ChefName = (TextView)v.findViewById(R.id.ChefName);
-            textViewItemPrice = (TextView)v.findViewById(R.id.textViewItemPrice);
+            textViewItemPrice = (TextView)v.findViewById(R.id.textViewItemPriceLabel);
 
         }
     }
@@ -60,9 +60,9 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     public void onBindViewHolder(FragmentOrderHistoryGuestAdapter.ViewHolder holder, int position) {
         OrderHistoryGuestItem orderItem = GuestEntity.orderHistoryGuestItemsArrayList.get(position);
         holder.textViewItemName.setText(orderItem.getItemName());
-        holder.Quantity.setText(String.valueOf(orderItem.getItemQuantity()));
+        //holder.Quantity.setText(String.valueOf(orderItem.getItemQuantity()));
         holder.ChefName.setText(orderItem.getChefName());
-        holder.textViewItemPrice.setText(orderItem.getPrice());
+        holder.textViewItemPrice.setText(orderItem.getTotalPrice());
 
         final int itemPosition = holder.getAdapterPosition();
 

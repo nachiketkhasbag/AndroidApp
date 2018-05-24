@@ -39,7 +39,7 @@ public class FragmentReceivedOrdersChefAdapter extends RecyclerView.Adapter<Frag
             super(v);
             mTextViewGuestName = (TextView)v.findViewById(R.id.textViewGuestName);
             mTextViewGuestPhoneNumber = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
-            mTextViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
+            mTextViewItemName = (TextView)v.findViewById(R.id.textViewChefNameLabel);
             mTextViewItemQuantity = (TextView)v.findViewById(R.id.textViewItemQuantity);
             mTextViewPickUpTime = (TextView)v.findViewById(R.id.textViewPickUpTime);
             mButtonAcceptOrder = (Button)v.findViewById(R.id.buttonAcceptOrder);

@@ -241,32 +241,6 @@ public class GuestActivityFunctions<G extends Collection> {
         return true;
     }
 
-    public void ReadGuestHistoryItemData(
-            DatabaseReference databaseReference,
-            final Interfaces.ReadGuestHistoryInterface readGuestHistoryInterface)
-    {
-        mGuestActivityFunctionsGeneric.mDataBaseFunctions.ReadDataBase(
-                databaseReference,
-                null,
-                new Interfaces.DataBaseReadInterface() {
-                    @Override
-                    public void ReadSucceeded(DataSnapshot dataSnapshot) {
-                        GuestEntity.orderHistoryGuestItemDetails.clear();
-                        for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            OrderHistoryGuestItemDetails orderHistoryGuestItemDetails = child.getValue(OrderHistoryGuestItemDetails.class);
-                            GuestEntity.orderHistoryGuestItemDetails.add(orderHistoryGuestItemDetails);
-                        }
-                        readGuestHistoryInterface.ReadComplete();
-                    }
-
-                    @Override
-                    public void ReadFailed(DatabaseError databaseError) {
-                        readGuestHistoryInterface.ReadFailed(databaseError.toString());
-                    }
-                }
-        );
-    }
-
     public void ReadGuestHistoryData(
             DatabaseReference databaseReference,
             final Interfaces.ReadGuestHistoryInterface readGuestHistoryInterface )

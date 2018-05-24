@@ -6,9 +6,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewManager;
+import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.khasna.cooker.Common.Interfaces;
@@ -18,6 +24,8 @@ import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import static android.content.Context.LAYOUT_INFLATER_SERVICE;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -41,7 +49,7 @@ public class FragmentOrderHistoryGuest extends Fragment{
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View orderHistory = inflater.inflate(R.layout.fragment_order_history, container, false);
+        final View orderHistory = inflater.inflate(R.layout.fragment_order_history, container, false);
 
         orderHistoryLRecyclerView = (RecyclerView)orderHistory.findViewById(R.id.guest_order_history);
 
@@ -58,33 +66,15 @@ public class FragmentOrderHistoryGuest extends Fragment{
 
         FragmentOrderHistoryGuestAdapter.onClickListener onClickListener = new FragmentOrderHistoryGuestAdapter.onClickListener() {
             @Override
-            public void onClick(int position) {
+            public void onClick(final int position) {
                 Toast.makeText(getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
-                DatabaseReference itemDatabaseRef = FirebaseDatabase.getInstance().getReference("userProfile").
-                        child(mCollection.mFireBaseFunctions.getuID()).child("orderHistory").
-                        child(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getChefName());
 
-                processDialogBox.ShowDialogBox();
-
-                mCollection.mGuestActivityFunctions.ReadGuestHistoryItemData(
-                        itemDatabaseRef,
-                        new Interfaces.ReadGuestHistoryInterface() {
-                            @Override
-                            public void ReadComplete() {
-                                Toast.makeText(getContext(), "Items found", Toast.LENGTH_SHORT).show();
-                                mActiveFragment = new FragmentOrderHistoryEntryGuest();
-                                //mActiveFragmentManager.beginTransaction().addToBackStack("OrderHistory").replace(R.id.guest_page, mActiveFragment).commit();
-                                processDialogBox.DismissDialogBox();
-                            }
-
-                            @Override
-                            public void ReadFailed(String error) {
-                                Toast.makeText(getContext(), "Database call failed", Toast.LENGTH_LONG).show();
-                                Toast.makeText(getContext(), error, Toast.LENGTH_LONG).show();
-                                processDialogBox.DismissDialogBox();
-                            }
-                        }
-                );
+                Bundle bundle = new Bundle();
+                bundle.putInt("position", position);
+                mActiveFragment = new FragmentOrderHistoryEntryGuest();
+                mActiveFragment.setArguments(bundle);
+                mActiveFragmentManager.beginTransaction().addToBackStack("OrderHistory").replace(R.id.guest_page, mActiveFragment).commit();
+                //ShowPopup(orderHistory, position);
             }
         };
 

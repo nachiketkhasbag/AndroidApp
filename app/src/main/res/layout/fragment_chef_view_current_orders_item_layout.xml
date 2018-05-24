@@ -37,7 +37,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewGuestNameLabel" />
 
     <TextView
-        android:id="@+id/textViewItemNameLabel"
+        android:id="@+id/textViewChefAddressLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
@@ -47,7 +47,7 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewGuestPhoneNumberLabel" />
 
     <TextView
-        android:id="@+id/textViewItemName"
+        android:id="@+id/textViewChefNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
@@ -64,7 +64,7 @@
         android:layout_marginTop="8dp"
         android:text="Item Quantity:"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemNameLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddressLabel" />
 
     <Button
         android:id="@+id/buttonAcceptOrder"
@@ -112,7 +112,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="TextView"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefNameLabel"
         android:layout_marginEnd="32dp"
         app:layout_constraintRight_toRightOf="parent" />
 

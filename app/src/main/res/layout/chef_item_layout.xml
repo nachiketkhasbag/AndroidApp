@@ -6,7 +6,7 @@
     android:background="@drawable/separator">
 
     <TextView
-        android:id="@+id/textViewItemIngredients"
+        android:id="@+id/textViewItemOrderedLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -18,13 +18,13 @@
         android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemDescription"
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddressLabel"
         app:layout_constraintVertical_bias="0.0"
         app:layout_constraintRight_toLeftOf="@+id/switchItemAvailable"
         android:layout_marginRight="8dp" />
 
     <TextView
-        android:id="@+id/textViewItemName"
+        android:id="@+id/textViewChefNameLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -40,7 +40,7 @@
         android:layout_marginRight="8dp" />
 
     <TextView
-        android:id="@+id/textViewItemDescription"
+        android:id="@+id/textViewChefAddressLabel"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginRight="8dp"
@@ -49,12 +49,12 @@
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:text="Item Description"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemName"
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefNameLabel"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toLeftOf="parent" />
 
     <TextView
-        android:id="@+id/textViewItemPrice"
+        android:id="@+id/textViewItemPriceLabel"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -78,7 +78,7 @@
         android:layout_marginTop="16dp"
         android:text="$"
         android:textSize="18sp"
-        app:layout_constraintRight_toLeftOf="@+id/textViewItemPrice"
+        app:layout_constraintRight_toLeftOf="@+id/textViewItemPriceLabel"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Switch
@@ -94,7 +94,7 @@
         android:textOn="Selling"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemDescription"
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddressLabel"
         app:layout_constraintVertical_bias="0.0" />
 
 </android.support.constraint.ConstraintLayout>

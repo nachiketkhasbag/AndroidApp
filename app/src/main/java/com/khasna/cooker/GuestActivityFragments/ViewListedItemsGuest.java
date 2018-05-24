@@ -30,7 +30,6 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
 
     View mView;
 
-    private ValueEventListener valueEventListener;
     private DatabaseReference mDataBaseRef;
     private Button buttonAddItemToCart;
     private SparseBooleanArray clickedItemPositions = new SparseBooleanArray();

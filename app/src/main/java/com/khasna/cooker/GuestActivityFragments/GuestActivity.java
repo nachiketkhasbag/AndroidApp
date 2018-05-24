@@ -59,7 +59,6 @@ public class GuestActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_guest);
-        final DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
         mActiveFragmentManager = getSupportFragmentManager();
 
         mCollection.mGuestActivityFunctions.PushToken(mDataBaseRefGuest);
@@ -201,7 +200,6 @@ public class GuestActivity extends AppCompatActivity
         mActiveFragmentManager = getSupportFragmentManager();
         if(mActiveFragmentManager.getBackStackEntryCount() > 0 )
         {
-            setTitle(R.string.viewChefs);
             super.onBackPressed();
         }
     }
@@ -215,7 +213,6 @@ public class GuestActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        setupNavMenu();
     }
 
     @Override

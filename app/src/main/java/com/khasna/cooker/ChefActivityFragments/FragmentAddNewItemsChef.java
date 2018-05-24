@@ -42,10 +42,10 @@ public class FragmentAddNewItemsChef extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_chef_add_new_item, container, false);
         buttonAddNewItem = (Button)mView.findViewById(R.id.buttonAddNewItem);
-        editTextItemName = (EditText)mView.findViewById(R.id.editTextItemName);
-        editTextItemDescription = (EditText)mView.findViewById(R.id.editTextItemDescription);
-        editTextItemIngredients = (EditText)mView.findViewById(R.id.editTextItemIngredients);
-        editTextItemPrice = (EditText)mView.findViewById(R.id.editTextItemPrice);
+        editTextItemName = (EditText)mView.findViewById(R.id.textViewChefName);
+        editTextItemDescription = (EditText)mView.findViewById(R.id.textViewChefAddress);
+        editTextItemIngredients = (EditText)mView.findViewById(R.id.textViewItemOrdered);
+        editTextItemPrice = (EditText)mView.findViewById(R.id.textViewPrice);
         mDataBaseRef = FirebaseDatabase.getInstance().getReference().child("cookProfile").child(mCollection.mFireBaseFunctions.getuID());
 
         processDialogBox = new ProcessDialogBox(getActivity());

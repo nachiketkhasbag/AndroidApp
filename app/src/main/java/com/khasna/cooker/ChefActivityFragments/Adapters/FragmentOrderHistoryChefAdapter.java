@@ -40,7 +40,7 @@ public class FragmentOrderHistoryChefAdapter extends RecyclerView.Adapter<Fragme
             super(v);
             textViewGuestName = (TextView)v.findViewById(R.id.textViewGuestName);
             textViewGuestPhoneNumber = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
-            textViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
+            textViewItemName = (TextView)v.findViewById(R.id.textViewChefNameLabel);
             textViewItemQuantity = (TextView)v.findViewById(R.id.textViewItemQuantity);
             textViewOrderTime = (TextView)v.findViewById(R.id.textViewOrderTime);
             textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);

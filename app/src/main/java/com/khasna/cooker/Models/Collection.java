@@ -1,13 +1,5 @@
 package com.khasna.cooker.Models;
 
-import android.os.Parcel;
-import android.os.Parcelable;
-
-import com.google.gson.Gson;
-import com.khasna.cooker.ChefActivityFragments.ChefActivity;
-
-import java.io.Serializable;
-
 /**
  * Created by nachiket on 4/27/2018.
  */

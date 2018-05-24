@@ -5,20 +5,29 @@ public class OrderHistoryGuestItem {
     String itemName;
     Long itemQuantity;
     String orderTime;
-    String price;
+    String totalPrice;
     String status;
     String chefName;
-
-    public OrderHistoryGuestItem(String itemName, Long itemQuantity, String orderTime, String price, String status, String chefName) {
-        this.itemName = itemName;
-        this.itemQuantity = itemQuantity;
-        this.orderTime = orderTime;
-        this.price = price;
-        this.status = status;
-        this.chefName = chefName;
-    }
+    String chefAddress;
+    String pickUpTime;
 
     public OrderHistoryGuestItem() {
+    }
+
+    public String getChefAddress() {
+        return chefAddress;
+    }
+
+    public String getPickUpTime() {
+        return pickUpTime;
+    }
+
+    public void setPickUpTime(String pickUpTime) {
+        this.pickUpTime = pickUpTime;
+    }
+
+    public void setChefAddress(String chefAddress) {
+        this.chefAddress = chefAddress;
     }
 
     public String getItemName() {
@@ -26,7 +35,6 @@ public class OrderHistoryGuestItem {
     }
 
     public void setItemName(String itemName) {
-        System.out.println("ItemSet");
         this.itemName = itemName;
     }
 
@@ -35,7 +43,6 @@ public class OrderHistoryGuestItem {
     }
 
     public void setItemQuantity(Long itemQuantity) {
-        System.out.println("Quantity");
         this.itemQuantity = itemQuantity;
     }
 
@@ -44,18 +51,15 @@ public class OrderHistoryGuestItem {
     }
 
     public void setOrderTime(String orderTime) {
-        System.out.println("Ordertime");
         this.orderTime = orderTime;
     }
 
-    public String getPrice() {
-        return price;
+    public String getTotalPrice() {
+        return totalPrice;
     }
 
-    public void setPrice(String price) {
-        System.out.println("Price");
-
-        this.price = price;
+    public void setTotalPrice(String totalPrice) {
+        this.totalPrice = totalPrice;
     }
 
     public String getStatus() {
@@ -63,8 +67,6 @@ public class OrderHistoryGuestItem {
     }
 
     public void setStatus(String status) {
-
-        System.out.println("Status");
         this.status = status;
     }
 
@@ -73,8 +75,6 @@ public class OrderHistoryGuestItem {
     }
 
     public void setChefName(String chefName) {
-        System.out.println("ChefName");
-
         this.chefName = chefName;
     }
 

@@ -54,10 +54,10 @@ public class FragmentViewListedItemsChefAdapter extends BaseAdapter {
 
         View itemDetails = mInflater.inflate(R.layout.chef_item_layout, parent, false);
 
-        TextView textViewItemName = (TextView) itemDetails.findViewById(R.id.textViewItemName);
-        TextView textViewItemDescription = (TextView) itemDetails.findViewById(R.id.textViewItemDescription);
-        TextView textViewItemIngredients = (TextView) itemDetails.findViewById(R.id.textViewItemIngredients);
-        TextView textViewItemPrice = (TextView) itemDetails.findViewById(R.id.textViewItemPrice);
+        TextView textViewItemName = (TextView) itemDetails.findViewById(R.id.textViewChefNameLabel);
+        TextView textViewItemDescription = (TextView) itemDetails.findViewById(R.id.textViewChefAddressLabel);
+        TextView textViewItemIngredients = (TextView) itemDetails.findViewById(R.id.textViewItemOrderedLabel);
+        TextView textViewItemPrice = (TextView) itemDetails.findViewById(R.id.textViewItemPriceLabel);
         mSwitchItemAvailable = (Switch) itemDetails.findViewById(R.id.switchItemAvailable);
 
         textViewItemName.setText(ChefEntity.ChefItemArrayList.get(position).getitemName());
