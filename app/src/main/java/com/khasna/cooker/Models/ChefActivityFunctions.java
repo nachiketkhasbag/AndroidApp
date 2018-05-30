@@ -13,6 +13,12 @@ import com.khasna.cooker.ChefActivityFragments.FragmentAddNewItemsChef;
 import com.khasna.cooker.Common.DebugClass;
 import com.khasna.cooker.Common.Interfaces;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+
 /**
  * Created by nachiket on 5/2/2018.
  */
@@ -158,6 +164,27 @@ public class ChefActivityFunctions<G extends Collection> {
                                 if (!orderHistoryChefItem.getStatus().equals("pending")) {
                                     ChefEntity.arrayListOrderHistoryChefItem.add(orderHistoryChefItem);
                                 }
+
+                                Collections.sort(ChefEntity.arrayListOrderHistoryChefItem, new Comparator<OrderHistoryChefItem>() {
+                                    @Override
+                                    public int compare(OrderHistoryChefItem o1, OrderHistoryChefItem o2) {
+                                        Date date1;
+                                        Date date2;
+                                        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss");
+                                        try {
+                                            date1 = sdf.parse(o1.getOrderTime());
+                                            date2 = sdf.parse(o2.getOrderTime());
+
+                                            if( date1.compareTo(date2) <= 0 )
+                                            {
+                                                return 1;
+                                            }
+                                        } catch (ParseException e) {
+                                            e.printStackTrace();
+                                        }
+                                        return -1;
+                                    }
+                                });
                             }
                         }
                         pendingItemsReadInterface.ReadSuccessful();
