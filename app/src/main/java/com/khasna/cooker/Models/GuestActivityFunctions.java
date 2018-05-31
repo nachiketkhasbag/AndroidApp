@@ -18,6 +18,7 @@ import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGue
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItemDetails;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -199,7 +200,10 @@ public class GuestActivityFunctions<G extends Collection> {
     {
         int index = 0;
         Date trialTime = new Date();
-        String time = trialTime.toString();
+        SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM yyyy hh:mm:ss a");
+        sdf.format(trialTime);
+        String time = sdf.format(trialTime);
+
         while( index < GuestEntity.cartItemArrayList.size())
         {
             CartItem cartItem = GuestEntity.cartItemArrayList.get(index);

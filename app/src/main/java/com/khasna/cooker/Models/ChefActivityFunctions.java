@@ -170,7 +170,7 @@ public class ChefActivityFunctions<G extends Collection> {
                                     public int compare(OrderHistoryChefItem o1, OrderHistoryChefItem o2) {
                                         Date date1;
                                         Date date2;
-                                        SimpleDateFormat sdf = new SimpleDateFormat("EEE MMM dd hh:mm:ss");
+                                        SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM yyyy hh:mm:ss a");
                                         try {
                                             date1 = sdf.parse(o1.getOrderTime());
                                             date2 = sdf.parse(o2.getOrderTime());
