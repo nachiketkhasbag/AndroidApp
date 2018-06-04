@@ -6,9 +6,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.khasna.cooker.ChefActivityFragments.ChefEntity;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItem;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 import com.khasna.cooker.R;
+
+import java.util.regex.Pattern;
 
 /**
  * Created by nachiket on 9/23/2017.
@@ -26,16 +29,20 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public TextView textViewItemName;
-        public TextView Quantity;
-        public TextView ChefName;
-        public TextView textViewItemPrice;
+        public TextView textViewQuantity;
+        public TextView textViewChefName;
+        public TextView textViewPrice;
+        public TextView textViewStatus;
+        public TextView textViewOrderDate;
 
         public ViewHolder(View v) {
             super(v);
-            textViewItemName = (TextView)v.findViewById(R.id.textViewChefNameLabel);
-            //Quantity = (TextView)v.findViewById(R.id.Quantity);
-            ChefName = (TextView)v.findViewById(R.id.ChefName);
-            textViewItemPrice = (TextView)v.findViewById(R.id.textViewItemPriceLabel);
+            textViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
+            textViewQuantity = (TextView)v.findViewById(R.id.textViewQuantity);
+            textViewChefName = (TextView)v.findViewById(R.id.textViewChefName);
+            textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);
+            textViewStatus = (TextView)v.findViewById(R.id.textViewStatus);
+            textViewOrderDate = (TextView)v.findViewById(R.id.textViewOrderDate);
 
         }
     }
@@ -60,9 +67,20 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     public void onBindViewHolder(FragmentOrderHistoryGuestAdapter.ViewHolder holder, int position) {
         OrderHistoryGuestItem orderItem = GuestEntity.orderHistoryGuestItemsArrayList.get(position);
         holder.textViewItemName.setText(orderItem.getItemName());
-        //holder.Quantity.setText(String.valueOf(orderItem.getItemQuantity()));
-        holder.ChefName.setText(orderItem.getChefName());
-        holder.textViewItemPrice.setText(orderItem.getTotalPrice());
+        String quantity = "Number of items: " + String.valueOf(orderItem.getItemQuantity());
+        holder.textViewQuantity.setText(quantity);
+        holder.textViewChefName.setText(orderItem.getChefName());
+        holder.textViewPrice.setText(orderItem.getTotalPrice());
+        holder.textViewStatus.setText(orderItem.getStatus());
+
+        Pattern pattern = Pattern.compile("\\s");
+
+        String date = orderItem.getOrderTime();
+        String[] date1 = pattern.split(date);
+
+        String displayDate = date1[0] + " " + date1[1] + " " + date1[2] + " " + date1[3];
+
+        holder.textViewOrderDate.setText(displayDate);
 
         final int itemPosition = holder.getAdapterPosition();
 

@@ -1,6 +1,5 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/order_history_guest_order_details_popup"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -12,7 +11,6 @@
         android:id="@+id/textViewChefNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="Chef Name:"
         android:textStyle="bold"
@@ -22,7 +20,7 @@
 
     <TextView
         android:id="@+id/textViewChefName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="16dp"
@@ -37,7 +35,6 @@
         android:id="@+id/textViewChefAddressLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
         android:layout_marginStart="16dp"
         android:text="Chef Address"
         android:textStyle="bold"
@@ -47,7 +44,7 @@
 
     <TextView
         android:id="@+id/textViewChefAddress"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -60,10 +57,32 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewChefName" />
 
     <TextView
+        android:id="@+id/textViewChefPhoneNumberLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="Phone Number"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewChefPhoneNumber" />
+
+    <TextView
+        android:id="@+id/textViewChefPhoneNumber"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textViewItemOrdered"
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddress" />
+
+    <TextView
         android:id="@+id/textViewItemOrderedLabel"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:text="Item Ordered"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -71,7 +90,7 @@
 
     <TextView
         android:id="@+id/textViewItemOrdered"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -80,7 +99,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textViewItemQuantity"
-        app:layout_constraintTop_toBottomOf="@+id/textViewChefAddress" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewChefPhoneNumber" />
 
     <TextView
         android:id="@+id/textViewItemQuantityLabel"
@@ -94,7 +113,7 @@
 
     <TextView
         android:id="@+id/textViewItemQuantity"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -116,7 +135,7 @@
 
     <TextView
         android:id="@+id/textViewOrderTime"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -130,7 +149,7 @@
         android:id="@+id/textViewPickUpTimeLabel"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
         android:text="Pickup time"
         android:textStyle="bold"
         app:layout_constraintLeft_toLeftOf="parent"
@@ -138,7 +157,29 @@
 
     <TextView
         android:id="@+id/textViewPickUpTime"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:ems="10"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/textViewStatus"
+        app:layout_constraintTop_toBottomOf="@+id/textViewOrderTime" />
+
+    <TextView
+        android:id="@+id/textViewStatusLabel"
         android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:text="Status"
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewStatus" />
+
+    <TextView
+        android:id="@+id/textViewStatus"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -146,7 +187,7 @@
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/textViewPrice"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOrderTime" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewPickUpTime" />
 
     <TextView
         android:id="@+id/textViewItemPriceLabel"
@@ -162,14 +203,14 @@
 
     <TextView
         android:id="@+id/textViewPrice"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:ems="10"
         android:textSize="14sp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewPickUpTime" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewStatus" />
 
     <View
         android:id="@+id/divider"

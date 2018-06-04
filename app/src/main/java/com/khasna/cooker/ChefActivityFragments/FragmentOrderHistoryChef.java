@@ -57,32 +57,36 @@ public class FragmentOrderHistoryChef extends Fragment {
             @Override
             public void onClick(int position) {
                 Toast.makeText(getContext(), "Item clicked", Toast.LENGTH_LONG).show();
-                DatabaseReference itemDatabaseRef = FirebaseDatabase.getInstance().getReference();
-                processDialogBox.ShowDialogBox();
 
-                mCollection.mDataBaseFunctions.ReadDataBase(
-                        itemDatabaseRef,
-                        "cookProfile/" + mCollection.mFireBaseFunctions.getuID() + "/orderHistory",
-                        new Interfaces.DataBaseReadInterface() {
-                            @Override
-                            public void ReadSucceeded(DataSnapshot dataSnapshot) {
-                                ChefEntity.arrayListOrderHistoryChefItemDetails.clear();
-                                for (DataSnapshot child : dataSnapshot.getChildren()) {
-                                    OrderHistoryChefItemDetails orderHistoryChefItemDetails = child.getValue(OrderHistoryChefItemDetails.class);
-                                    ChefEntity.arrayListOrderHistoryChefItemDetails.add(orderHistoryChefItemDetails);
-                                }
-                                Toast.makeText(getContext(), "Items found", Toast.LENGTH_SHORT).show();
-                                mActiveFragment = new FragmentOrderHistoryEntryChef();
-                                mActiveFragmentManager.beginTransaction().addToBackStack("OrderHistory").replace(R.id.chefs_page, mActiveFragment).commit();
-                                processDialogBox.DismissDialogBox();
-                            }
+                Bundle bundle = new Bundle();
+                bundle.putInt("position", position );
+                mActiveFragment = new FragmentOrderHistoryEntryChef();
+                mActiveFragment.setArguments(bundle);
+                mActiveFragmentManager.beginTransaction().addToBackStack("OrderHistory").replace(R.id.chefs_page, mActiveFragment).commit();
 
-                            @Override
-                            public void ReadFailed(DatabaseError databaseError) {
-                                Toast.makeText(getContext(), "Database call failed", Toast.LENGTH_LONG).show();
-                                processDialogBox.DismissDialogBox();
-                            }
-                        });
+//                mCollection.mDataBaseFunctions.ReadDataBase(
+//                        itemDatabaseRef,
+//                        "cookProfile/" + mCollection.mFireBaseFunctions.getuID() + "/orderHistory",
+//                        new Interfaces.DataBaseReadInterface() {
+//                            @Override
+//                            public void ReadSucceeded(DataSnapshot dataSnapshot) {
+//                                ChefEntity.arrayListOrderHistoryChefItemDetails.clear();
+//                                for (DataSnapshot child : dataSnapshot.getChildren()) {
+//                                    OrderHistoryChefItemDetails orderHistoryChefItemDetails = child.getValue(OrderHistoryChefItemDetails.class);
+//                                    ChefEntity.arrayListOrderHistoryChefItemDetails.add(orderHistoryChefItemDetails);
+//                                }
+//                                Toast.makeText(getContext(), "Items found", Toast.LENGTH_SHORT).show();
+//                                mActiveFragment = new FragmentOrderHistoryEntryChef();
+//                                mActiveFragmentManager.beginTransaction().addToBackStack("OrderHistory").replace(R.id.chefs_page, mActiveFragment).commit();
+//                                processDialogBox.DismissDialogBox();
+//                            }
+//
+//                            @Override
+//                            public void ReadFailed(DatabaseError databaseError) {
+//                                Toast.makeText(getContext(), "Database call failed", Toast.LENGTH_LONG).show();
+//                                processDialogBox.DismissDialogBox();
+//                            }
+//                        });
             }
         };
 

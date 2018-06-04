@@ -24,6 +24,8 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
     public TextView textViewOrderTime;
     public TextView textViewPickupTime;
     public TextView textViewPrice;
+    public TextView textViewChefPhoneNumber;
+    public TextView textViewStatus;
 
     public FragmentOrderHistoryEntryGuest() {
     }
@@ -40,6 +42,8 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
         textViewOrderTime = mView.findViewById(R.id.textViewOrderTime);
         textViewPickupTime = mView.findViewById(R.id.textViewPickUpTime);
         textViewPrice = mView.findViewById(R.id.textViewPrice);
+        textViewChefPhoneNumber = mView.findViewById(R.id.textViewChefPhoneNumber);
+        textViewStatus = mView.findViewById(R.id.textViewStatus);
 
         position = getArguments().getInt("position");
         textViewChefName.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getChefName());
@@ -49,6 +53,8 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
         textViewOrderTime.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getOrderTime());
         textViewPrice.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getTotalPrice());
         textViewPickupTime.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getPickUpTime());
+        textViewChefPhoneNumber.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getChefPhoneNumber());
+        textViewStatus.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getStatus());
 
         return mView;
     }

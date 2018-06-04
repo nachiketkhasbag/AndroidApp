@@ -10,6 +10,7 @@ import com.khasna.cooker.ChefActivityFragments.ChefEntity;
 import com.khasna.cooker.R;
 
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 
 
 /**
@@ -29,20 +30,20 @@ public class FragmentOrderHistoryChefAdapter extends RecyclerView.Adapter<Fragme
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public TextView textViewGuestName;
-        public TextView textViewGuestPhoneNumber;
+//        public TextView textViewGuestPhoneNumber;
         public TextView textViewItemName;
         public TextView textViewItemQuantity;
-        public TextView textViewOrderTime;
+        public TextView textViewOrderDate;
         public TextView textViewPrice;
         public TextView textViewStatus;
 
         public ViewHolder(View v) {
             super(v);
             textViewGuestName = (TextView)v.findViewById(R.id.textViewGuestName);
-            textViewGuestPhoneNumber = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
-            textViewItemName = (TextView)v.findViewById(R.id.textViewChefNameLabel);
+//            textViewGuestPhoneNumber = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
+            textViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
             textViewItemQuantity = (TextView)v.findViewById(R.id.textViewItemQuantity);
-            textViewOrderTime = (TextView)v.findViewById(R.id.textViewOrderTime);
+            textViewOrderDate = (TextView)v.findViewById(R.id.textViewOrderDate);
             textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);
             textViewStatus = (TextView)v.findViewById(R.id.textViewStatus);
         }
@@ -69,17 +70,24 @@ public class FragmentOrderHistoryChefAdapter extends RecyclerView.Adapter<Fragme
         holder.textViewGuestName.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getGuestName());
         String orderCount = String.format("%s", ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemQuantity()) + " " + "Order(s)";
 
-        holder.textViewGuestPhoneNumber.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getGuestPhoneNumber());
+//        holder.textViewGuestPhoneNumber.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getGuestPhoneNumber());
         holder.textViewItemName.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemName());
         holder.textViewItemQuantity.setText(orderCount);
-        holder.textViewOrderTime.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getOrderTime());
+
+        Pattern pattern = Pattern.compile("\\s");
+
+        String date = ChefEntity.arrayListOrderHistoryChefItem.get(position).getOrderTime();
+        String[] date1 = pattern.split(date);
+
+        String displayDate = date1[0] + " " + date1[1] + " " + date1[2] + " " + date1[3];
+        holder.textViewOrderDate.setText(displayDate);
 
         BigDecimal itemCount = new BigDecimal(ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemQuantity());
         BigDecimal itemPrice = new BigDecimal(ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemPrice());
         BigDecimal totalPrice;
         totalPrice = itemCount.multiply(itemPrice);
 
-        holder.textViewPrice.setText("Total price  = $" + totalPrice);
+        holder.textViewPrice.setText(totalPrice.toString());
         holder.textViewStatus.setText("Status:" + ChefEntity.arrayListOrderHistoryChefItem.get(position).getStatus());
 
         final int itemPosition = holder.getAdapterPosition();
