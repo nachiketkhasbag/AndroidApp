@@ -102,6 +102,10 @@ public class GuestActivityFunctions<G extends Collection> {
                         GuestEntity.chefsListForGuestArrayList.clear();
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
                             try{
+                                //check to see if the chef is an debug chef
+                                if(child.child("debug").exists())
+                                    continue;       //skip this chef.
+
                                 if(dataSnapshot.child(child.getKey()).child("isActive").getValue().toString().matches("true") ) {
                                     ChefsListForGuest chefsListForGuest = child.child("profile").getValue(ChefsListForGuest.class);
                                     chefsListForGuest.SetUnknownFields(dataSnapshot.child(child.getKey()).getKey());
