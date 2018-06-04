@@ -67,14 +67,13 @@ public class FragmentOrderHistoryGuest extends Fragment{
         FragmentOrderHistoryGuestAdapter.onClickListener onClickListener = new FragmentOrderHistoryGuestAdapter.onClickListener() {
             @Override
             public void onClick(final int position) {
-                Toast.makeText(getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getContext(), "Item clicked", Toast.LENGTH_SHORT).show();
 
                 Bundle bundle = new Bundle();
                 bundle.putInt("position", position);
                 mActiveFragment = new FragmentOrderHistoryEntryGuest();
                 mActiveFragment.setArguments(bundle);
                 mActiveFragmentManager.beginTransaction().addToBackStack("OrderHistory").replace(R.id.guest_page, mActiveFragment).commit();
-                //ShowPopup(orderHistory, position);
             }
         };
 

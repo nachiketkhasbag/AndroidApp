@@ -27,9 +27,8 @@ public class FragmentOrderHistoryEntryChef extends Fragment {
     TextView textViewOrderTime;
     TextView textViewPickUpTime;
     TextView textViewPrice;
-    RecyclerView mRecyclerView;
-    RecyclerView.LayoutManager mLayoutManager;
-    RecyclerView.Adapter mAdapter;
+    TextView textViewGuestPhoneNumber;
+    TextView textViewStatus;
 
     public FragmentOrderHistoryEntryChef() {
     }
@@ -47,6 +46,8 @@ public class FragmentOrderHistoryEntryChef extends Fragment {
         textViewOrderTime = mView.findViewById(R.id.textViewOrderTime);
         textViewPickUpTime = mView.findViewById(R.id.textViewPickUpTime);
         textViewPrice = mView.findViewById(R.id.textViewPrice);
+        textViewGuestPhoneNumber = mView.findViewById(R.id.textViewGuestPhoneNumber);
+        textViewStatus = mView.findViewById(R.id.textViewStatus);
 
         int position = getArguments().getInt("position");
         textViewGuestName.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getGuestName());
@@ -57,6 +58,8 @@ public class FragmentOrderHistoryEntryChef extends Fragment {
         textViewOrderTime.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getOrderTime());
         textViewPickUpTime.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getPickUpTime());
         textViewPrice.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getTotalPrice());
+        textViewGuestPhoneNumber.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getGuestPhoneNumber());
+        textViewStatus.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getStatus());
 
         // use a linear layout manager
 //        mLayoutManager = new LinearLayoutManager(getContext());

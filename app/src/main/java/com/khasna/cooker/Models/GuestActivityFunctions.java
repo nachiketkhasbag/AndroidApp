@@ -8,6 +8,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
+import com.khasna.cooker.ChefActivityFragments.ChefEntity;
+import com.khasna.cooker.ChefActivityFragments.ContainerClasses.OrderHistoryChefItem;
 import com.khasna.cooker.Common.CartItem;
 import com.khasna.cooker.Common.DebugClass;
 import com.khasna.cooker.Common.Interfaces;
@@ -18,7 +20,10 @@ import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGue
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItemDetails;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 
 /**
@@ -183,7 +188,10 @@ public class GuestActivityFunctions<G extends Collection> {
                         GuestEntity.guestItemArrayList.get(key).getItemPrice(),
                         //R.string.dinnerPickUpTime,
                         "",
-                        String.valueOf(GuestEntity.guestItemArrayList.get(key).getItemPrice())
+                        String.valueOf(GuestEntity.guestItemArrayList.get(key).getItemPrice()),
+                        GuestEntity.chefsListForGuestArrayList.get(position).getPhoneNO(),
+                        GuestEntity.guestProfile.getAddress() + " " + GuestEntity.guestProfile.getaptno() +
+                                " " + GuestEntity.guestProfile.getCity() + " " + GuestEntity.guestProfile.getZipcode()
                 );
 
                 GuestEntity.cartItemArrayList.add(cartItem);
@@ -270,6 +278,27 @@ public class GuestActivityFunctions<G extends Collection> {
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
                             GuestEntity.orderHistoryGuestItemsArrayList.add(child.getValue(OrderHistoryGuestItem.class));
                         }
+
+                        Collections.sort(GuestEntity.orderHistoryGuestItemsArrayList, new Comparator<OrderHistoryGuestItem>() {
+                            @Override
+                            public int compare(OrderHistoryGuestItem o1, OrderHistoryGuestItem o2) {
+                                Date date1;
+                                Date date2;
+                                SimpleDateFormat sdf = new SimpleDateFormat("EEE dd MMM yyyy hh:mm:ss a");
+                                try {
+                                    date1 = sdf.parse(o1.getOrderTime());
+                                    date2 = sdf.parse(o2.getOrderTime());
+
+                                    if( date1.compareTo(date2) <= 0 )
+                                    {
+                                        return 1;
+                                    }
+                                } catch (ParseException e) {
+                                    e.printStackTrace();
+                                }
+                                return -1;
+                            }
+                        });
                     }
                 }
         );

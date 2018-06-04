@@ -10,6 +10,7 @@ public class OrderHistoryGuestItem {
     String chefName;
     String chefAddress;
     String pickUpTime;
+    String chefPhoneNumber;
 
     public OrderHistoryGuestItem() {
     }
@@ -78,4 +79,11 @@ public class OrderHistoryGuestItem {
         this.chefName = chefName;
     }
 
+    public String getChefPhoneNumber() {
+        return chefPhoneNumber;
+    }
+
+    public void setChefPhoneNumber(String chefPhoneNumber) {
+        this.chefPhoneNumber = chefPhoneNumber;
+    }
 }

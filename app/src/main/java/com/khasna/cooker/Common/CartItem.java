@@ -17,13 +17,15 @@ public class CartItem {
     private String orderTime;
     private String pickUpTime;
     private String totalPrice;
+    private String chefPhoneNumber;
+    private String guestAddress;
 
     public CartItem() {
     }
 
     public CartItem(String chefName, String chefUid, String guestName, String guestUid,
                     String chefAddress, Integer itemQuantity, String itemName, String guestPhoneNumber,
-                    String itemPrice, String pickUpTime, String totalPrice) {
+                    String itemPrice, String pickUpTime, String totalPrice, String chefPhoneNumber, String guestAddress) {
         this.chefName = chefName;
         this.chefUid = chefUid;
         this.guestName = guestName;
@@ -35,6 +37,8 @@ public class CartItem {
         this.guestPhoneNumber = guestPhoneNumber;
         this.pickUpTime = pickUpTime;
         this.totalPrice = totalPrice;
+        this.chefPhoneNumber = chefPhoneNumber;
+        this.guestAddress = guestAddress;
     }
 
     public String getPickUpTime() {
@@ -131,5 +135,21 @@ public class CartItem {
 
     public void setTotalPrice(String totalPrice) {
         this.totalPrice = totalPrice;
+    }
+
+    public String getChefPhoneNumber() {
+        return chefPhoneNumber;
+    }
+
+    public void setChefPhoneNumber(String chefPhoneNumber) {
+        this.chefPhoneNumber = chefPhoneNumber;
+    }
+
+    public String getGuestAddress() {
+        return guestAddress;
+    }
+
+    public void setGuestAddress(String guestAddress) {
+        this.guestAddress = guestAddress;
     }
 }

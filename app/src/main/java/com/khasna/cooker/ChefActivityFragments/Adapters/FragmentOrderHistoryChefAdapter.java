@@ -10,6 +10,7 @@ import com.khasna.cooker.ChefActivityFragments.ChefEntity;
 import com.khasna.cooker.R;
 
 import java.math.BigDecimal;
+import java.util.regex.Pattern;
 
 
 /**
@@ -32,7 +33,7 @@ public class FragmentOrderHistoryChefAdapter extends RecyclerView.Adapter<Fragme
 //        public TextView textViewGuestPhoneNumber;
         public TextView textViewItemName;
         public TextView textViewItemQuantity;
-//        public TextView textViewOrderTime;
+        public TextView textViewOrderDate;
         public TextView textViewPrice;
         public TextView textViewStatus;
 
@@ -42,7 +43,7 @@ public class FragmentOrderHistoryChefAdapter extends RecyclerView.Adapter<Fragme
 //            textViewGuestPhoneNumber = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
             textViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
             textViewItemQuantity = (TextView)v.findViewById(R.id.textViewItemQuantity);
-//            textViewOrderTime = (TextView)v.findViewById(R.id.textViewOrderTime);
+            textViewOrderDate = (TextView)v.findViewById(R.id.textViewOrderDate);
             textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);
             textViewStatus = (TextView)v.findViewById(R.id.textViewStatus);
         }
@@ -72,7 +73,14 @@ public class FragmentOrderHistoryChefAdapter extends RecyclerView.Adapter<Fragme
 //        holder.textViewGuestPhoneNumber.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getGuestPhoneNumber());
         holder.textViewItemName.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemName());
         holder.textViewItemQuantity.setText(orderCount);
-//        holder.textViewOrderTime.setText(ChefEntity.arrayListOrderHistoryChefItem.get(position).getOrderTime());
+
+        Pattern pattern = Pattern.compile("\\s");
+
+        String date = ChefEntity.arrayListOrderHistoryChefItem.get(position).getOrderTime();
+        String[] date1 = pattern.split(date);
+
+        String displayDate = date1[0] + " " + date1[1] + " " + date1[2] + " " + date1[3];
+        holder.textViewOrderDate.setText(displayDate);
 
         BigDecimal itemCount = new BigDecimal(ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemQuantity());
         BigDecimal itemPrice = new BigDecimal(ChefEntity.arrayListOrderHistoryChefItem.get(position).getItemPrice());
