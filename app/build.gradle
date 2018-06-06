@@ -4,7 +4,6 @@ android {
     signingConfigs {
         release {
             keyAlias 'release_key'
-
         }
     }
     compileSdkVersion 27
@@ -13,7 +12,7 @@ android {
         applicationId "com.khasna.khasna"
         minSdkVersion 21
         targetSdkVersion 27
-        versionCode 4
+        versionCode 6
         versionName "1.1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         signingConfig signingConfigs.release
@@ -30,7 +29,20 @@ android {
         exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
     }
+    flavorDimensions "flavor"
     productFlavors {
+        releaz{
+            dimension "flavor"
+            applicationId "com.khasna.khasna"
+            versionCode 6
+            versionName "1.1"
+        }
+        development{
+            dimension "flavor"
+            applicationId "com.khasna.development"
+            versionCode 6
+            versionName "1.1"
+        }
     }
 }
     repositories {

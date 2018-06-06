@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "198338073283",
+    "firebase_url": "https://cookerdebug.firebaseio.com",
+    "project_id": "cookerdebug",
+    "storage_bucket": "cookerdebug.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198338073283:android:f9626c62c8a6f4d4",
+        "android_client_info": {
+          "package_name": "com.khasna.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
+          "client_type": 3
+        },
+        {
+          "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOek4MfgjleqFm9IjPaaDlEW8Ap-eJlL4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
