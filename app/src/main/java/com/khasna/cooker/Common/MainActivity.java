@@ -126,8 +126,13 @@ public class MainActivity extends AppCompatActivity implements
 
         if (errorCode.compareTo("VALID_INPUT") == 0)
         {
-            DebugClass.DebugPrint(className, "login:valid input from user");
-            mCollection.mFireBaseFunctions.SignInWithEmail(this, email.getText().toString(), password.getText().toString() );
+            try {
+                DebugClass.DebugPrint(className, "login:valid input from user");
+                mCollection.mFireBaseFunctions.SignInWithEmail(this, email.getText().toString(), password.getText().toString());
+            }
+            catch(Exception e) {
+                Toast.makeText(getApplicationContext(),"Wrong Credentials. Make sure you are signed in on your phone.",Toast.LENGTH_LONG).show();
+            }
         }
         else
         {
