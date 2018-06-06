@@ -1,15 +1,12 @@
 package com.khasna.cooker.Models;
 
 import android.util.SparseBooleanArray;
-import android.widget.Toast;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.khasna.cooker.ChefActivityFragments.ChefEntity;
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.OrderHistoryChefItem;
 import com.khasna.cooker.Common.CartItem;
 import com.khasna.cooker.Common.DebugClass;
 import com.khasna.cooker.Common.Interfaces;
@@ -17,7 +14,6 @@ import com.khasna.cooker.GuestActivityFragments.ContainerClasses.ChefsListForGue
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestItem;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItem;
-import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItemDetails;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 
 import java.text.ParseException;
@@ -108,10 +104,6 @@ public class GuestActivityFunctions<G extends Collection> {
                         GuestEntity.chefsListForGuestArrayList.clear();
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
                             try{
-                                //check to see if the chef is an debug chef
-                                if(child.child("debug").exists())
-                                    continue;       //skip this chef.
-
                                 if(dataSnapshot.child(child.getKey()).child("isActive").getValue().toString().matches("true") ) {
                                     ChefsListForGuest chefsListForGuest = child.child("profile").getValue(ChefsListForGuest.class);
                                     chefsListForGuest.SetUnknownFields(dataSnapshot.child(child.getKey()).getKey());
