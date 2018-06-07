@@ -164,9 +164,9 @@
                 android:layout_height="wrap_content"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@+id/radioGroup"/>
+                app:layout_constraintLeft_toLeftOf="@+id/radioGroup" />
 
             <RadioButton
                 android:id="@+id/radioButton1"
@@ -174,9 +174,9 @@
                 android:layout_height="wrap_content"
                 android:scaleX="0.8"
                 android:scaleY="0.8"
-                android:textAlignment="center"
+                android:textAlignment="textStart"
                 android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@+id/radioGroup"/>
+                app:layout_constraintLeft_toLeftOf="@+id/radioGroup" />
 
             <RadioButton
                 android:id="@+id/radioButton2"
@@ -186,7 +186,7 @@
                 android:scaleY="0.8"
                 android:textAlignment="center"
                 android:textSize="18sp"
-                app:layout_constraintLeft_toLeftOf="@+id/radioGroup"/>
+                app:layout_constraintLeft_toLeftOf="@+id/radioGroup" />
 
         </RadioGroup>
 
