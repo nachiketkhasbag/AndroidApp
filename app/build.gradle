@@ -31,12 +31,6 @@ android {
     }
     flavorDimensions "flavor"
     productFlavors {
-        releaz {
-            dimension "flavor"
-            applicationId "com.khasna.khasna"
-            versionCode 6
-            versionName "1.1"
-        }
         development {
             dimension "flavor"
             applicationId "com.khasna.development"
@@ -46,7 +40,7 @@ android {
         releaseapp {
             dimension "flavor"
             applicationId "com.khasna.release"
-            versionCode 1
+            versionCode 2
             versionName "1.0"
             signingConfig signingConfigs.release
         }
