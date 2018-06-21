@@ -37,13 +37,13 @@ public class FragmentReceivedOrdersChefAdapter extends RecyclerView.Adapter<Frag
 
         public ViewHolder(View v) {
             super(v);
-            mTextViewGuestName = (TextView)v.findViewById(R.id.textViewGuestName);
-            mTextViewGuestPhoneNumber = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
-            mTextViewItemName = (TextView)v.findViewById(R.id.textViewChefNameLabel);
-            mTextViewItemQuantity = (TextView)v.findViewById(R.id.textViewItemQuantity);
-            mTextViewPickUpTime = (TextView)v.findViewById(R.id.textViewPickUpTime);
-            mButtonAcceptOrder = (Button)v.findViewById(R.id.buttonAcceptOrder);
-            mButtonDeclineOrder = (Button)v.findViewById(R.id.buttonDeclineOrder);
+            mTextViewGuestName          = (TextView)v.findViewById(R.id.textViewGuestName);
+            mTextViewGuestPhoneNumber   = (TextView)v.findViewById(R.id.textViewGuestPhoneNumber);
+            mTextViewItemName           = (TextView)v.findViewById(R.id.textViewChefNameLabel);
+            mTextViewItemQuantity       = (TextView)v.findViewById(R.id.textViewItemQuantity);
+            mTextViewPickUpTime         = (TextView)v.findViewById(R.id.textViewPickUpTime);
+            mButtonAcceptOrder          = (Button)v.findViewById(R.id.buttonAcceptOrder);
+            mButtonDeclineOrder         = (Button)v.findViewById(R.id.buttonDeclineOrder);
         }
     }
 
@@ -66,7 +66,7 @@ public class FragmentReceivedOrdersChefAdapter extends RecyclerView.Adapter<Frag
         holder.mTextViewGuestName.setText(ChefEntity.chefReceivedOrderItemsArrayList.get(position).getGuestName());
         holder.mTextViewGuestPhoneNumber.setText(ChefEntity.chefReceivedOrderItemsArrayList.get(position).getGuestPhoneNumber());
         holder.mTextViewItemName.setText(ChefEntity.chefReceivedOrderItemsArrayList.get(position).getItemName());
-        holder.mTextViewPickUpTime.setText(ChefEntity.chefReceivedOrderItemsArrayList.get(position).getOrderPickupTime());
+        holder.mTextViewPickUpTime.setText(ChefEntity.chefReceivedOrderItemsArrayList.get(position).getPickUpTime());
         holder.mTextViewItemQuantity.setText(String.format("%s", ChefEntity.chefReceivedOrderItemsArrayList.get(position).getItemQuantity()));
         holder.mItemKey = ChefEntity.chefReceivedOrderItemsArrayList.get(position).getItemKey();
         final int itemPosition = holder.getAdapterPosition();

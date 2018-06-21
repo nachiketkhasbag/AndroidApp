@@ -19,20 +19,20 @@ public class ChefReceivedOrderItem {
     public ChefReceivedOrderItem() {
     }
 
-    public String getItemKey() {
-        return itemKey;
-    }
-
-    public void setItemKey(String itemKey) {
-        this.itemKey = itemKey;
-    }
-
     public String getGuestName() {
         return guestName;
     }
 
     public void setGuestName(String guestName) {
         this.guestName = guestName;
+    }
+
+    public String getGuestUid() {
+        return guestUid;
+    }
+
+    public void setGuestUid(String guestUid) {
+        this.guestUid = guestUid;
     }
 
     public String getGuestPhoneNumber() {
@@ -51,22 +51,6 @@ public class ChefReceivedOrderItem {
         this.itemName = itemName;
     }
 
-    public Integer getItemQuantity() {
-        return itemQuantity;
-    }
-
-    public void setItemQuantity(Integer itemQuantity) {
-        this.itemQuantity = itemQuantity;
-    }
-
-    public String getGuestUid() {
-        return guestUid;
-    }
-
-    public void setGuestUid(String guestUid) {
-        this.guestUid = guestUid;
-    }
-
     public String getPrice() {
         return price;
     }
@@ -83,11 +67,27 @@ public class ChefReceivedOrderItem {
         this.orderTime = orderTime;
     }
 
-    public String getOrderPickupTime() {
+    public String getItemKey() {
+        return itemKey;
+    }
+
+    public void setItemKey(String itemKey) {
+        this.itemKey = itemKey;
+    }
+
+    public String getPickUpTime() {
         return pickUpTime;
     }
 
-    public void setOrderPickupTime(String pickUpTime) {
+    public void setPickUpTime(String pickUpTime) {
         this.pickUpTime = pickUpTime;
+    }
+
+    public Integer getItemQuantity() {
+        return itemQuantity;
+    }
+
+    public void setItemQuantity(Integer itemQuantity) {
+        this.itemQuantity = itemQuantity;
     }
 }
