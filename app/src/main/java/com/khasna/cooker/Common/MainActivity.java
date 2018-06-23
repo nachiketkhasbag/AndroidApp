@@ -1,6 +1,7 @@
 package com.khasna.cooker.Common;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity implements
     Button mLoginButton;
     Button mSignUpButton;
     TextView mForgotPassword;
+    TextView mTextViewPP;
+    TextView mTextViewTC;
     Collection mCollection;
 
     @Override
@@ -47,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements
         mSignUpButton = (Button)findViewById(R.id.signupButton); // Signup button listener
 //        mFbLoginButton = (LoginButton)findViewById(R.id.facebookLogin);   //declaring and instantiate the loin button
         mForgotPassword = (TextView)findViewById(R.id.forgotPasswordView);
+        mTextViewPP = (TextView)findViewById(R.id.textViewPP);
+        mTextViewTC = (TextView)findViewById(R.id.textViewTC);
 
         mLoginButton.setVisibility(View.GONE);
         mSignUpButton.setVisibility(View.GONE);
@@ -63,6 +68,22 @@ public class MainActivity extends AppCompatActivity implements
                 startActivity(intent);
                 finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
+            }
+        });
+
+        mTextViewPP.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/cookerptcd/home"));
+                startActivity(intent);
+            }
+        });
+
+        mTextViewTC.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/cookerptcd/home"));
+                startActivity(intent);
             }
         });
 
