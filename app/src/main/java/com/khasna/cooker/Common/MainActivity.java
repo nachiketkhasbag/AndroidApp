@@ -36,12 +36,16 @@ public class MainActivity extends AppCompatActivity implements
     TextView mTextViewPP;
     TextView mTextViewTC;
     Collection mCollection;
+    ProcessDialogBox processDialogBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         DebugClass.DebugPrint(className, "onCreate:Activity created");
+
+        processDialogBox = new ProcessDialogBox(this);
+        processDialogBox.ShowDialogBox();
 
         mCollection = Collection.getInstance();
         mCollection.mFireBaseFunctions.WaitForUserLogin(this);
@@ -53,11 +57,13 @@ public class MainActivity extends AppCompatActivity implements
         mTextViewPP = (TextView)findViewById(R.id.textViewPP);
         mTextViewTC = (TextView)findViewById(R.id.textViewTC);
 
-        mLoginButton.setVisibility(View.GONE);
-        mSignUpButton.setVisibility(View.GONE);
+        mLoginButton.setVisibility(View.INVISIBLE);
+        mSignUpButton.setVisibility(View.INVISIBLE);
 //        mFbLoginButton.setVisibility(View.GONE);
 //        mFbLoginButton.setClickable(false);
-        mForgotPassword.setVisibility(View.GONE);
+        mForgotPassword.setVisibility(View.INVISIBLE);
+        mTextViewPP.setVisibility(View.INVISIBLE);
+        mTextViewTC.setVisibility(View.INVISIBLE);
 
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
 
@@ -175,10 +181,13 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void UserSignedOut() {
+        processDialogBox.DismissDialogBox();
         mLoginButton.setVisibility(View.VISIBLE);
         mSignUpButton.setVisibility(View.VISIBLE);
 //        mFbLoginButton.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.VISIBLE);
+        mTextViewPP.setVisibility(View.VISIBLE);
+        mTextViewTC.setVisibility(View.VISIBLE);
     }
 
 //    protected void startWelcome(boolean Facebook){
@@ -215,6 +224,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void UserIsChef() {
+        processDialogBox.DismissDialogBox();
+
         ChefEntity.chefProfile = new ChefProfile();
 
         Bundle bundle = new Bundle();
@@ -230,6 +241,8 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void UserIsGuest() {
+        processDialogBox.DismissDialogBox();
+
         GuestEntity.guestProfile = new GuestProfile();
 
         Intent i = new Intent(getApplicationContext(), GuestActivity.class);
@@ -243,10 +256,13 @@ public class MainActivity extends AppCompatActivity implements
     public void ForceUserSignOut() {
         //Toast.makeText(android.content.Context.getApplicationContext(), "THERE HAS BEEN A SERIOUS PROBLEM. PLEASE REPORT THIS", Toast.LENGTH_LONG).show();
         System.out.print("!!!!!!!!!!!!!!!!THERE HAS BEEN A SERIOUS PROBLEM. NEEDS DEBUG!!!!!!!!!!!!!!!!!!!!!!");
+        processDialogBox.DismissDialogBox();
         mLoginButton.setVisibility(View.VISIBLE);
         mSignUpButton.setVisibility(View.VISIBLE);
 //        mFbLoginButton.setVisibility(View.GONE);
         mForgotPassword.setVisibility(View.VISIBLE);
+        mTextViewPP.setVisibility(View.VISIBLE);
+        mTextViewTC.setVisibility(View.VISIBLE);
         mCollection.mFireBaseFunctions.signOut();
     }
 }

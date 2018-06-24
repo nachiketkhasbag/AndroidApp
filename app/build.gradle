@@ -4,6 +4,10 @@ android {
     signingConfigs {
         release {
             keyAlias 'release_key'
+
+            keyPassword 'Reebok1234#'
+            storeFile file('C:/Users/nachi/AndroidStudioProjects/Keystore/release_keystore.jks')
+            storePassword 'Reebok1234#'
         }
     }
     compileSdkVersion 27
@@ -34,13 +38,13 @@ android {
         development {
             dimension "flavor"
             applicationId "com.khasna.development"
-            versionCode 9
+            versionCode 10
             versionName "1.1"
         }
         releaseapp {
             dimension "flavor"
             applicationId "com.khasna.release"
-            versionCode 4
+            versionCode 5
             versionName "1.0"
             signingConfig signingConfigs.release
         }
