@@ -1,5 +1,9 @@
 package com.khasna.cooker.ChefActivityFragments.ContainerClasses;
 
+import android.content.Context;
+
+import com.khasna.cooker.Common.LocationHandler;
+
 /**
  * Created by Sourabh on 13/04/2017.
  */
@@ -12,6 +16,28 @@ public class ChefProfile {
     private String aptno;
     private String zipcode;
     private String phoneNO;
+    private double latitude;
+    private double longitude;
+
+
+    public double getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
+
+    public double getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+
+
 
     public ChefProfile() {
         fname = "";

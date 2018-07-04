@@ -1,6 +1,8 @@
 package com.khasna.cooker.ChefActivityFragments;
 
+import android.location.Address;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -13,6 +15,8 @@ import android.widget.Toast;
 
 import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
 import com.khasna.cooker.Common.Interfaces;
+import com.khasna.cooker.Common.LocationHandler;
+import com.khasna.cooker.Common.LocationResultReciever;
 import com.khasna.cooker.Common.ProcessDialogBox;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
@@ -154,23 +158,44 @@ public class FragmentUpdateAccountChef extends Fragment {
                 editTextUpdatePhoneNumber.getText().toString(),
                 editTextUpdateZipCode.getText().toString());
 
-        mCollection.mDataBaseFunctions.UpdateProfileAddress(
-                mDataBaseRef,
-                chefProfile,
-                new Interfaces.UpdateProfileInterface() {
-                    @Override
-                    public void UpdateProfileComplete() {
-                        ChefEntity.chefProfile = chefProfile;
-                        Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
-                    }
+        LocationResultReciever resultReciever =new LocationResultReciever(new Handler()) {
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                super.onReceiveResult(resultCode, resultData);
+                if(resultCode==1){
+                    System.out.println("There is a valid address ");
+                    Address address = resultData.getParcelable("address");
+                    Double longitude =  address.getLongitude();
+                    Double latitude = address.getLatitude();
+                    chefProfile.setLatitude(latitude);
+                    chefProfile.setLongitude(longitude);
+                    mCollection.mDataBaseFunctions.UpdateProfileAddress(
+                            mDataBaseRef,
+                            chefProfile,
+                            new Interfaces.UpdateProfileInterface() {
+                                @Override
+                                public void UpdateProfileComplete() {
+                                    ChefEntity.chefProfile = chefProfile;
+                                    Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
+                                }
 
-                    @Override
-                    public void UpdateProfileFailed(String error) {
-                        Toast.makeText(getContext(),"There has been problem connecting to the server" +
-                                        "Please try again in sometime ",
-                                Toast.LENGTH_LONG).show();
-                        Toast.makeText(getContext(),error, Toast.LENGTH_LONG).show();
-                    }
-                });
+                                @Override
+                                public void UpdateProfileFailed(String error) {
+                                    Toast.makeText(getContext(),"There has been problem connecting to the server" +
+                                                    "Please try again in sometime ",
+                                            Toast.LENGTH_LONG).show();
+                                    Toast.makeText(getContext(),error, Toast.LENGTH_LONG).show();
+                                }
+                            });
+                }
+                else{
+                    Toast.makeText(getContext(), "There was a problem with the address verification." +
+                            "Please check your address. ", Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        LocationHandler locationHandler= new LocationHandler(chefProfile,this.getContext(),resultReciever);
+
+
     }
 }
