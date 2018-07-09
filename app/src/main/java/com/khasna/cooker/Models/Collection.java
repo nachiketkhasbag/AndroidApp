@@ -10,13 +10,11 @@ public class Collection{
 
     public FireBaseFunctions mFireBaseFunctions;
     public DataBaseFunctions mDataBaseFunctions;
-    public ChefActivityFunctions mChefActivityFunctions;
     public GuestActivityFunctions mGuestActivityFunctions;
 
     private Collection() {
         mFireBaseFunctions = new FireBaseFunctions<>(this);
         mDataBaseFunctions = new DataBaseFunctions<>(this);
-        mChefActivityFunctions = new ChefActivityFunctions<>(this);
         mGuestActivityFunctions = new GuestActivityFunctions<>(this);
     }
 

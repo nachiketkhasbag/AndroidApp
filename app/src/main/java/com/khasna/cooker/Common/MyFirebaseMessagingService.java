@@ -7,7 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
-import com.khasna.cooker.ChefActivityFragments.ChefActivity;
+import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.R;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -34,7 +34,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void shownotification(String title, String body, Map<String, String> data)
     {
-        Intent intent = new Intent(this, ChefActivity.class);
+        Intent intent = new Intent(this, GuestActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Bundle bundle = new Bundle();
@@ -60,7 +60,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private void shownotification(String title, String body)
     {
-        Intent intent = new Intent(this, ChefActivity.class);
+        Intent intent = new Intent(this, GuestActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         Bundle bundle = new Bundle();

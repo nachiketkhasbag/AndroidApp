@@ -9,9 +9,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.khasna.cooker.ChefActivityFragments.ChefActivity;
-import com.khasna.cooker.ChefActivityFragments.ChefEntity;
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
@@ -37,22 +34,13 @@ public class SignupActivity extends AppCompatActivity{
     String editTextPasswordText;
     String editTextConfirmPasswordText;
 
-    Button buttonSignUpAsGuest;
-    Button buttonSignUpAsChef;
+    Button buttonSignUpWithEmail;
     Collection mCollection;
     ProgressDialog progressDialog;
     private DatabaseReference databaseRef;
 
     private static int MINIMUM_PASSWORD_LENGTH = 5;
     private static final String className = "SignupActivity";
-
-    public enum USER_TYPE
-    {
-        CHEF,
-        GUEST
-    }
-
-    USER_TYPE userType;
 
     public SignupActivity() {
         mCollection = Collection.getInstance();
@@ -68,8 +56,7 @@ public class SignupActivity extends AppCompatActivity{
         editTextPassword = (EditText)findViewById(R.id.editTextPassword);               // Textfield password
         editTextConfirmPassword = (EditText)findViewById(R.id.editTextConfirmPassword); // Textfield confirm password
 
-        buttonSignUpAsGuest = (Button)findViewById(R.id.buttonSignUpAsGuest);       // SignUpGuest button listener
-        buttonSignUpAsChef = (Button)findViewById(R.id.buttonSignUpAsChef);       // SignUpGuest button listener
+        buttonSignUpWithEmail = (Button)findViewById(R.id.buttonSignUpWithEmail);       // SignUpGuest button listener
 
         progressDialog = new ProgressDialog(this);
 
@@ -79,29 +66,28 @@ public class SignupActivity extends AppCompatActivity{
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Horizontal
         progressDialog.setCancelable(false);
 
-        buttonSignUpAsGuest.setOnClickListener(new View.OnClickListener() {
+//        buttonSignUpWithGoogle.setOnClickListener(new View.OnClickListener() {
+//
+//            @Override
+//            public void onClick(View v) {
+//
+//                String errorCode = ValidateInput();
+//
+//                if (errorCode.compareTo("VALID_INPUT") == 0)
+//                {
+//                    progressDialog.show(); // Display Progress Dialog
+//                    DebugClass.DebugPrint(className, "OnClickSignUpGuest:valid input from user");
+//                    SignUp();
+//                }
+//                else
+//                {
+//                    DebugClass.DebugPrint(className, "OnClickSignUp:invalid input from user");
+//                    Toast.makeText(getApplicationContext(), errorCode, Toast.LENGTH_LONG).show();
+//                }
+//            }
+//        });
 
-            @Override
-            public void onClick(View v) {
-
-                String errorCode = ValidateInput();
-
-                if (errorCode.compareTo("VALID_INPUT") == 0)
-                {
-                    progressDialog.show(); // Display Progress Dialog
-                    DebugClass.DebugPrint(className, "OnClickSignUpGuest:valid input from user");
-                    userType = USER_TYPE.GUEST;
-                    SignUp();
-                }
-                else
-                {
-                    DebugClass.DebugPrint(className, "OnClickSignUp:invalid input from user");
-                    Toast.makeText(getApplicationContext(), errorCode, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        buttonSignUpAsChef.setOnClickListener(new View.OnClickListener() {
+        buttonSignUpWithEmail.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -112,7 +98,6 @@ public class SignupActivity extends AppCompatActivity{
                 {
                     progressDialog.show(); // Display Progress Dialog
                     DebugClass.DebugPrint(className, "OnClickSignUpChef:valid input from user");
-                    userType = USER_TYPE.CHEF;
                     SignUp();
                 }
                 else
@@ -128,7 +113,7 @@ public class SignupActivity extends AppCompatActivity{
     {
         editTextEmailText = editTextEmail.getText().toString();
         editTextPasswordText = editTextPassword.getText().toString();
-        mCollection.mFireBaseFunctions.SignUpWithEmail(userType, editTextEmailText, editTextPasswordText,
+        mCollection.mFireBaseFunctions.SignUpWithEmail( editTextEmailText, editTextPasswordText,
                 new Interfaces.SignUpUserInterface() {
                     @Override
                     public void SignUpComplete() {
@@ -136,32 +121,14 @@ public class SignupActivity extends AppCompatActivity{
                                 "Signup succeeded", Toast.LENGTH_SHORT).show();
                         System.out.print("SignUp succeeded");
                         progressDialog.dismiss();
-                        if (userType == USER_TYPE.CHEF)
-                        {
-                            ChefEntity.chefProfile = new ChefProfile();
 
-                            UpdateDB(ChefEntity.chefProfile);
-
-                            // Take directly to homepage
-                            Intent i = new Intent(getApplicationContext(), ChefActivity.class);
-                            startActivity(i);
-
-                            // close this activity
-                            finish();
-                        }
-                        else
-                        {
-                            GuestEntity.guestProfile = new GuestProfile();
-
-                            UpdateDB(GuestEntity.guestProfile);
-
-                            // Take directly to homepage
-                            Intent i = new Intent(getApplicationContext(), GuestActivity.class);
-                            startActivity(i);
-
-                            // close this activity
-                            finish();
-                        }
+                        GuestEntity.guestProfile = new GuestProfile();
+                        UpdateDB(GuestEntity.guestProfile);
+                        // Take directly to homepage
+                        Intent i = new Intent(getApplicationContext(), GuestActivity.class);
+                        startActivity(i);
+                        // close this activity
+                        finish();
                     }
 
                     @Override
@@ -205,27 +172,6 @@ public class SignupActivity extends AppCompatActivity{
         return "VALID_INPUT";
     }
 
-    public void UpdateDB( ChefProfile chefProfile )
-    {
-        databaseRef.child("cookProfile").child(mCollection.mFireBaseFunctions.getuID()).child("profile").setValue(chefProfile, new DatabaseReference.CompletionListener() {
-
-            //Implies that the data has been committed
-            @Override
-            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                if (databaseError == null)
-                {
-                    databaseRef.child("cookProfile").child(mCollection.mFireBaseFunctions.getuID()).child("isActive").setValue(false);
-                    System.out.println("Chef Data saved successfully.");
-                    DebugClass.DebugPrint(className, "UpdateDB:Update cookprofile db");
-                    return;
-                }
-
-                Toast.makeText(getApplicationContext(),"There has been problem connecting to the server" +
-                                "Please try again in sometime ",
-                        Toast.LENGTH_LONG).show();
-            }
-        });
-    }
     public void UpdateDB( GuestProfile guestProfile )
     {
         databaseRef.child("userProfile").child(mCollection.mFireBaseFunctions.getuID()).child("profile").setValue(guestProfile, new DatabaseReference.CompletionListener() {

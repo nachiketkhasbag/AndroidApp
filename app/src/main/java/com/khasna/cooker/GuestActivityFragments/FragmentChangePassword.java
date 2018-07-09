@@ -1,7 +1,7 @@
-package com.khasna.cooker.ChefActivityFragments;
+package com.khasna.cooker.GuestActivityFragments;
+
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,34 +14,34 @@ import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
-
 /**
- * Created by nachiket on 4/27/2017.
+ * A simple {@link Fragment} subclass.
  */
+public class FragmentChangePassword extends Fragment {
 
-public class FragmentResetPasswordChef extends Fragment {
+    Collection mCollection;
     View mView;
     EditText editTextCurrentPassword;
     EditText editTextNewPassword;
     EditText editTextConfirmPassword;
-    Button buttonChefResetPassword;
-    Collection mCollection;
+    Button buttonResetPassword;
 
-    public FragmentResetPasswordChef() {
+    public FragmentChangePassword() {
         mCollection = Collection.getInstance();
     }
 
-    @Nullable
+
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mView = inflater.inflate(R.layout.fragment_chef_reset_password, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        mView = inflater.inflate(R.layout.fragment_change_password, container, false);
 
         editTextCurrentPassword = (EditText)mView.findViewById(R.id.editTextCurrentPassword);
         editTextNewPassword = (EditText)mView.findViewById(R.id.editTextNewPassword);
         editTextConfirmPassword = (EditText)mView.findViewById(R.id.editTextConfirmPassword);
-        buttonChefResetPassword = (Button)mView.findViewById(R.id.buttonChefResetPassword);
+        buttonResetPassword = (Button)mView.findViewById(R.id.buttonResetPassword);
 
-        buttonChefResetPassword.setOnClickListener(new View.OnClickListener(){
+        buttonResetPassword.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
 
@@ -62,6 +62,8 @@ public class FragmentResetPasswordChef extends Fragment {
                         });
             }
         });
+
         return mView;
     }
+
 }

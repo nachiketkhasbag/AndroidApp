@@ -11,9 +11,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.khasna.cooker.ChefActivityFragments.ChefActivity;
-import com.khasna.cooker.ChefActivityFragments.ChefEntity;
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefProfile;
+import com.google.android.gms.common.SignInButton;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
@@ -22,8 +20,7 @@ import com.khasna.cooker.R;
 
 public class MainActivity extends AppCompatActivity implements
         com.khasna.cooker.Common.Interfaces.UserInterface,
-        Interfaces.AppUserInterface,
-        Interfaces.AppUserLocatorInterface{
+        Interfaces.AppUserInterface{
     private static final String TAG = "LoginActivity";
     private static final String className = "MainActivity";
 
@@ -32,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements
 //    LoginButton mFbLoginButton;
     Button mLoginButton;
     Button mSignUpButton;
+    SignInButton mGoogleButton;
     TextView mForgotPassword;
     TextView mTextViewPP;
     TextView mTextViewTC;
@@ -56,6 +54,12 @@ public class MainActivity extends AppCompatActivity implements
         mForgotPassword = (TextView)findViewById(R.id.forgotPasswordView);
         mTextViewPP = (TextView)findViewById(R.id.textViewPP);
         mTextViewTC = (TextView)findViewById(R.id.textViewTC);
+        mGoogleButton = (SignInButton)findViewById(R.id.sign_in_button);
+
+        mGoogleButton.setSize(SignInButton.SIZE_WIDE);
+        TextView textView = (TextView) mGoogleButton.getChildAt(0);
+        textView.setText("Sign In With Google");
+        textView.setTextSize(14);
 
         mLoginButton.setVisibility(View.INVISIBLE);
         mSignUpButton.setVisibility(View.INVISIBLE);
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements
         mForgotPassword.setVisibility(View.INVISIBLE);
         mTextViewPP.setVisibility(View.INVISIBLE);
         mTextViewTC.setVisibility(View.INVISIBLE);
+        mGoogleButton.setVisibility(View.INVISIBLE);
 
         mForgotPassword.setOnClickListener(new View.OnClickListener() {
 
@@ -97,7 +102,27 @@ public class MainActivity extends AppCompatActivity implements
 
             @Override
             public void onClick(View v) {
-                login();
+                Log.d(TAG, "Login");
+                final EditText email = ( EditText)findViewById(R.id.email);
+                final EditText password = ( EditText)findViewById(R.id.password);
+
+                String errorCode = ValidateInput();
+
+                if (errorCode.compareTo("VALID_INPUT") == 0)
+                {
+                    try {
+                        DebugClass.DebugPrint(className, "login:valid input from user");
+                        mCollection.mFireBaseFunctions.SignInWithEmail(MainActivity.this, email.getText().toString(), password.getText().toString());
+                    }
+                    catch(Exception e) {
+                        Toast.makeText(getApplicationContext(),"Wrong Credentials. Make sure you are signed in on your phone.",Toast.LENGTH_LONG).show();
+                    }
+                }
+                else
+                {
+                    DebugClass.DebugPrint(className, "login:invalid input from user");
+                    Toast.makeText(getApplicationContext(), errorCode, Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -144,30 +169,6 @@ public class MainActivity extends AppCompatActivity implements
 //        });
     }
 
-    public void login() {
-        Log.d(TAG, "Login");
-        final EditText email = ( EditText)findViewById(R.id.email);
-        final EditText password = ( EditText)findViewById(R.id.password);
-
-        String errorCode = ValidateInput();
-
-        if (errorCode.compareTo("VALID_INPUT") == 0)
-        {
-            try {
-                DebugClass.DebugPrint(className, "login:valid input from user");
-                mCollection.mFireBaseFunctions.SignInWithEmail(this, email.getText().toString(), password.getText().toString());
-            }
-            catch(Exception e) {
-                Toast.makeText(getApplicationContext(),"Wrong Credentials. Make sure you are signed in on your phone.",Toast.LENGTH_LONG).show();
-            }
-        }
-        else
-        {
-            DebugClass.DebugPrint(className, "login:invalid input from user");
-            Toast.makeText(getApplicationContext(), errorCode, Toast.LENGTH_LONG).show();
-        }
-    }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
@@ -176,7 +177,16 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void UserSignedIn() {
-        mCollection.mDataBaseFunctions.LocateUser(this);
+
+        processDialogBox.DismissDialogBox();
+
+        GuestEntity.guestProfile = new GuestProfile();
+
+        Intent i = new Intent(getApplicationContext(), GuestActivity.class);
+        startActivity(i);
+
+        // close this activity
+        finish();
     }
 
     @Override
@@ -188,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements
         mForgotPassword.setVisibility(View.VISIBLE);
         mTextViewPP.setVisibility(View.VISIBLE);
         mTextViewTC.setVisibility(View.VISIBLE);
+        mGoogleButton.setVisibility(View.VISIBLE);
     }
 
 //    protected void startWelcome(boolean Facebook){
@@ -220,49 +231,5 @@ public class MainActivity extends AppCompatActivity implements
         }
 
         return "VALID_INPUT";
-    }
-
-    @Override
-    public void UserIsChef() {
-        processDialogBox.DismissDialogBox();
-
-        ChefEntity.chefProfile = new ChefProfile();
-
-        Bundle bundle = new Bundle();
-        bundle.putString("source", "MainActivity");
-
-        Intent i = new Intent(getApplicationContext(), ChefActivity.class);
-        i.putExtras(bundle);
-        startActivity(i);
-
-        // close this activity
-        finish();
-    }
-
-    @Override
-    public void UserIsGuest() {
-        processDialogBox.DismissDialogBox();
-
-        GuestEntity.guestProfile = new GuestProfile();
-
-        Intent i = new Intent(getApplicationContext(), GuestActivity.class);
-        startActivity(i);
-
-        // close this activity
-        finish();
-    }
-
-    @Override
-    public void ForceUserSignOut() {
-        //Toast.makeText(android.content.Context.getApplicationContext(), "THERE HAS BEEN A SERIOUS PROBLEM. PLEASE REPORT THIS", Toast.LENGTH_LONG).show();
-        System.out.print("!!!!!!!!!!!!!!!!THERE HAS BEEN A SERIOUS PROBLEM. NEEDS DEBUG!!!!!!!!!!!!!!!!!!!!!!");
-        processDialogBox.DismissDialogBox();
-        mLoginButton.setVisibility(View.VISIBLE);
-        mSignUpButton.setVisibility(View.VISIBLE);
-//        mFbLoginButton.setVisibility(View.GONE);
-        mForgotPassword.setVisibility(View.VISIBLE);
-        mTextViewPP.setVisibility(View.VISIBLE);
-        mTextViewTC.setVisibility(View.VISIBLE);
-        mCollection.mFireBaseFunctions.signOut();
     }
 }

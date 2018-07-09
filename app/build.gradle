@@ -9,7 +9,7 @@ android {
     compileSdkVersion 27
     buildToolsVersion "27.0.3"
     defaultConfig {
-        applicationId "com.khasna.khasna"
+        applicationId "com.khasna.release"
         minSdkVersion 21
         targetSdkVersion 27
         versionCode 6
@@ -40,13 +40,13 @@ android {
         releaseapp {
             dimension "flavor"
             applicationId "com.khasna.release"
-            versionCode 5
+            versionCode 7
             versionName "1.0"
             signingConfig signingConfigs.release
         }
     }
 }
-    repositories {
+repositories {
     mavenCentral()
 }
 
@@ -62,6 +62,7 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 }
+
 
 
 

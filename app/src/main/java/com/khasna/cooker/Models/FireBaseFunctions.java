@@ -189,7 +189,6 @@ public class FireBaseFunctions<G extends Collection> {
     }
 
     public void SignUpWithEmail(
-            SignupActivity.USER_TYPE userType,
             String userName,
             String password,
             final Interfaces.SignUpUserInterface signUpUserInterface)

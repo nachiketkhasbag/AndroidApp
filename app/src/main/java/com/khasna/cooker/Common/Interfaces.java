@@ -3,7 +3,6 @@ package com.khasna.cooker.Common;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.khasna.cooker.ChefActivityFragments.ContainerClasses.ChefItem;
 
 
 /**
@@ -26,35 +25,8 @@ public class Interfaces {
         void UserSignedOut();
     }
 
-    public interface AppUserLocatorInterface{
-
-        void UserIsChef();
-
-        void UserIsGuest();
-
-        void ForceUserSignOut();
-    }
-
-    public interface DataBaseWriteInterface{
-        void WriteSucceeded();
-
-        void WriteFailed(DatabaseError databaseError);
-    }
-
     public interface DataBaseReadInterface{
         void ReadSucceeded(DataSnapshot dataSnapshot);
-
-        void ReadFailed(DatabaseError databaseError);
-    }
-
-    public interface AddNewItemInterface{
-        void ItemAdded(ChefItem chefItem);
-
-        void ItemAddFailed(String error);
-    }
-
-    public interface ReadChefDataInterface {
-        void ReadComplete(String message);
 
         void ReadFailed(DatabaseError databaseError);
     }
@@ -65,34 +37,10 @@ public class Interfaces {
         void UpdateEmailFailed(String error);
     }
 
-    public interface UpdateProfileInterface{
-        void UpdateProfileComplete();
-
-        void UpdateProfileFailed(String error);
-    }
-
     public interface UpdatePasswordInterface{
         void UpdatePasswordSuccessful();
 
         void UpdatePasswordFailed(String error);
-    }
-
-    public interface PendingItemsReadInterface{
-        void ReadSuccessful();
-
-        void ReadFailed(String error);
-    }
-
-    public interface ReceivedOrdersInterface{
-        void ReadSuccessful();
-
-        void ReadFailed(String error);
-    }
-
-    public interface OrderStatusInterface{
-        void OrderSetStatusSuccessful();
-
-        void OrderSetStatusFailed(String error);
     }
 
     public interface ReadGuestDataInterface{

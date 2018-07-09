@@ -42,9 +42,9 @@ public class FragmentAccountSettingsGuest extends Fragment {
     Button buttonGuestResetPassword;
     GuestProfile guestProfile;
     Collection mCollection;
+    Fragment mActiveFragment;
 
     public FragmentAccountSettingsGuest() {
-        // Required empty public constructor
         mCollection = Collection.getInstance();
     }
 
@@ -67,6 +67,14 @@ public class FragmentAccountSettingsGuest extends Fragment {
         processDialogBox = new ProcessDialogBox(getActivity());
 
         setKnownFields();
+
+        buttonGuestResetPassword.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                mActiveFragment = new FragmentChangePassword();
+                mActiveFragmentManager.beginTransaction().replace(R.id.guest_page, mActiveFragment).commit();
+            }
+        });
 
         buttonReUpdateGuestProfile.setOnClickListener(new View.OnClickListener(){
             @Override

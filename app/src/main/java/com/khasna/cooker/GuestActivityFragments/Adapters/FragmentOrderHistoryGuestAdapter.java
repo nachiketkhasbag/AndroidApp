@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.khasna.cooker.ChefActivityFragments.ChefEntity;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItem;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 import com.khasna.cooker.R;
