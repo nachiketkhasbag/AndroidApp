@@ -1,45 +1,39 @@
 package com.khasna.cooker.Common;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.google.android.gms.common.SignInButton;
+import com.firebase.ui.auth.AuthUI;
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
+import java.util.Arrays;
+import java.util.List;
+
+
 public class MainActivity extends AppCompatActivity implements
         com.khasna.cooker.Common.Interfaces.UserInterface,
         Interfaces.AppUserInterface{
     private static final String TAG = "LoginActivity";
     private static final String className = "MainActivity";
+    private static final int RC_SIGN_IN = 9001;
 
-    //declareing the mCallbackManager
-//    CallbackManager mCallbackManager;
-//    LoginButton mFbLoginButton;
-    Button mLoginButton;
-    Button mSignUpButton;
-    SignInButton mGoogleButton;
-    TextView mForgotPassword;
-    TextView mTextViewPP;
-    TextView mTextViewTC;
+
+    // Choose authentication providers
+    List<AuthUI.IdpConfig> providers = Arrays.asList(
+            new AuthUI.IdpConfig.GoogleBuilder().build(),
+            new AuthUI.IdpConfig.EmailBuilder().build());
+
     Collection mCollection;
     ProcessDialogBox processDialogBox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+//        setContentView(R.layout.activity_main);
         DebugClass.DebugPrint(className, "onCreate:Activity created");
 
         processDialogBox = new ProcessDialogBox(this);
@@ -47,132 +41,24 @@ public class MainActivity extends AppCompatActivity implements
 
         mCollection = Collection.getInstance();
         mCollection.mFireBaseFunctions.WaitForUserLogin(this);
-
-        mLoginButton = (Button)findViewById(R.id.loginButton);   // Login button listener
-        mSignUpButton = (Button)findViewById(R.id.signupButton); // Signup button listener
-//        mFbLoginButton = (LoginButton)findViewById(R.id.facebookLogin);   //declaring and instantiate the loin button
-        mForgotPassword = (TextView)findViewById(R.id.forgotPasswordView);
-        mTextViewPP = (TextView)findViewById(R.id.textViewPP);
-        mTextViewTC = (TextView)findViewById(R.id.textViewTC);
-        mGoogleButton = (SignInButton)findViewById(R.id.sign_in_button);
-
-        mGoogleButton.setSize(SignInButton.SIZE_WIDE);
-        TextView textView = (TextView) mGoogleButton.getChildAt(0);
-        textView.setText("Sign In With Google");
-        textView.setTextSize(14);
-
-        mLoginButton.setVisibility(View.INVISIBLE);
-        mSignUpButton.setVisibility(View.INVISIBLE);
-//        mFbLoginButton.setVisibility(View.GONE);
-//        mFbLoginButton.setClickable(false);
-        mForgotPassword.setVisibility(View.INVISIBLE);
-        mTextViewPP.setVisibility(View.INVISIBLE);
-        mTextViewTC.setVisibility(View.INVISIBLE);
-        mGoogleButton.setVisibility(View.INVISIBLE);
-
-        mForgotPassword.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Forgot password activity
-                Intent intent = new Intent(getApplicationContext(), ForgotPassword.class);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            }
-        });
-
-        mTextViewPP.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/cookerptcd/home"));
-                startActivity(intent);
-            }
-        });
-
-        mTextViewTC.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://sites.google.com/view/cookerptcd/home"));
-                startActivity(intent);
-            }
-        });
-
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Log.d(TAG, "Login");
-                final EditText email = ( EditText)findViewById(R.id.email);
-                final EditText password = ( EditText)findViewById(R.id.password);
-
-                String errorCode = ValidateInput();
-
-                if (errorCode.compareTo("VALID_INPUT") == 0)
-                {
-                    try {
-                        DebugClass.DebugPrint(className, "login:valid input from user");
-                        mCollection.mFireBaseFunctions.SignInWithEmail(MainActivity.this, email.getText().toString(), password.getText().toString());
-                    }
-                    catch(Exception e) {
-                        Toast.makeText(getApplicationContext(),"Wrong Credentials. Make sure you are signed in on your phone.",Toast.LENGTH_LONG).show();
-                    }
-                }
-                else
-                {
-                    DebugClass.DebugPrint(className, "login:invalid input from user");
-                    Toast.makeText(getApplicationContext(), errorCode, Toast.LENGTH_LONG).show();
-                }
-            }
-        });
-
-        mSignUpButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // Start the Signup activity
-                Intent intent = new Intent(getApplicationContext(), SignupActivity.class);
-                startActivity(intent);
-                finish();
-                overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
-            }
-        });
-
-
-        // Facebook button listener
-//        mCallbackManager =CallbackManager.Factory.create();
-//
-//        //register the callbackmanager with the button.
-//        mFbLoginButton.registerCallback(mCallbackManager,new FacebookCallback< LoginResult>(){
-//            @Override
-//            public void onSuccess(LoginResult result){
-//                //create a new activity
-//                startWelcome(true);             //true indicates that the user has signed in using Facebook
-//            }
-//
-//            @Override
-//            public void onCancel(){
-//                //display message
-//            }
-//            @Override
-//            public void onError(FacebookException fbe){
-//
-//            }
-//        });
-//        mFbLoginButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                List<String> list=new ArrayList<>();
-//                list.add("email");
-//                LoginManager.getInstance().logInWithReadPermissions(MainActivity.this,list);
-//            }
-//        });
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         super.onActivityResult(requestCode, resultCode, data);
-//        mCallbackManager.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RC_SIGN_IN) {
+
+            if (resultCode == RESULT_OK) {
+                // Successfully signed in
+                mCollection.mFireBaseFunctions.WaitForUserLogin(this);
+            } else {
+                // Sign in failed. If response is null the user canceled the
+                // sign-in flow using the back button. Otherwise check
+                // response.getError().getErrorCode() and handle the error.
+                // ...
+                System.out.print("Sign in failed");
+            }
+        }
     }
 
     @Override
@@ -191,45 +77,18 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void UserSignedOut() {
+
         processDialogBox.DismissDialogBox();
-        mLoginButton.setVisibility(View.VISIBLE);
-        mSignUpButton.setVisibility(View.VISIBLE);
-//        mFbLoginButton.setVisibility(View.GONE);
-        mForgotPassword.setVisibility(View.VISIBLE);
-        mTextViewPP.setVisibility(View.VISIBLE);
-        mTextViewTC.setVisibility(View.VISIBLE);
-        mGoogleButton.setVisibility(View.VISIBLE);
-    }
 
-//    protected void startWelcome(boolean Facebook){
-//        if (Facebook)
-//        {
-//            //extract the name using the file
-//            // Dummy comment
-//        }
-//        Intent intent=new Intent(this,WelcomeActivity.class);
-//        startActivity(intent);
-//    }
-
-    public String ValidateInput()
-    {
-        EditText emailID = (EditText)findViewById(R.id.email); // Textfield email
-        EditText password = (EditText)findViewById(R.id.password); // Textfield password
-
-        String validateEmail = emailID.getText().toString();
-        String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
-        String validatePass = password.getText().toString();
-
-        if ((!validateEmail.matches(emailPattern)) ||
-                validateEmail.isEmpty() )
-        {
-            return "INVALID_EMAIL";
-        }
-        if (validatePass.isEmpty())
-        {
-            return "PASSWORD cannot be blank";
-        }
-
-        return "VALID_INPUT";
+        // Create and launch sign-in intent
+        startActivityForResult(
+                AuthUI.getInstance()
+                        .createSignInIntentBuilder()
+                        .setLogo(R.drawable.logobigred)
+                        .setTheme(R.style.CookerAppTheme)
+                        .setTosAndPrivacyPolicyUrls("https://sites.google.com/view/cookerptcd/home", "https://sites.google.com/view/cookerptcd/home")
+                        .setAvailableProviders(providers)
+                        .build(),
+                RC_SIGN_IN);
     }
 }

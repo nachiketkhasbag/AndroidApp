@@ -11,6 +11,12 @@ import com.google.firebase.database.DatabaseError;
 
 public class Interfaces {
 
+    public interface SignOutInterface{
+        void TaskComplete();
+
+        void TaskFailed( String error );
+    }
+
     public interface UserInterface {
 
         void UserSignedIn();

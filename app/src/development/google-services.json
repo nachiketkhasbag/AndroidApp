@@ -8,15 +8,27 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:198338073283:android:f9626c62c8a6f4d4",
+        "mobilesdk_app_id": "1:198338073283:android:9a742c40f2fe0c77",
         "android_client_info": {
-          "package_name": "com.khasna.development"
+          "package_name": "com.khasna.chef.development"
         }
       },
       "oauth_client": [
         {
-          "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
-          "client_type": 3
+          "client_id": "198338073283-qd9bkl8kf30sedgej3d5l99qrnetobqi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khasna.chef.development",
+            "certificate_hash": "196282f228cc35eaa795344394a61056f6169b78"
+          }
+        },
+        {
+          "client_id": "198338073283-mh4ee3sclm2u51psakp23s09mrrpg4er.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khasna.chef.development",
+            "certificate_hash": "49a5a4790589938a0a6d45d65eabd9fd047399b8"
+          }
         },
         {
           "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
@@ -33,8 +45,65 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198338073283:android:f9626c62c8a6f4d4",
+        "android_client_info": {
+          "package_name": "com.khasna.development"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198338073283-a265ft85a7fqb9hiroku4vm9l1f9gmp3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khasna.development",
+            "certificate_hash": "196282f228cc35eaa795344394a61056f6169b78"
+          }
+        },
+        {
+          "client_id": "198338073283-4s3nieqevmdr3vhko51gvpqu4a0ncmno.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.khasna.development",
+            "certificate_hash": "49a5a4790589938a0a6d45d65eabd9fd047399b8"
+          }
+        },
+        {
+          "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOek4MfgjleqFm9IjPaaDlEW8Ap-eJlL4"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198338073283-vkr9qgtm2sspler99dbjof458n2h9ujn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         },
         "ads_service": {
           "status": 2

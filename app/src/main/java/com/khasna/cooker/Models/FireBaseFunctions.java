@@ -2,9 +2,11 @@ package com.khasna.cooker.Models;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.widget.Toast;
 
+import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
@@ -41,27 +43,24 @@ public class FireBaseFunctions<G extends Collection> {
     {
         mInterfaces = userInterface;
 
-        mAuthListener = new FirebaseAuth.AuthStateListener() {
-            @Override
-            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
-                final FirebaseUser user = firebaseAuth.getCurrentUser();
-                if (user != null) {
-                    // User is signed in
-                    System.out.print("Signed in");
-                    DebugClass.DebugPrint(className, "onAuthStateChanged:valid input from user");
-                    emailID = user.getEmail();
-                    uID = user.getUid();
-                    displayName = user.getDisplayName();
-                    mInterfaces.UserSignedIn();
-                } else {
-                    // User is signed out
-                    System.out.print("Signed out");
-                    DebugClass.DebugPrint(className, "onAuthStateChanged:User signed out");
-                    mInterfaces.UserSignedOut();
-                }
-            }
-        };
-        FireBaseAuthClass.AddAuthStateListener(mAuthListener);
+        FirebaseAuth auth = FirebaseAuth.getInstance();
+        if (auth.getCurrentUser() != null)
+        {
+            // User is signed in
+            System.out.print("Signed in");
+            DebugClass.DebugPrint(className, "onAuthStateChanged:valid input from user");
+            emailID = auth.getCurrentUser().getEmail();
+            uID = auth.getUid();
+            displayName = auth.getCurrentUser().getDisplayName();
+            mInterfaces.UserSignedIn();
+        }
+        else
+        {
+            // User is signed out
+            System.out.print("Signed out");
+            DebugClass.DebugPrint(className, "onAuthStateChanged:User signed out");
+            mInterfaces.UserSignedOut();
+        }
     }
 
     public String getEmailID() {
@@ -76,73 +75,26 @@ public class FireBaseFunctions<G extends Collection> {
         return displayName;
     }
 
-    public void signOut()
+    public void signOut(Context context, final Interfaces.SignOutInterface signOutInterface)
     {
-        FireBaseAuthClass.SignOut();
-        FireBaseAuthClass.RemoveAuthStateListener(mAuthListener);
-        DestroyCurrentUser();
-    }
-
-    public void SignInWithEmail(final Activity activity, String emailId, String password)
-    {
-        final ProgressDialog progressDialog = new ProgressDialog(activity);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-
-        progressDialog.setMax(100); // Progress Dialog Max Value
-        progressDialog.setMessage("Loading..."); // Setting Message
-        progressDialog.setTitle("Processing"); // Setting Title
-        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER); // Progress Dialog Style Horizontal
-        progressDialog.show(); // Display Progress Dialog
-        progressDialog.setCancelable(false);
-
-        mAuth.signInWithEmailAndPassword(emailId,password)
-                .addOnCompleteListener(activity, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        progressDialog.dismiss();
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
-                        if (!task.isSuccessful()) {
-                            System.out.print("Sign in failed");
-                            Toast.makeText(activity.getApplicationContext(),
-                                    task.getException().toString(), Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                        {
-                            System.out.print("Sign in successful");
-                            Toast.makeText(activity.getApplicationContext(),
-                                    "Signed in", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    public void UpdateEmail(String emailId, final Interfaces.UpdateEmailInterface updateEmailInterface)
-    {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null){
-            mAuth.getCurrentUser().updateEmail(emailId).addOnCompleteListener(new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    if (task.isSuccessful()){
-                        updateEmailInterface.UpdateEmailComplete();
-                    }
-                    else{
-                        updateEmailInterface.UpdateEmailFailed(task.getException().toString());
-                    }
+        AuthUI.getInstance().signOut(context).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if (task.isSuccessful()){
+                    signOutInterface.TaskComplete();
                 }
-            });
-        }
-    }
+                else
+                {
+                    signOutInterface.TaskFailed(task.getException().toString());
+                }
+            }
+        });
 
-    public void UpdateProfileName(String firstName, String lastName){
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        if (mAuth.getCurrentUser() != null){
-            UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
-                    .setDisplayName(firstName + lastName).build();
-            mAuth.getCurrentUser().updateProfile(profileUpdates);
+        if(DebugClass.IsDelete())
+        {
+            AuthUI.getInstance().delete(context);
         }
+        DestroyCurrentUser();
     }
 
     public void ChangePassword(

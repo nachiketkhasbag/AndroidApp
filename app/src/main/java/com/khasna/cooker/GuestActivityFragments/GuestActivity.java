@@ -95,6 +95,7 @@ public class GuestActivity extends AppCompatActivity
 
         mToolbar = (Toolbar) findViewById(R.id.toolbarGuest);
         setSupportActionBar(mToolbar);
+        setTitle(R.string.app_name);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -179,14 +180,24 @@ public class GuestActivity extends AppCompatActivity
                 break;
 
             case R.id.signOut:
-                mCollection.mFireBaseFunctions.signOut();
-                mCollection.mGuestActivityFunctions.CleanObjects(mDataBaseRefGuest);
+                mCollection.mFireBaseFunctions.signOut(this, new Interfaces.SignOutInterface() {
+                    @Override
+                    public void TaskComplete() {
+                        mCollection.mGuestActivityFunctions.CleanObjects(mDataBaseRefGuest);
+                        Intent signOut = new Intent(getApplicationContext(), MainActivity.class);
+                        startActivity(signOut);
 
-                Intent signOut = new Intent(getApplicationContext(), MainActivity.class);
-                startActivity(signOut);
+                        // close this activity
+                        finish();
+                    }
 
-                // close this activity
-                finish();
+                    @Override
+                    public void TaskFailed(String error) {
+                        Toast.makeText(getApplicationContext(), error,
+                                Toast.LENGTH_LONG).show();
+                    }
+                });
+
                 break;
         }
 
