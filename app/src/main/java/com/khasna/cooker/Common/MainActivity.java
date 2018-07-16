@@ -9,18 +9,14 @@ import com.khasna.cooker.GuestActivityFragments.GuestActivity;
 import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-
 import java.util.Arrays;
 import java.util.List;
-
-
 public class MainActivity extends AppCompatActivity implements
         com.khasna.cooker.Common.Interfaces.UserInterface,
         Interfaces.AppUserInterface{
     private static final String TAG = "LoginActivity";
     private static final String className = "MainActivity";
     private static final int RC_SIGN_IN = 9001;
-
 
     // Choose authentication providers
     List<AuthUI.IdpConfig> providers = Arrays.asList(
@@ -50,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                mCollection.mFireBaseFunctions.WaitForUserLogin(this);
+                UserSignedIn();
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
@@ -77,7 +73,6 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void UserSignedOut() {
-
         processDialogBox.DismissDialogBox();
 
         // Create and launch sign-in intent

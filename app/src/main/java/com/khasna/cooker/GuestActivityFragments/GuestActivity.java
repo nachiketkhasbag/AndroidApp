@@ -1,5 +1,6 @@
 package com.khasna.cooker.GuestActivityFragments;
 
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
@@ -71,13 +72,12 @@ public class GuestActivity extends AppCompatActivity
                 new Interfaces.ReadGuestDataInterface() {
             @Override
             public void ReadComplete() {
+                processDialogBox.DismissDialogBox();
                 mActiveFragment = new FragmentChefsListGuest();
                 FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
                 transaction.replace(R.id.guest_page, mActiveFragment);
                 transaction.commit();
                 setTitle(R.string.viewChefs);
-
-                processDialogBox.DismissDialogBox();
             }
 
             @Override
@@ -93,11 +93,11 @@ public class GuestActivity extends AppCompatActivity
 
     private void setupDrawer() {
 
-        mToolbar = (Toolbar) findViewById(R.id.toolbarGuest);
+        mToolbar = findViewById(R.id.toolbarGuest);
         setSupportActionBar(mToolbar);
         setTitle(R.string.app_name);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
+        DrawerLayout drawer = findViewById(R.id.guest_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -107,8 +107,8 @@ public class GuestActivity extends AppCompatActivity
         setupNavMenu();
 
         View header = navigationView.getHeaderView(0);
-        mTextViewUserName = (TextView)header.findViewById(R.id.userNameGuest);
-        mTextViewUserEmail = (TextView)header.findViewById(R.id.userEmailGuest);
+        mTextViewUserName = header.findViewById(R.id.userNameGuest);
+        mTextViewUserEmail = header.findViewById(R.id.userEmailGuest);
         mTextViewUserName.setText(mCollection.mFireBaseFunctions.getDisplayName());
         mTextViewUserEmail.setText(mCollection.mFireBaseFunctions.getEmailID());
     }
@@ -135,7 +135,7 @@ public class GuestActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item)
+    public boolean onNavigationItemSelected(@NonNull MenuItem item)
     {
         int id = item.getItemId();
 
@@ -201,7 +201,7 @@ public class GuestActivity extends AppCompatActivity
                 break;
         }
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.guest_layout);
+        DrawerLayout drawer = findViewById(R.id.guest_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
@@ -233,7 +233,7 @@ public class GuestActivity extends AppCompatActivity
 
     void setupNavMenu()
     {
-        navigationView = (NavigationView) findViewById(R.id.nav_view_guest);
+        navigationView = findViewById(R.id.nav_view_guest);
         navigationView.setNavigationItemSelectedListener(GuestActivity.this);
         navigationView.getMenu().getItem(0).setChecked(true);
     }
