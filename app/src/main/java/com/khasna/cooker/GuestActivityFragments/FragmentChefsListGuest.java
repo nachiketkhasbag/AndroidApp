@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.khasna.cooker.Common.Interfaces;
+import com.khasna.cooker.Common.ProcessDialogBox;
 import com.khasna.cooker.GuestActivityFragments.Adapters.FragmentChefsListGuestAdapter;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
@@ -33,14 +34,10 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
     private View mView;
     private int orderDay;
     RecyclerView.LayoutManager mLayoutManager;
+    ProcessDialogBox mProcessDialogBox;
 
     private DatabaseReference mDataBaseRefChefs;
     private Collection mCollection;
-
-//    String dayOfTheWeek[] =
-//    {
-//            "", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"
-//    };
 
     public FragmentChefsListGuest() {
         // Required empty public constructor
@@ -54,7 +51,9 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
         mView = inflater.inflate(R.layout.fragment_cooks_list_for_guest, container, false);
         mDataBaseRefChefs = FirebaseDatabase.getInstance().getReference("cookProfile");
 
-//        textViewOrderTime = (TextView)mView.findViewById(R.id.textViewOrderTime);
+        mProcessDialogBox = new ProcessDialogBox(getActivity());
+        mProcessDialogBox.ShowDialogBox();
+
         String[] ids = TimeZone.getAvailableIDs(-8 * 60 * 60 * 1000);
 
         SimpleTimeZone simpleTimeZone = new SimpleTimeZone(-8 * 60 * 60 * 1000, ids[0]);
@@ -78,11 +77,13 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
                 new Interfaces.ReadActiveChefsInterface() {
                     @Override
                     public void ReadComplete() {
+                        mProcessDialogBox.DismissDialogBox();
                         mCooksList.setAdapter(adapter);
                     }
 
                     @Override
                     public void ReadFailed(String error) {
+                        mProcessDialogBox.DismissDialogBox();
                         System.out.println(error);
                     }
                 }

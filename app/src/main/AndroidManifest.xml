@@ -58,13 +58,6 @@
             </intent-filter>
         </service>
 
-        <activity
-            android:name="com.khasna.cooker.Common.SignupActivity"
-            android:theme="@style/CookerAppThemeEntryPoint" />
-        <activity
-            android:name="com.khasna.cooker.Common.ForgotPassword"
-            android:theme="@style/CookerAppThemeEntryPoint" />
-
         <!--<meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/fb_app_id" /> -->

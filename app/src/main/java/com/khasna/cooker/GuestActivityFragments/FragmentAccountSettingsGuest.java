@@ -66,6 +66,8 @@ public class FragmentAccountSettingsGuest extends Fragment {
 
         processDialogBox = new ProcessDialogBox(getActivity());
 
+        editTextUpdateGuestEmailAddress.setEnabled(false);
+
         setKnownFields();
 
         buttonGuestResetPassword.setOnClickListener(new View.OnClickListener(){

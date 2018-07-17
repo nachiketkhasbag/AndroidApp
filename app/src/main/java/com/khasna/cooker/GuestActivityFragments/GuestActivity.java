@@ -67,27 +67,6 @@ public class GuestActivity extends AppCompatActivity
         processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
 
-        mCollection.mGuestActivityFunctions.GetAllGuestData(
-                mDataBaseRefGuest,
-                new Interfaces.ReadGuestDataInterface() {
-            @Override
-            public void ReadComplete() {
-                processDialogBox.DismissDialogBox();
-                mActiveFragment = new FragmentChefsListGuest();
-                FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
-                transaction.replace(R.id.guest_page, mActiveFragment);
-                transaction.commit();
-                setTitle(R.string.viewChefs);
-            }
-
-            @Override
-            public void ReadFailed(DatabaseError databaseError) {
-                processDialogBox.DismissDialogBox();
-                System.out.println(databaseError.toString());
-                Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
-            }
-        });
-
         setupDrawer();
     }
 
@@ -224,11 +203,27 @@ public class GuestActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-    }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
+        mCollection.mGuestActivityFunctions.GetAllGuestData(
+                mDataBaseRefGuest,
+                new Interfaces.ReadGuestDataInterface() {
+                    @Override
+                    public void ReadComplete() {
+                        processDialogBox.DismissDialogBox();
+                        mActiveFragment = new FragmentChefsListGuest();
+                        FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
+                        transaction.replace(R.id.guest_page, mActiveFragment);
+                        transaction.commit();
+                        setTitle(R.string.viewChefs);
+                    }
+
+                    @Override
+                    public void ReadFailed(DatabaseError databaseError) {
+                        processDialogBox.DismissDialogBox();
+                        System.out.println(databaseError.toString());
+                        Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     void setupNavMenu()

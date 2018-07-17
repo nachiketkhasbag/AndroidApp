@@ -1,24 +1,16 @@
 package com.khasna.cooker.Models;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserProfileChangeRequest;
 import com.khasna.cooker.Common.DebugClass;
-import com.khasna.cooker.Common.FireBaseAuthClass;
 import com.khasna.cooker.Common.Interfaces;
-import com.khasna.cooker.Common.SignupActivity;
 
 /**
  * Created by nachiket on 4/26/2018.
@@ -29,9 +21,7 @@ public class FireBaseFunctions<G extends Collection> {
     private String emailID;
     private String uID;
     private String displayName;
-    private FirebaseAuth.AuthStateListener mAuthListener;
     private G fireBaseFunctionsGeneric;
-    private Interfaces.AppUserInterface mInterfaces;
 
     FireBaseFunctions(G g){
         fireBaseFunctionsGeneric = g;
@@ -41,6 +31,8 @@ public class FireBaseFunctions<G extends Collection> {
 
     public void WaitForUserLogin(Interfaces.AppUserInterface userInterface)
     {
+        Interfaces.AppUserInterface mInterfaces;
+
         mInterfaces = userInterface;
 
         FirebaseAuth auth = FirebaseAuth.getInstance();
@@ -140,26 +132,6 @@ public class FireBaseFunctions<G extends Collection> {
                 });
     }
 
-    public void SignUpWithEmail(
-            String userName,
-            String password,
-            final Interfaces.SignUpUserInterface signUpUserInterface)
-    {
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.createUserWithEmailAndPassword(userName, password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-            @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful())
-                {
-                    signUpUserInterface.SignUpFailed(task.getException().toString());
-                }
-                else
-                {
-                    signUpUserInterface.SignUpComplete();
-                }
-            }
-        });
-    }
 
     private void SendResetPassword(String newPass, final Interfaces.UpdatePasswordInterface updatePasswordInterface)
     {

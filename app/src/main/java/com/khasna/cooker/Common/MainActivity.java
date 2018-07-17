@@ -29,7 +29,6 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
         DebugClass.DebugPrint(className, "onCreate:Activity created");
 
         processDialogBox = new ProcessDialogBox(this);
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                UserSignedIn();
+                mCollection.mFireBaseFunctions.WaitForUserLogin(this);
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check
