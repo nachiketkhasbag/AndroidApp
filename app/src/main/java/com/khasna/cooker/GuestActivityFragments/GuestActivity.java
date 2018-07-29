@@ -119,10 +119,6 @@ public class GuestActivity extends AppCompatActivity
         int id = item.getItemId();
 
         mActiveFragmentManager = getSupportFragmentManager();
-        if(mActiveFragmentManager.getBackStackEntryCount() > 0 )
-        {
-            mActiveFragmentManager.popBackStack();
-        }
 
         switch(id)
         {
@@ -187,10 +183,18 @@ public class GuestActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
+        // Disable back button for now
+
         mActiveFragmentManager = getSupportFragmentManager();
         if(mActiveFragmentManager.getBackStackEntryCount() > 0 )
         {
-            super.onBackPressed();
+//            mActiveFragmentManager.popBackStack();
+            mActiveFragment = new FragmentChefsListGuest();
+            FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
+            transaction.replace(R.id.guest_page, mActiveFragment);
+            transaction.commit();
+            setTitle(R.string.viewChefs);
+//            super.onBackPressed();
         }
     }
 

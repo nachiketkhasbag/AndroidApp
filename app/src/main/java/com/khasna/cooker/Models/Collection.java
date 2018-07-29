@@ -11,11 +11,13 @@ public class Collection{
     public FireBaseFunctions mFireBaseFunctions;
     public DataBaseFunctions mDataBaseFunctions;
     public GuestActivityFunctions mGuestActivityFunctions;
+    public FireBaseStorageFunctions mFireBaseStorageFunctions;
 
     private Collection() {
         mFireBaseFunctions = new FireBaseFunctions<>(this);
         mDataBaseFunctions = new DataBaseFunctions<>(this);
         mGuestActivityFunctions = new GuestActivityFunctions<>(this);
+        mFireBaseStorageFunctions = new FireBaseStorageFunctions<>(this);
     }
 
     // static method to create instance of Singleton class

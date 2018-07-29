@@ -3,6 +3,7 @@ package com.khasna.cooker.GuestActivityFragments;
 
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,6 +20,7 @@ import com.khasna.cooker.R;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -72,6 +74,8 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
         final RecyclerView mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
         final FragmentChefsListGuestAdapter adapter = new FragmentChefsListGuestAdapter(this);
 
+        DeleteLocalFiles();
+
         mCollection.mGuestActivityFunctions.GetActiveChefs(
                 mDataBaseRefChefs,
                 new Interfaces.ReadActiveChefsInterface() {
@@ -79,6 +83,7 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
                     public void ReadComplete() {
                         mProcessDialogBox.DismissDialogBox();
                         mCooksList.setAdapter(adapter);
+                        DownloadProfilePictures(adapter);
                     }
 
                     @Override
@@ -95,6 +100,42 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
 
         // Inflate the layout for this fragment
         return mView;
+    }
+
+    void DownloadProfilePictures(final FragmentChefsListGuestAdapter adapter)
+    {
+        final ProcessDialogBox processDialogBox = new ProcessDialogBox(this.getActivity());
+        processDialogBox.ShowDialogBox();
+
+        mCollection.mFireBaseStorageFunctions.DownloadDP(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
+                new Interfaces.DownloadDP() {
+                    @Override
+                    public void TaskComplete() {
+                        adapter.notifyDataSetChanged();
+                        processDialogBox.DismissDialogBox();
+                    }
+
+                    @Override
+                    public void TaskFailed(String error) {
+                        processDialogBox.DismissDialogBox();
+                    }
+                });
+    }
+
+    void DeleteLocalFiles()
+    {
+        File myDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if (myDir != null && myDir.exists()) {
+            if (myDir.isDirectory()) {
+                String[] children = myDir.list();
+                for (String child: children) {
+                    new File(myDir, child).delete();
+                }
+            }
+        }
+        else{
+            System.out.print("Files don't exist");
+        }
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.khasna.cooker.Common;
 
 
+import android.net.Uri;
+
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 
@@ -10,6 +12,12 @@ import com.google.firebase.database.DatabaseError;
  */
 
 public class Interfaces {
+
+    public interface DownloadDP{
+        void TaskComplete();
+
+        void TaskFailed( String error );
+    }
 
     public interface SignOutInterface{
         void TaskComplete();
@@ -35,12 +43,6 @@ public class Interfaces {
         void ReadSucceeded(DataSnapshot dataSnapshot);
 
         void ReadFailed(DatabaseError databaseError);
-    }
-
-    public interface UpdateEmailInterface{
-        void UpdateEmailComplete();
-
-        void UpdateEmailFailed(String error);
     }
 
     public interface UpdatePasswordInterface{

@@ -1,6 +1,8 @@
 package com.khasna.cooker.GuestActivityFragments.ContainerClasses;
 
 
+import android.net.Uri;
+
 /**
  * Created by nachiket on 8/27/2017.
  */
@@ -17,6 +19,7 @@ public class ChefsListForGuest {
     private String uID;
     private String fullName;
     private String fullAddress;
+    private Uri uriProfilePic;
 
     public ChefsListForGuest() {
     }
@@ -104,5 +107,13 @@ public class ChefsListForGuest {
 
     public void setZipcode(String zipcode) {
         this.zipcode = zipcode;
+    }
+
+    public Uri getUriProfilePic() {
+        return uriProfilePic;
+    }
+
+    public void setUriProfilePic(Uri uriProfilePic) {
+        this.uriProfilePic = uriProfilePic;
     }
 }

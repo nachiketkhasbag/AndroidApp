@@ -62,6 +62,10 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
         holder.cookAddress.setText(GuestEntity.chefsListForGuestArrayList.get(position).getFullAddress());
         holder.cookPhoneNumber.setText(GuestEntity.chefsListForGuestArrayList.get(position).getPhoneNO());
 
+        if(GuestEntity.chefsListForGuestArrayList.get(position).getUriProfilePic() != null){
+            holder.cookImage.setImageURI(GuestEntity.chefsListForGuestArrayList.get(position).getUriProfilePic());
+        }
+
         final int itemPosition = holder.getAdapterPosition();
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
