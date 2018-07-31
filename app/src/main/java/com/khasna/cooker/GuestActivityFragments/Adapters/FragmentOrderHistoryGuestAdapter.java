@@ -22,6 +22,7 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     }
 
     FragmentOrderHistoryGuestAdapter.onClickListener mOnClickListener;
+    GuestEntity mGuestEntity;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -49,6 +50,7 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     // Provide a suitable constructor (depends on the kind of dataset)
     public FragmentOrderHistoryGuestAdapter(FragmentOrderHistoryGuestAdapter.onClickListener onClickListener) {
         this.mOnClickListener = onClickListener;
+        this.mGuestEntity = GuestEntity.getInstance();
     }
 
     @Override
@@ -64,7 +66,7 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
 
     @Override
     public void onBindViewHolder(FragmentOrderHistoryGuestAdapter.ViewHolder holder, int position) {
-        OrderHistoryGuestItem orderItem = GuestEntity.orderHistoryGuestItemsArrayList.get(position);
+        OrderHistoryGuestItem orderItem = mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position);
         holder.textViewItemName.setText(orderItem.getItemName());
         String quantity = "Number of items: " + String.valueOf(orderItem.getItemQuantity());
         holder.textViewQuantity.setText(quantity);
@@ -93,6 +95,6 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
 
     @Override
     public int getItemCount() {
-        return GuestEntity.orderHistoryGuestItemsArrayList.size();
+        return mGuestEntity.getOrderHistoryGuestItemsArrayList().size();
     }
 }

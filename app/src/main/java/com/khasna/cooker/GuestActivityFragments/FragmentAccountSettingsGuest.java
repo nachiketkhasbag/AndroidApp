@@ -43,9 +43,11 @@ public class FragmentAccountSettingsGuest extends Fragment {
     GuestProfile guestProfile;
     Collection mCollection;
     Fragment mActiveFragment;
+    GuestEntity mGuestEntity;
 
     public FragmentAccountSettingsGuest() {
         mCollection = Collection.getInstance();
+        mGuestEntity = GuestEntity.getInstance();
     }
 
 
@@ -55,7 +57,7 @@ public class FragmentAccountSettingsGuest extends Fragment {
         updateGuestAccount = inflater.inflate(R.layout.fragment_guest_account_settings, container, false);
 
         mDataBaseRef = FirebaseDatabase.getInstance().getReference("userProfile").
-                child(mCollection.mFireBaseFunctions.getuID()).child("profile");
+                child(mGuestEntity.getFirebaseUser().getUid()).child("profile");
         mActiveFragmentManager              = getFragmentManager();
         editTextUpdateGuestFirstName        = (EditText)updateGuestAccount.findViewById(R.id.editTextUpdateGuestFirstName);
         editTextUpdateGuestPhoneNumber         = (EditText)updateGuestAccount.findViewById(R.id.editTextUpdateGuestPhoneNumber);
@@ -113,10 +115,10 @@ public class FragmentAccountSettingsGuest extends Fragment {
     }
 
     public void setKnownFields(){
-        editTextUpdateGuestFirstName.setText(GuestEntity.guestProfile.getfname());
-        editTextUpdateGuestLastName.setText(GuestEntity.guestProfile.getlname());
-        editTextUpdateGuestPhoneNumber.setText(GuestEntity.guestProfile.getPhoneNumber());
-        editTextUpdateGuestEmailAddress.setText(mCollection.mFireBaseFunctions.getEmailID());
+        editTextUpdateGuestFirstName.setText(mGuestEntity.getGuestProfile().getfname());
+        editTextUpdateGuestLastName.setText(mGuestEntity.getGuestProfile().getlname());
+        editTextUpdateGuestPhoneNumber.setText(mGuestEntity.getGuestProfile().getPhoneNumber());
+        editTextUpdateGuestEmailAddress.setText(mGuestEntity.getFirebaseUser().getEmail());
     }
 
     public String ValidateInput()
@@ -154,7 +156,7 @@ public class FragmentAccountSettingsGuest extends Fragment {
                 editTextUpdateGuestPhoneNumber.getText().toString(),
                 "");
 
-        mDataBaseRef.child("userProfile").child(mCollection.mFireBaseFunctions.getuID()).child("profile").
+        mDataBaseRef.child("userProfile").child(mGuestEntity.getFirebaseUser().getUid()).child("profile").
                 setValue(guestProfile, new DatabaseReference.CompletionListener() {
 
                     //Implies that the data has been committed
@@ -162,7 +164,7 @@ public class FragmentAccountSettingsGuest extends Fragment {
                     public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
                         if (databaseError == null)
                         {
-                            GuestEntity.guestProfile = guestProfile;
+                            mGuestEntity.setGuestProfile(guestProfile);
                             Toast.makeText(getContext(), "Information updated", Toast.LENGTH_LONG).show();
                             return;
                         }

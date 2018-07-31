@@ -29,6 +29,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     private OnCLickListener mOnCLickListener;
     private SparseArray<String> orderTimeOptions = new SparseArray<>();
+    private GuestEntity mGuestEntity;
 
     public interface OnCLickListener{
         void RemoveOnClick(int itemPosition);
@@ -71,6 +72,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     public CartItemAdapter(OnCLickListener onCLickListener) {
         mOnCLickListener = onCLickListener;
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Override
@@ -86,27 +88,27 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(CartItemAdapter.ViewHolder holder, int position) {
         final int itemPosition = position;
-        holder.textViewCartItemName.setText(GuestEntity.cartItemArrayList.get(position).getItemName());
-        holder.textViewCartChefName.setText(GuestEntity.cartItemArrayList.get(position).getChefName());
-        holder.textViewChefAddress.setText(GuestEntity.cartItemArrayList.get(position).getChefAddress());
-        holder.textViewItemPriceForGuest.setText(String.valueOf(GuestEntity.cartItemArrayList.get(position).getItemPrice()));
+        holder.textViewCartItemName.setText(mGuestEntity.getCartItemArrayList().get(position).getItemName());
+        holder.textViewCartChefName.setText(mGuestEntity.getCartItemArrayList().get(position).getChefName());
+        holder.textViewChefAddress.setText(mGuestEntity.getCartItemArrayList().get(position).getChefAddress());
+        holder.textViewItemPriceForGuest.setText(String.valueOf(mGuestEntity.getCartItemArrayList().get(position).getItemPrice()));
         AdjustDatesForRadioButtons(holder);
         holder.radioButton0.setText(orderTimeOptions.get(0));
         holder.radioButton1.setText(orderTimeOptions.get(1));
         holder.radioButton2.setText(orderTimeOptions.get(2));
 
-        GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(orderTimeOptions.get(0));
+        mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(orderTimeOptions.get(0));
 
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                GuestEntity.cartItemArrayList.get(itemPosition).setItemQuantity(position+1);
+                mGuestEntity.getCartItemArrayList().get(itemPosition).setItemQuantity(position+1);
 
-                BigDecimal itemValue = new BigDecimal(GuestEntity.cartItemArrayList.get(itemPosition).getItemPrice());
-                BigDecimal itemQuantity = new BigDecimal(GuestEntity.cartItemArrayList.get(itemPosition).getItemQuantity());
+                BigDecimal itemValue = new BigDecimal(mGuestEntity.getCartItemArrayList().get(itemPosition).getItemPrice());
+                BigDecimal itemQuantity = new BigDecimal(mGuestEntity.getCartItemArrayList().get(itemPosition).getItemQuantity());
 
                 itemValue = itemValue.multiply(itemQuantity);
-                GuestEntity.cartItemArrayList.get(itemPosition).setTotalPrice(String.valueOf(itemValue));
+                mGuestEntity.getCartItemArrayList().get(itemPosition).setTotalPrice(String.valueOf(itemValue));
                 mOnCLickListener.UpdateFields();
             }
 
@@ -128,7 +130,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
                 }
             }
@@ -138,7 +140,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
                 }
             }
@@ -148,7 +150,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    GuestEntity.cartItemArrayList.get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
                 }
             }
@@ -157,7 +159,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return GuestEntity.cartItemArrayList.size();
+        return mGuestEntity.getCartItemArrayList().size();
     }
 
     private void AdjustDatesForRadioButtons(CartItemAdapter.ViewHolder holder)

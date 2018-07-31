@@ -21,6 +21,7 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
         void OnClick(int position);
     }
     OnClickListener mOnClickListener;
+    GuestEntity mGuestEntity;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -43,6 +44,7 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
 
     public FragmentChefsListGuestAdapter(OnClickListener onClickListener) {
         mOnClickListener = onClickListener;
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Override
@@ -57,13 +59,13 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
 
     @Override
     public void onBindViewHolder(FragmentChefsListGuestAdapter.ViewHolder holder, int position) {
-        holder.cookName.setText(GuestEntity.chefsListForGuestArrayList.get(position).getFullName());
+        holder.cookName.setText(mGuestEntity.getChefsListForGuestArrayList().get(position).getFullName());
         holder.cookSpeciality.setText("");
-        holder.cookAddress.setText(GuestEntity.chefsListForGuestArrayList.get(position).getFullAddress());
-        holder.cookPhoneNumber.setText(GuestEntity.chefsListForGuestArrayList.get(position).getPhoneNO());
+        holder.cookAddress.setText(mGuestEntity.getChefsListForGuestArrayList().get(position).getFullAddress());
+        holder.cookPhoneNumber.setText(mGuestEntity.getChefsListForGuestArrayList().get(position).getPhoneNO());
 
-        if(GuestEntity.chefsListForGuestArrayList.get(position).getUriProfilePic() != null){
-            holder.cookImage.setImageURI(GuestEntity.chefsListForGuestArrayList.get(position).getUriProfilePic());
+        if(mGuestEntity.getChefsListForGuestArrayList().get(position).getUriProfilePic() != null){
+            holder.cookImage.setImageURI(mGuestEntity.getChefsListForGuestArrayList().get(position).getUriProfilePic());
         }
 
         final int itemPosition = holder.getAdapterPosition();
@@ -78,6 +80,6 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
 
     @Override
     public int getItemCount() {
-        return GuestEntity.chefsListForGuestArrayList.size();
+        return mGuestEntity.getChefsListForGuestArrayList().size();
     }
 }

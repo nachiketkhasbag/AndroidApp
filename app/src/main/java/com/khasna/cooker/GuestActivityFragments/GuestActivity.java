@@ -42,15 +42,18 @@ public class GuestActivity extends AppCompatActivity
     ProcessDialogBox processDialogBox;
     NavigationView navigationView;
     Collection mCollection;
+    GuestEntity mGuestEntity;
 
     private DatabaseReference mDataBaseRefGuest;
 
     public GuestActivity() {
         mCollection = Collection.getInstance();
-        mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").
-                child(mCollection.mFireBaseFunctions.getuID());
+        mGuestEntity = GuestEntity.getInstance();
 
-        if (mCollection.mFireBaseFunctions.getEmailID() == null)
+        mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").
+                child(mGuestEntity.getFirebaseUser().getUid());
+
+        if (mGuestEntity.getFirebaseUser().getEmail() == null)
         {
             System.out.print("!!!!!!!!!!!!!ALERT - SHOULDN'T COME HERE!!!!!!!!!!!!!");
             System.out.print("!!!!!!!!!!!!!PLEASE DEBUG THIS!!!!!!!!!!!!!");
@@ -88,8 +91,8 @@ public class GuestActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         mTextViewUserName = header.findViewById(R.id.userNameGuest);
         mTextViewUserEmail = header.findViewById(R.id.userEmailGuest);
-        mTextViewUserName.setText(mCollection.mFireBaseFunctions.getDisplayName());
-        mTextViewUserEmail.setText(mCollection.mFireBaseFunctions.getEmailID());
+        mTextViewUserName.setText(mGuestEntity.getFirebaseUser().getUid());
+        mTextViewUserEmail.setText(mGuestEntity.getFirebaseUser().getEmail());
     }
 
     @Override
@@ -201,7 +204,7 @@ public class GuestActivity extends AppCompatActivity
     @Override
     protected void onStop() {
         super.onStop();
-        GuestEntity.chefsListForGuestArrayList.clear();
+        mGuestEntity.getChefsListForGuestArrayList().clear();
     }
 
     @Override

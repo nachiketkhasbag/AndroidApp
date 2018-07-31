@@ -41,9 +41,11 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
 
     ProcessDialogBox processDialogBox;
     Collection mCollection;
+    GuestEntity mGuestEntity;
 
     public FragmentViewCartGuest() {
         mCollection = Collection.getInstance();
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Nullable
@@ -76,7 +78,7 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
         mLayoutManager = new LinearLayoutManager(getContext());
         listViewCartItems.setLayoutManager(mLayoutManager);
 
-        if (GuestEntity.cartItemArrayList.size() != 0)
+        if (mGuestEntity.getCartItemArrayList().size() != 0)
         {
             textViewEmptyCart.setVisibility(View.GONE);
             cartItemAdapter = new CartItemAdapter(this);
@@ -142,7 +144,7 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
 
     @Override
     public void RemoveOnClick(int itemPosition) {
-        GuestEntity.cartItemArrayList.remove(itemPosition);
+        mGuestEntity.getCartItemArrayList().remove(itemPosition);
         cartItemAdapter.notifyDataSetChanged();
     }
 
@@ -165,12 +167,12 @@ public class FragmentViewCartGuest extends Fragment implements CartItemAdapter.O
         BigDecimal itemPrice;
         BigDecimal totalValue = new BigDecimal("0");
 
-        for (Integer index = 0; index < GuestEntity.cartItemArrayList.size(); index++)
+        for (Integer index = 0; index < mGuestEntity.getCartItemArrayList().size(); index++)
         {
-            itemPrice = new BigDecimal(GuestEntity.cartItemArrayList.get(index).getTotalPrice());
+            itemPrice = new BigDecimal(mGuestEntity.getCartItemArrayList().get(index).getTotalPrice());
 
             totalValue = totalValue.add(itemPrice);
-            numberOfItems += GuestEntity.cartItemArrayList.get(index).getItemQuantity();
+            numberOfItems += mGuestEntity.getCartItemArrayList().get(index).getItemQuantity();
         }
 
         textViewTotalPrice.setText(String.valueOf(totalValue));

@@ -4,9 +4,7 @@ import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.firebase.ui.auth.AuthUI;
-import com.khasna.cooker.GuestActivityFragments.ContainerClasses.GuestProfile;
 import com.khasna.cooker.GuestActivityFragments.GuestActivity;
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 import java.util.Arrays;
@@ -60,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements
     public void UserSignedIn() {
 
         processDialogBox.DismissDialogBox();
-
-        GuestEntity.guestProfile = new GuestProfile();
 
         Intent i = new Intent(getApplicationContext(), GuestActivity.class);
         startActivity(i);

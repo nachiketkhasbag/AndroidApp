@@ -30,9 +30,11 @@ public class GuestActivityFunctions<G extends Collection> {
 
     G mGuestActivityFunctionsGeneric;
     private int mClickCount = 0;
+    private GuestEntity mGuestEntity;
 
     public GuestActivityFunctions(G g) {
         mGuestActivityFunctionsGeneric = g;
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     public void PushToken(DatabaseReference databaseReference)
@@ -52,7 +54,8 @@ public class GuestActivityFunctions<G extends Collection> {
                 new Interfaces.DataBaseReadInterface() {
                     @Override
                     public void ReadSucceeded(DataSnapshot dataSnapshot) {
-                        GuestEntity.guestProfile = getGuestProfile(dataSnapshot);
+                        GuestProfile guestProfile = getGuestProfile(dataSnapshot);
+                        mGuestEntity.setGuestProfile(guestProfile);
                         readGuestDataInterface.ReadComplete();
                     }
 
@@ -78,12 +81,12 @@ public class GuestActivityFunctions<G extends Collection> {
 
     public void CleanObjects( DatabaseReference databaseReference)
     {
-        GuestEntity.chefsListForGuestArrayList.clear();
-        GuestEntity.guestProfile = null;
-        GuestEntity.cartItemArrayList.clear();
-        GuestEntity.guestItemArrayList.clear();
-        GuestEntity.orderHistoryGuestItemDetails.clear();
-        GuestEntity.orderHistoryGuestItemsArrayList.clear();
+        mGuestEntity.getChefsListForGuestArrayList().clear();
+        mGuestEntity.setGuestProfile(null);
+        mGuestEntity.getCartItemArrayList().clear();
+        mGuestEntity.getGuestItemArrayList().clear();
+        mGuestEntity.getOrderHistoryGuestItemDetails().clear();
+        mGuestEntity.getOrderHistoryGuestItemsArrayList().clear();
 
         mGuestActivityFunctionsGeneric.mDataBaseFunctions.WriteToDataBase(
                 databaseReference,
@@ -101,14 +104,14 @@ public class GuestActivityFunctions<G extends Collection> {
                 new Interfaces.DataBaseReadInterface() {
                     @Override
                     public void ReadSucceeded(DataSnapshot dataSnapshot) {
-                        GuestEntity.chefsListForGuestArrayList.clear();
+                        mGuestEntity.getChefsListForGuestArrayList().clear();
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
                             try{
                                 if(dataSnapshot.child(child.getKey()).child("isActive").getValue().toString().matches("true") ) {
                                     ChefsListForGuest chefsListForGuest = child.child("profile").getValue(ChefsListForGuest.class);
                                     chefsListForGuest.SetUnknownFields(dataSnapshot.child(child.getKey()).getKey());
 
-                                    GuestEntity.chefsListForGuestArrayList.add(chefsListForGuest);
+                                    mGuestEntity.getChefsListForGuestArrayList().add(chefsListForGuest);
                                 }
                             }
                             catch (Exception e)
@@ -142,7 +145,7 @@ public class GuestActivityFunctions<G extends Collection> {
                                 GuestItem guestItem = child.getValue(GuestItem.class);
 
                                 if(guestItem.getIsAvailable()) {
-                                    GuestEntity.guestItemArrayList.add(guestItem);
+                                    mGuestEntity.getGuestItemArrayList().add(guestItem);
                                 }
                             }
                             catch (Exception e)
@@ -173,31 +176,30 @@ public class GuestActivityFunctions<G extends Collection> {
                 System.out.println("Item selected to add to cart");
 
                 CartItem cartItem = new CartItem(
-                        GuestEntity.chefsListForGuestArrayList.get(position).getFullName(),
-                        GuestEntity.chefsListForGuestArrayList.get(position).getuID(),
-                        GuestEntity.guestProfile.getfname() + " " + GuestEntity.guestProfile.getlname(),
-                        mGuestActivityFunctionsGeneric.mFireBaseFunctions.getuID(),
-                        GuestEntity.chefsListForGuestArrayList.get(position).getFullAddress(),
+                        mGuestEntity.getChefsListForGuestArrayList().get(position).getFullName(),
+                        mGuestEntity.getChefsListForGuestArrayList().get(position).getuID(),
+                        mGuestEntity.getGuestProfile().getfname() + " " + mGuestEntity.getGuestProfile().getlname(),
+                        mGuestEntity.getFirebaseUser().getUid(),
+                        mGuestEntity.getChefsListForGuestArrayList().get(position).getFullAddress(),
                         1,
-                        GuestEntity.guestItemArrayList.get(key).getitemName(),
-                        GuestEntity.guestProfile.getPhoneNumber(),
-                        GuestEntity.guestItemArrayList.get(key).getItemPrice(),
-                        //R.string.dinnerPickUpTime,
+                        mGuestEntity.getGuestItemArrayList().get(key).getitemName(),
+                        mGuestEntity.getGuestProfile().getPhoneNumber(),
+                        mGuestEntity.getGuestItemArrayList().get(key).getItemPrice(),
                         "",
-                        String.valueOf(GuestEntity.guestItemArrayList.get(key).getItemPrice()),
-                        GuestEntity.chefsListForGuestArrayList.get(position).getPhoneNO(),
-                        GuestEntity.guestProfile.getAddress() + " " + GuestEntity.guestProfile.getaptno() +
-                                " " + GuestEntity.guestProfile.getCity() + " " + GuestEntity.guestProfile.getZipcode()
+                        String.valueOf(mGuestEntity.getGuestItemArrayList().get(key).getItemPrice()),
+                        mGuestEntity.getChefsListForGuestArrayList().get(position).getPhoneNO(),
+                        mGuestEntity.getGuestProfile().getAddress() + " " + mGuestEntity.getGuestProfile().getaptno() +
+                                " " + mGuestEntity.getGuestProfile().getCity() + " " + mGuestEntity.getGuestProfile().getZipcode()
                 );
 
-                GuestEntity.cartItemArrayList.add(cartItem);
+                mGuestEntity.getCartItemArrayList().add(cartItem);
             }
         }
     }
 
     public boolean IsGuestProfileCheckPass()
     {
-        return (GuestEntity.guestProfile.getfname().isEmpty() || GuestEntity.guestProfile.getPhoneNumber().isEmpty());
+        return (mGuestEntity.getGuestProfile().getfname().isEmpty() || mGuestEntity.getGuestProfile().getPhoneNumber().isEmpty());
     }
 
     public void DataUpload(final Interfaces.DataUploadInterface dataUploadInterface)
@@ -208,9 +210,9 @@ public class GuestActivityFunctions<G extends Collection> {
         sdf.format(trialTime);
         String time = sdf.format(trialTime);
 
-        while( index < GuestEntity.cartItemArrayList.size())
+        while( index < mGuestEntity.getCartItemArrayList().size())
         {
-            CartItem cartItem = GuestEntity.cartItemArrayList.get(index);
+            CartItem cartItem = mGuestEntity.getCartItemArrayList().get(index);
             String currentItemChefUid  = cartItem.getChefUid();
             DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("liveOrders").child(currentItemChefUid);
             // setting the time
@@ -233,7 +235,7 @@ public class GuestActivityFunctions<G extends Collection> {
             });
             index++;
         }
-        GuestEntity.cartItemArrayList.clear();
+        mGuestEntity.getCartItemArrayList().clear();
         dataUploadInterface.UploadComplete();
     }
 
@@ -270,12 +272,12 @@ public class GuestActivityFunctions<G extends Collection> {
 
                     public void getItems(DataSnapshot dataSnapshot)
                     {
-                        GuestEntity.orderHistoryGuestItemsArrayList.clear();
+                        mGuestEntity.getOrderHistoryGuestItemsArrayList().clear();
                         for (DataSnapshot child : dataSnapshot.getChildren()) {
-                            GuestEntity.orderHistoryGuestItemsArrayList.add(child.getValue(OrderHistoryGuestItem.class));
+                            mGuestEntity.getOrderHistoryGuestItemsArrayList().add(child.getValue(OrderHistoryGuestItem.class));
                         }
 
-                        Collections.sort(GuestEntity.orderHistoryGuestItemsArrayList, new Comparator<OrderHistoryGuestItem>() {
+                        Collections.sort(mGuestEntity.getOrderHistoryGuestItemsArrayList(), new Comparator<OrderHistoryGuestItem>() {
                             @Override
                             public int compare(OrderHistoryGuestItem o1, OrderHistoryGuestItem o2) {
                                 Date date1;

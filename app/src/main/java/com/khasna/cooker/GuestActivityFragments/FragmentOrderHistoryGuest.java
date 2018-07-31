@@ -39,10 +39,12 @@ public class FragmentOrderHistoryGuest extends Fragment{
     Fragment mActiveFragment;
     ProcessDialogBox processDialogBox;
     Collection mCollection;
+    GuestEntity mGuestEntity;
 
     public FragmentOrderHistoryGuest() {
         // Required empty public constructor
         mCollection = Collection.getInstance();
+        mGuestEntity = GuestEntity.getInstance();
     }
 
 
@@ -58,7 +60,7 @@ public class FragmentOrderHistoryGuest extends Fragment{
         orderHistoryLRecyclerView.setLayoutManager(mLayoutManager);
 
         mDatabaseRef = FirebaseDatabase.getInstance().getReference("userProfile").
-                child(mCollection.mFireBaseFunctions.getuID()).child("orderHistory");
+                child(mGuestEntity.getFirebaseUser().getUid()).child("orderHistory");
         mActiveFragmentManager = getFragmentManager();
 
         processDialogBox = new ProcessDialogBox(getActivity());

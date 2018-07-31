@@ -37,9 +37,11 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
     RecyclerView.LayoutManager mLayoutManager;
     ProcessDialogBox processDialogBox;
     Collection mCollection;
+    GuestEntity mGuestEntity;
 
     public ViewListedItemsGuest(){
         mCollection = Collection.getInstance();
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Nullable
@@ -48,7 +50,7 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
         mView = inflater.inflate(R.layout.fragment_guest_activity_view_listed_items, container, false);
 
         position = getArguments().getInt("position");
-        String uId = GuestEntity.chefsListForGuestArrayList.get(position).getuID();
+        String uId = mGuestEntity.getChefsListForGuestArrayList().get(position).getuID();
         mDataBaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").child(uId);
 
         final RecyclerView recyclerView = (RecyclerView)mView.findViewById(R.id.itemsListForGuest);
@@ -88,7 +90,7 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
             @Override
             public void onClick(View v) {
                 mCollection.mGuestActivityFunctions.AddItemToCart(clickedItemPositions, position);
-                if(GuestEntity.guestItemArrayList.size() != 0)
+                if(mGuestEntity.getGuestItemArrayList().size() != 0)
                 {
                     Toast.makeText(getContext(), "Item(s) added to cart", Toast.LENGTH_SHORT).show();
                 }
@@ -113,6 +115,6 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
     @Override
     public void onStop() {
         super.onStop();
-        GuestEntity.guestItemArrayList.clear();
+        mGuestEntity.getGuestItemArrayList().clear();
     }
 }

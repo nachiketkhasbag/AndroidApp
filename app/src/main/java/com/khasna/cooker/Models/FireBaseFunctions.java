@@ -11,6 +11,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.khasna.cooker.Common.DebugClass;
 import com.khasna.cooker.Common.Interfaces;
+import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 
 /**
  * Created by nachiket on 4/26/2018.
@@ -22,9 +23,11 @@ public class FireBaseFunctions<G extends Collection> {
     private String uID;
     private String displayName;
     private G fireBaseFunctionsGeneric;
+    private GuestEntity mGuestEntity;
 
     FireBaseFunctions(G g){
         fireBaseFunctionsGeneric = g;
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     private static final String className = "FireBaseFunctions";
@@ -41,8 +44,9 @@ public class FireBaseFunctions<G extends Collection> {
             // User is signed in
             System.out.print("Signed in");
             DebugClass.DebugPrint(className, "onAuthStateChanged:valid input from user");
+            mGuestEntity.setFirebaseUser(auth.getCurrentUser());
             emailID = auth.getCurrentUser().getEmail();
-            uID = auth.getUid();
+            uID = auth.getCurrentUser().getUid();
             displayName = auth.getCurrentUser().getDisplayName();
             mInterfaces.UserSignedIn();
         }
@@ -55,15 +59,15 @@ public class FireBaseFunctions<G extends Collection> {
         }
     }
 
-    public String getEmailID() {
+    private String getEmailID() {
         return emailID;
     }
 
-    public String getuID() {
+    private String getuID() {
         return uID;
     }
 
-    public String getDisplayName() {
+    private String getDisplayName() {
         return displayName;
     }
 

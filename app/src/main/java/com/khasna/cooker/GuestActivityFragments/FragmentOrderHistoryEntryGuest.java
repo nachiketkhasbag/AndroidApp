@@ -27,7 +27,10 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
     public TextView textViewChefPhoneNumber;
     public TextView textViewStatus;
 
+    GuestEntity mGuestEntity;
+
     public FragmentOrderHistoryEntryGuest() {
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Nullable
@@ -46,15 +49,15 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
         textViewStatus = mView.findViewById(R.id.textViewStatus);
 
         position = getArguments().getInt("position");
-        textViewChefName.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getChefName());
-        textViewChefAddress.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getChefAddress());
-        textViewItemOrdered.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getItemName());
-        textViewItemQuantity.setText(String.format("%s",GuestEntity.orderHistoryGuestItemsArrayList.get(position).getItemQuantity()));
-        textViewOrderTime.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getOrderTime());
-        textViewPrice.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getTotalPrice());
-        textViewPickupTime.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getPickUpTime());
-        textViewChefPhoneNumber.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getChefPhoneNumber());
-        textViewStatus.setText(GuestEntity.orderHistoryGuestItemsArrayList.get(position).getStatus());
+        textViewChefName.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getChefName());
+        textViewChefAddress.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getChefAddress());
+        textViewItemOrdered.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getItemName());
+        textViewItemQuantity.setText(String.format("%s",mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getItemQuantity()));
+        textViewOrderTime.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getOrderTime());
+        textViewPrice.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getTotalPrice());
+        textViewPickupTime.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getPickUpTime());
+        textViewChefPhoneNumber.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getChefPhoneNumber());
+        textViewStatus.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getStatus());
 
         return mView;
     }

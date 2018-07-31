@@ -19,6 +19,7 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
         void OnClick(View view, int position);
     }
     private OnClickListener mOnClickListener;
+    private GuestEntity mGuestEntity;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -40,6 +41,7 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
 
     public ViewListedItemsGuestAdapter(OnClickListener onClickListener) {
         mOnClickListener = onClickListener;
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Override
@@ -54,10 +56,10 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
 
     @Override
     public void onBindViewHolder(ViewListedItemsGuestAdapter.ViewHolder holder, int position) {
-        holder.textViewItemNameForGuest.setText(GuestEntity.guestItemArrayList.get(position).getitemName());
-        holder.textViewItemDescriptionForGuest.setText(GuestEntity.guestItemArrayList.get(position).getitemDescription());
-        holder.textViewItemContentsForGuest.setText(GuestEntity.guestItemArrayList.get(position).getItemIngredients());
-        holder.textViewItemPriceForGuest.setText(GuestEntity.guestItemArrayList.get(position).getItemPrice());
+        holder.textViewItemNameForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getitemName());
+        holder.textViewItemDescriptionForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getitemDescription());
+        holder.textViewItemContentsForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getItemIngredients());
+        holder.textViewItemPriceForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getItemPrice());
         final int itemPosition = holder.getAdapterPosition();
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -70,7 +72,7 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
 
     @Override
     public int getItemCount() {
-        return GuestEntity.guestItemArrayList.size();
+        return mGuestEntity.getGuestItemArrayList().size();
     }
 
 }

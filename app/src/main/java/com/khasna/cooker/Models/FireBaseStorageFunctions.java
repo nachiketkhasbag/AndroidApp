@@ -28,12 +28,14 @@ public class FireBaseStorageFunctions<G extends Collection> {
     private FirebaseStorage storage;
     private StorageReference storageReference;
     final String dp_path = "/images/dp/dp";
+    private GuestEntity mGuestEntity;
 
 
     FireBaseStorageFunctions(G g){
         mFireBaseStorageFunctionsGeneric = g;
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
+        mGuestEntity = GuestEntity.getInstance();
     }
 
     private static final String className = "FireBaseStorageFunctions";
@@ -41,9 +43,9 @@ public class FireBaseStorageFunctions<G extends Collection> {
     //    public void DownloadDP(Uri filepath, final Context context)
     public void DownloadDP(final File storageDir, final Interfaces.DownloadDP downloadDP)
     {
-        if(!GuestEntity.chefsListForGuestArrayList.isEmpty())
+        if(!mGuestEntity.getChefsListForGuestArrayList().isEmpty())
         {
-            for (final ChefsListForGuest chefsListForGuest: GuestEntity.chefsListForGuestArrayList)
+            for (final ChefsListForGuest chefsListForGuest: mGuestEntity.getChefsListForGuestArrayList())
             {
                 String uid = chefsListForGuest.getuID();
                 StorageReference pathReference = storageReference.child(uid + dp_path);
