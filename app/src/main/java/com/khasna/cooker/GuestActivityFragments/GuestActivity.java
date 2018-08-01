@@ -197,6 +197,7 @@ public class GuestActivity extends AppCompatActivity
             transaction.replace(R.id.guest_page, mActiveFragment);
             transaction.commit();
             setTitle(R.string.viewChefs);
+            navigationView.getMenu().getItem(0).setChecked(true);
 //            super.onBackPressed();
         }
     }

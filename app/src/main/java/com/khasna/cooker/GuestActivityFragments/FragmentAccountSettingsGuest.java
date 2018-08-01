@@ -39,7 +39,7 @@ public class FragmentAccountSettingsGuest extends Fragment {
     EditText editTextUpdateGuestLastName;
     EditText editTextUpdateGuestEmailAddress;
     Button buttonReUpdateGuestProfile;
-    Button buttonGuestResetPassword;
+//    Button buttonGuestResetPassword;
     GuestProfile guestProfile;
     Collection mCollection;
     Fragment mActiveFragment;
@@ -64,7 +64,7 @@ public class FragmentAccountSettingsGuest extends Fragment {
         editTextUpdateGuestLastName        = (EditText)updateGuestAccount.findViewById(R.id.editTextUpdateGuestLastName);
         editTextUpdateGuestEmailAddress    = (EditText)updateGuestAccount.findViewById(R.id.editTextUpdateGuestEmailAddress);
         buttonReUpdateGuestProfile           = (Button)updateGuestAccount.findViewById(R.id.buttonReUpdateGuestProfile);
-        buttonGuestResetPassword             = (Button)updateGuestAccount.findViewById(R.id.buttonGuestResetPassword);
+//        buttonGuestResetPassword             = (Button)updateGuestAccount.findViewById(R.id.buttonGuestResetPassword);
 
         processDialogBox = new ProcessDialogBox(getActivity());
 
@@ -72,13 +72,13 @@ public class FragmentAccountSettingsGuest extends Fragment {
 
         setKnownFields();
 
-        buttonGuestResetPassword.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                mActiveFragment = new FragmentChangePassword();
-                mActiveFragmentManager.beginTransaction().replace(R.id.guest_page, mActiveFragment).commit();
-            }
-        });
+//        buttonGuestResetPassword.setOnClickListener(new View.OnClickListener(){
+//            @Override
+//            public void onClick(View v) {
+//                mActiveFragment = new FragmentChangePassword();
+//                mActiveFragmentManager.beginTransaction().replace(R.id.guest_page, mActiveFragment).commit();
+//            }
+//        });
 
         buttonReUpdateGuestProfile.setOnClickListener(new View.OnClickListener(){
             @Override

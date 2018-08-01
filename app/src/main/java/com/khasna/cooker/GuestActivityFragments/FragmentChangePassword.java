@@ -45,21 +45,21 @@ public class FragmentChangePassword extends Fragment {
             @Override
             public void onClick(View v) {
 
-                mCollection.mFireBaseFunctions.ChangePassword(
-                        editTextCurrentPassword.getText().toString(),
-                        editTextNewPassword.getText().toString(),
-                        editTextConfirmPassword.getText().toString(),
-                        new Interfaces.UpdatePasswordInterface() {
-                            @Override
-                            public void UpdatePasswordSuccessful() {
-                                Toast.makeText(getContext(), " Password reset successful" , Toast.LENGTH_SHORT).show();
-                            }
-
-                            @Override
-                            public void UpdatePasswordFailed(String error) {
-                                Toast.makeText(getContext(), error , Toast.LENGTH_SHORT).show();
-                            }
-                        });
+//                mCollection.mFireBaseFunctions.ChangePassword(
+//                        editTextCurrentPassword.getText().toString(),
+//                        editTextNewPassword.getText().toString(),
+//                        editTextConfirmPassword.getText().toString(),
+//                        new Interfaces.UpdatePasswordInterface() {
+//                            @Override
+//                            public void UpdatePasswordSuccessful() {
+//                                Toast.makeText(getContext(), " Password reset successful" , Toast.LENGTH_SHORT).show();
+//                            }
+//
+//                            @Override
+//                            public void UpdatePasswordFailed(String error) {
+//                                Toast.makeText(getContext(), error , Toast.LENGTH_SHORT).show();
+//                            }
+//                        });
             }
         });
 
