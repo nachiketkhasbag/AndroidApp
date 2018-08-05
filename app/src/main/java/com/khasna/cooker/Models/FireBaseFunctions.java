@@ -7,9 +7,10 @@ import com.firebase.ui.auth.AuthUI;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.khasna.cooker.Common.DebugClass;
 import com.khasna.cooker.Common.Interfaces;
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 
 /**
  * Created by nachiket on 4/26/2018.
@@ -17,15 +18,11 @@ import com.khasna.cooker.GuestActivityFragments.GuestEntity;
 
 public class FireBaseFunctions<G extends Collection> {
 
-    private String emailID;
-    private String uID;
-    private String displayName;
     private G fireBaseFunctionsGeneric;
-    private GuestEntity mGuestEntity;
+    private FirebaseUser mFireBaseUser;
 
     FireBaseFunctions(G g){
         fireBaseFunctionsGeneric = g;
-        mGuestEntity = GuestEntity.getInstance();
     }
 
     private static final String className = "FireBaseFunctions";
@@ -42,10 +39,7 @@ public class FireBaseFunctions<G extends Collection> {
             // User is signed in
             System.out.print("Signed in");
             DebugClass.DebugPrint(className, "onAuthStateChanged:valid input from user");
-            mGuestEntity.setFirebaseUser(auth.getCurrentUser());
-            emailID = auth.getCurrentUser().getEmail();
-            uID = auth.getCurrentUser().getUid();
-            displayName = auth.getCurrentUser().getDisplayName();
+            mFireBaseUser = auth.getCurrentUser();
             mInterfaces.UserSignedIn();
         }
         else
@@ -57,16 +51,9 @@ public class FireBaseFunctions<G extends Collection> {
         }
     }
 
-    private String getEmailID() {
-        return emailID;
-    }
-
-    private String getuID() {
-        return uID;
-    }
-
-    private String getDisplayName() {
-        return displayName;
+    protected FirebaseUser getFireBaseUser()
+    {
+        return mFireBaseUser;
     }
 
     public void signOut(Context context, final Interfaces.SignOutInterface signOutInterface)
@@ -88,92 +75,21 @@ public class FireBaseFunctions<G extends Collection> {
         {
             AuthUI.getInstance().delete(context);
         }
-        DestroyCurrentUser();
+        DebugClass.DebugPrint(className, "DestroyCurrentUser:User destroyed");
     }
 
-//    public void ChangePassword(
-//            final String currentPassword,
-//            final String newPassword,
-//            final String confirmNewPassword,
-//            final Interfaces.UpdatePasswordInterface updatePasswordInterface)
-//    {
-//        String errorCode;
-//
-//        if (currentPassword.isEmpty())
-//        {
-//            errorCode = "CURRENT_PASSWORD_BLANK";
-//            updatePasswordInterface.UpdatePasswordFailed(errorCode);
-//            return;
-//        }
-//
-//        AuthCredential credential = EmailAuthProvider.getCredential(
-//                getEmailID(),
-//                currentPassword);
-//
-//        FirebaseAuth.getInstance().getCurrentUser().reauthenticate(credential)
-//                .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<Void> task) {
-//                        if (task.isSuccessful())
-//                        {
-//                            String error = ValidateInput(
-//                                    newPassword,
-//                                    confirmNewPassword);
-//                            if (error.equals("PASSWORDS_MATCH")){
-//                                SendResetPassword(confirmNewPassword, updatePasswordInterface);
-//                            }
-//                            else{
-//                                updatePasswordInterface.UpdatePasswordFailed(error);
-//                            }
-//                        }
-//                        else
-//                        {
-//                            updatePasswordInterface.UpdatePasswordFailed(task.getException().toString());
-//                        }
-//                    }
-//                });
-//    }
-
-
-    private void SendResetPassword(String newPass, final Interfaces.UpdatePasswordInterface updatePasswordInterface)
+    public void UpdateProfile(String newFname, String newLname)
     {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        mAuth.getCurrentUser().updatePassword(newPass)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            updatePasswordInterface.UpdatePasswordSuccessful();
-                        }
-                        else{
-                            updatePasswordInterface.UpdatePasswordFailed(task.getException().toString());
-                        }
-                    }
-                });
-    }
-
-    private String ValidateInput(String editTextNewPassword,
-                                String editTextConfirmPassword)
-    {
-        if (editTextNewPassword.isEmpty() |
-                editTextConfirmPassword.isEmpty() )
+        if (mAuth == null || mAuth.getCurrentUser() == null)
         {
-            return "PASSWORD_CANNOT_BE_BLANK";
+            System.out.print("Cannot complete process. PLease try again later");
+            System.exit(0);
+            return;
         }
-        else if (!editTextNewPassword.equals(editTextConfirmPassword)){
-            return "PASSWORDS_DO_NOT_MATCH";
-        }
-        else if (editTextNewPassword.equals(editTextConfirmPassword)){
-            return "PASSWORDS_MATCH";
-        }
-        return "UNKNOWN_ERROR";
-    }
 
-    private void DestroyCurrentUser()
-    {
-        DebugClass.DebugPrint(className, "DestroyCurrentUser:User destroyed");
-        emailID = "";
-        uID = "";
-        displayName = "";
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newFname + newLname).build();
+        mAuth.getCurrentUser().updateProfile(profileUpdates);
     }
 }

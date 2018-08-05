@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
 /**
@@ -26,11 +27,10 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
     public TextView textViewPrice;
     public TextView textViewChefPhoneNumber;
     public TextView textViewStatus;
-
-    GuestEntity mGuestEntity;
+    private Collection mCollection;
 
     public FragmentOrderHistoryEntryGuest() {
-        mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance();
     }
 
     @Nullable
@@ -49,15 +49,15 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
         textViewStatus = mView.findViewById(R.id.textViewStatus);
 
         position = getArguments().getInt("position");
-        textViewChefName.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getChefName());
-        textViewChefAddress.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getChefAddress());
-        textViewItemOrdered.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getItemName());
-        textViewItemQuantity.setText(String.format("%s",mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getItemQuantity()));
-        textViewOrderTime.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getOrderTime());
-        textViewPrice.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getTotalPrice());
-        textViewPickupTime.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getPickUpTime());
-        textViewChefPhoneNumber.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getChefPhoneNumber());
-        textViewStatus.setText(mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position).getStatus());
+        textViewChefName.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefName());
+        textViewChefAddress.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefAddress());
+        textViewItemOrdered.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getItemName());
+        textViewItemQuantity.setText(String.format("%s",mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getItemQuantity()));
+        textViewOrderTime.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getOrderTime());
+        textViewPrice.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getTotalPrice());
+        textViewPickupTime.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getPickUpTime());
+        textViewChefPhoneNumber.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefPhoneNumber());
+        textViewStatus.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getStatus());
 
         return mView;
     }

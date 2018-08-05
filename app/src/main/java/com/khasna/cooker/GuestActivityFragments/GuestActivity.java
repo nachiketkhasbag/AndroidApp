@@ -18,21 +18,20 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.database.DataSnapshot;
 import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.MainActivity;
 import com.khasna.cooker.Common.ProcessDialogBox;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
 /**
  * Created by nachiket on 4/6/2017.
  */
 
 public class GuestActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener{
+        implements NavigationView.OnNavigationItemSelectedListener,Interfaces.DataBaseReadInterface{
 
     Toolbar mToolbar;
     Fragment mActiveFragment;
@@ -42,22 +41,11 @@ public class GuestActivity extends AppCompatActivity
     ProcessDialogBox processDialogBox;
     NavigationView navigationView;
     Collection mCollection;
-    GuestEntity mGuestEntity;
-
-    private DatabaseReference mDataBaseRefGuest;
 
     public GuestActivity() {
-        mCollection = Collection.getInstance();
-        mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance(this);
 
-        mDataBaseRefGuest = FirebaseDatabase.getInstance().getReference("userProfile").
-                child(mGuestEntity.getFirebaseUser().getUid());
-
-        if (mGuestEntity.getFirebaseUser().getEmail() == null)
-        {
-            System.out.print("!!!!!!!!!!!!!ALERT - SHOULDN'T COME HERE!!!!!!!!!!!!!");
-            System.out.print("!!!!!!!!!!!!!PLEASE DEBUG THIS!!!!!!!!!!!!!");
-        }
+        mCollection.InitDatabase();
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +53,7 @@ public class GuestActivity extends AppCompatActivity
         setContentView(R.layout.activity_guest);
         mActiveFragmentManager = getSupportFragmentManager();
 
-        mCollection.mGuestActivityFunctions.PushToken(mDataBaseRefGuest);
+        mCollection.PushToken();
 
         processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
@@ -91,8 +79,8 @@ public class GuestActivity extends AppCompatActivity
         View header = navigationView.getHeaderView(0);
         mTextViewUserName = header.findViewById(R.id.userNameGuest);
         mTextViewUserEmail = header.findViewById(R.id.userEmailGuest);
-        mTextViewUserName.setText(mGuestEntity.getFirebaseUser().getUid());
-        mTextViewUserEmail.setText(mGuestEntity.getFirebaseUser().getEmail());
+        mTextViewUserName.setText(mCollection.GetFireBaseUser().getDisplayName());
+        mTextViewUserEmail.setText(mCollection.GetFireBaseUser().getEmail());
     }
 
     @Override
@@ -158,10 +146,10 @@ public class GuestActivity extends AppCompatActivity
                 break;
 
             case R.id.signOut:
-                mCollection.mFireBaseFunctions.signOut(this, new Interfaces.SignOutInterface() {
+                mCollection.SignOut(new Interfaces.SignOutInterface() {
                     @Override
                     public void TaskComplete() {
-                        mCollection.mGuestActivityFunctions.CleanObjects(mDataBaseRefGuest);
+                        mCollection.CleanObjects();
                         Intent signOut = new Intent(getApplicationContext(), MainActivity.class);
                         startActivity(signOut);
 
@@ -184,6 +172,8 @@ public class GuestActivity extends AppCompatActivity
         return true;
     }
 
+
+
     @Override
     public void onBackPressed() {
         // Disable back button for now
@@ -191,47 +181,42 @@ public class GuestActivity extends AppCompatActivity
         mActiveFragmentManager = getSupportFragmentManager();
         if(mActiveFragmentManager.getBackStackEntryCount() > 0 )
         {
-//            mActiveFragmentManager.popBackStack();
             mActiveFragment = new FragmentChefsListGuest();
             FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
             transaction.replace(R.id.guest_page, mActiveFragment);
             transaction.commit();
             setTitle(R.string.viewChefs);
             navigationView.getMenu().getItem(0).setChecked(true);
-//            super.onBackPressed();
         }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mGuestEntity.getChefsListForGuestArrayList().clear();
+        mCollection.CleanObjects();
+    }
+
+    @Override
+    public void ReadSucceeded(DataSnapshot dataSnapshot) {
+        processDialogBox.DismissDialogBox();
+        mActiveFragment = new FragmentChefsListGuest();
+        FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
+        transaction.replace(R.id.guest_page, mActiveFragment);
+        transaction.commit();
+        setTitle(R.string.viewChefs);
+    }
+
+    @Override
+    public void ReadFailed(DatabaseError databaseError) {
+        processDialogBox.DismissDialogBox();
+        System.out.println(databaseError.toString());
+        Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-
-        mCollection.mGuestActivityFunctions.GetAllGuestData(
-                mDataBaseRefGuest,
-                new Interfaces.ReadGuestDataInterface() {
-                    @Override
-                    public void ReadComplete() {
-                        processDialogBox.DismissDialogBox();
-                        mActiveFragment = new FragmentChefsListGuest();
-                        FragmentTransaction transaction = mActiveFragmentManager.beginTransaction();
-                        transaction.replace(R.id.guest_page, mActiveFragment);
-                        transaction.commit();
-                        setTitle(R.string.viewChefs);
-                    }
-
-                    @Override
-                    public void ReadFailed(DatabaseError databaseError) {
-                        processDialogBox.DismissDialogBox();
-                        System.out.println(databaseError.toString());
-                        Toast.makeText(getApplicationContext(), databaseError.toString(), Toast.LENGTH_LONG).show();
-                    }
-                });
+        mCollection.FillGuestProfile(this);
     }
 
     void setupNavMenu()

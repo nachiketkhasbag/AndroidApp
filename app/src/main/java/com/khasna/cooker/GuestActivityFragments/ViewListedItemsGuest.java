@@ -19,14 +19,14 @@ import com.khasna.cooker.GuestActivityFragments.Adapters.ViewListedItemsGuestAda
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 /**
  * Created by nachiket on 6/5/2017.
  */
 
-public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGuestAdapter.OnClickListener {
+public class ViewListedItemsGuest extends Fragment implements
+        ViewListedItemsGuestAdapter.OnClickListener,
+        Interfaces.ReadChefItemsInterface{
 
     View mView;
 
@@ -37,11 +37,10 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
     RecyclerView.LayoutManager mLayoutManager;
     ProcessDialogBox processDialogBox;
     Collection mCollection;
-    GuestEntity mGuestEntity;
+    ViewListedItemsGuestAdapter mAdapter;
 
     public ViewListedItemsGuest(){
         mCollection = Collection.getInstance();
-        mGuestEntity = GuestEntity.getInstance();
     }
 
     @Nullable
@@ -50,12 +49,10 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
         mView = inflater.inflate(R.layout.fragment_guest_activity_view_listed_items, container, false);
 
         position = getArguments().getInt("position");
-        String uId = mGuestEntity.getChefsListForGuestArrayList().get(position).getuID();
-        mDataBaseRef = FirebaseDatabase.getInstance().getReference("cookProfile").child(uId);
 
         final RecyclerView recyclerView = (RecyclerView)mView.findViewById(R.id.itemsListForGuest);
-        final ViewListedItemsGuestAdapter adapter = new ViewListedItemsGuestAdapter(this);
-        recyclerView.setAdapter(adapter);
+        mAdapter = new ViewListedItemsGuestAdapter(this);
+        recyclerView.setAdapter(mAdapter);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -66,31 +63,14 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
         processDialogBox = new ProcessDialogBox(getActivity());
         processDialogBox.ShowDialogBox();
 
-        mCollection.mGuestActivityFunctions.GetChefItems(
-                mDataBaseRef,
-                new Interfaces.ReadChefItemsInterface() {
-                    @Override
-                    public void ReadComplete() {
-                        adapter.notifyDataSetChanged();
-                        processDialogBox.DismissDialogBox();
-                    }
-
-                    @Override
-                    public void ReadFailed(String error) {
-                        System.out.println(error);
-                        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
-                        processDialogBox.DismissDialogBox();
-                    }
-                }
-        );
-
-        adapter.notifyDataSetChanged();
+        mCollection.GetChefItems(position, this);
 
         buttonAddItemToCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mCollection.mGuestActivityFunctions.AddItemToCart(clickedItemPositions, position);
-                if(mGuestEntity.getGuestItemArrayList().size() != 0)
+                int itemsInCart = mCollection.GetCartItemArrayList().size();
+                mCollection.AddItemToCart(clickedItemPositions, position);
+                if(mCollection.GetCartItemArrayList().size() != itemsInCart)
                 {
                     Toast.makeText(getContext(), "Item(s) added to cart", Toast.LENGTH_SHORT).show();
                 }
@@ -115,6 +95,20 @@ public class ViewListedItemsGuest extends Fragment implements ViewListedItemsGue
     @Override
     public void onStop() {
         super.onStop();
-        mGuestEntity.getGuestItemArrayList().clear();
+        mCollection.GetGuestItemArrayList().clear();
+    }
+
+    @Override
+    public void ReadComplete() {
+        mAdapter.notifyDataSetChanged();
+        processDialogBox.DismissDialogBox();
+    }
+
+    @Override
+    public void ReadFailed(String error) {
+        System.out.println(error);
+        mAdapter.notifyDataSetChanged();
+        Toast.makeText(getContext(), error, Toast.LENGTH_SHORT).show();
+        processDialogBox.DismissDialogBox();
     }
 }

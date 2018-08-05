@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
 
@@ -21,7 +21,7 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
         void OnClick(int position);
     }
     OnClickListener mOnClickListener;
-    GuestEntity mGuestEntity;
+    Collection mCollection;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -44,7 +44,7 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
 
     public FragmentChefsListGuestAdapter(OnClickListener onClickListener) {
         mOnClickListener = onClickListener;
-        mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance();
     }
 
     @Override
@@ -59,13 +59,13 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
 
     @Override
     public void onBindViewHolder(FragmentChefsListGuestAdapter.ViewHolder holder, int position) {
-        holder.cookName.setText(mGuestEntity.getChefsListForGuestArrayList().get(position).getFullName());
+        holder.cookName.setText(mCollection.GetChefsListForGuest().get(position).getFullName());
         holder.cookSpeciality.setText("");
-        holder.cookAddress.setText(mGuestEntity.getChefsListForGuestArrayList().get(position).getFullAddress());
-        holder.cookPhoneNumber.setText(mGuestEntity.getChefsListForGuestArrayList().get(position).getPhoneNO());
+        holder.cookAddress.setText(mCollection.GetChefsListForGuest().get(position).getFullAddress());
+        holder.cookPhoneNumber.setText(mCollection.GetChefsListForGuest().get(position).getPhoneNO());
 
-        if(mGuestEntity.getChefsListForGuestArrayList().get(position).getUriProfilePic() != null){
-            holder.cookImage.setImageURI(mGuestEntity.getChefsListForGuestArrayList().get(position).getUriProfilePic());
+        if(mCollection.GetChefsListForGuest().get(position).getUriProfilePic() != null){
+            holder.cookImage.setImageURI(mCollection.GetChefsListForGuest().get(position).getUriProfilePic());
         }
 
         final int itemPosition = holder.getAdapterPosition();
@@ -80,6 +80,6 @@ public class FragmentChefsListGuestAdapter extends RecyclerView.Adapter<Fragment
 
     @Override
     public int getItemCount() {
-        return mGuestEntity.getChefsListForGuestArrayList().size();
+        return mCollection.GetChefsListForGuest().size();
     }
 }

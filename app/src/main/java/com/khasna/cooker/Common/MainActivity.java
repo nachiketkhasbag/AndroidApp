@@ -32,8 +32,8 @@ public class MainActivity extends AppCompatActivity implements
         processDialogBox = new ProcessDialogBox(this);
         processDialogBox.ShowDialogBox();
 
-        mCollection = Collection.getInstance();
-        mCollection.mFireBaseFunctions.WaitForUserLogin(this);
+        mCollection = Collection.getInstance(this);
+        mCollection.WaitForUserLogin(this);
     }
 
     @Override
@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements
 
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
-                mCollection.mFireBaseFunctions.WaitForUserLogin(this);
+                mCollection.WaitForUserLogin(this);
             } else {
                 // Sign in failed. If response is null the user canceled the
                 // sign-in flow using the back button. Otherwise check

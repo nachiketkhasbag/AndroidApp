@@ -12,7 +12,7 @@ import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
 import java.math.BigDecimal;
@@ -29,7 +29,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     private OnCLickListener mOnCLickListener;
     private SparseArray<String> orderTimeOptions = new SparseArray<>();
-    private GuestEntity mGuestEntity;
+    private Collection mCollection;
 
     public interface OnCLickListener{
         void RemoveOnClick(int itemPosition);
@@ -72,7 +72,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     public CartItemAdapter(OnCLickListener onCLickListener) {
         mOnCLickListener = onCLickListener;
-        mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance();
     }
 
     @Override
@@ -88,27 +88,27 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     @Override
     public void onBindViewHolder(CartItemAdapter.ViewHolder holder, int position) {
         final int itemPosition = position;
-        holder.textViewCartItemName.setText(mGuestEntity.getCartItemArrayList().get(position).getItemName());
-        holder.textViewCartChefName.setText(mGuestEntity.getCartItemArrayList().get(position).getChefName());
-        holder.textViewChefAddress.setText(mGuestEntity.getCartItemArrayList().get(position).getChefAddress());
-        holder.textViewItemPriceForGuest.setText(String.valueOf(mGuestEntity.getCartItemArrayList().get(position).getItemPrice()));
-        AdjustDatesForRadioButtons(holder);
+        holder.textViewCartItemName.setText(mCollection.GetCartItemArrayList().get(position).getItemName());
+        holder.textViewCartChefName.setText(mCollection.GetCartItemArrayList().get(position).getChefName());
+        holder.textViewChefAddress.setText(mCollection.GetCartItemArrayList().get(position).getChefAddress());
+        holder.textViewItemPriceForGuest.setText(String.valueOf(mCollection.GetCartItemArrayList().get(position).getItemPrice()));
+        AdjustDatesForRadioButtons();
         holder.radioButton0.setText(orderTimeOptions.get(0));
         holder.radioButton1.setText(orderTimeOptions.get(1));
         holder.radioButton2.setText(orderTimeOptions.get(2));
 
-        mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(orderTimeOptions.get(0));
+        mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(orderTimeOptions.get(0));
 
         holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mGuestEntity.getCartItemArrayList().get(itemPosition).setItemQuantity(position+1);
+                mCollection.GetCartItemArrayList().get(itemPosition).setItemQuantity(position+1);
 
-                BigDecimal itemValue = new BigDecimal(mGuestEntity.getCartItemArrayList().get(itemPosition).getItemPrice());
-                BigDecimal itemQuantity = new BigDecimal(mGuestEntity.getCartItemArrayList().get(itemPosition).getItemQuantity());
+                BigDecimal itemValue = new BigDecimal(mCollection.GetCartItemArrayList().get(itemPosition).getItemPrice());
+                BigDecimal itemQuantity = new BigDecimal(mCollection.GetCartItemArrayList().get(itemPosition).getItemQuantity());
 
                 itemValue = itemValue.multiply(itemQuantity);
-                mGuestEntity.getCartItemArrayList().get(itemPosition).setTotalPrice(String.valueOf(itemValue));
+                mCollection.GetCartItemArrayList().get(itemPosition).setTotalPrice(String.valueOf(itemValue));
                 mOnCLickListener.UpdateFields();
             }
 
@@ -130,7 +130,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
                 }
             }
@@ -140,7 +140,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
                 }
             }
@@ -150,7 +150,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (isChecked) {
-                    mGuestEntity.getCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
+                    mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
                 }
             }
@@ -159,10 +159,10 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
 
     @Override
     public int getItemCount() {
-        return mGuestEntity.getCartItemArrayList().size();
+        return mCollection.GetCartItemArrayList().size();
     }
 
-    private void AdjustDatesForRadioButtons(CartItemAdapter.ViewHolder holder)
+    private void AdjustDatesForRadioButtons()
     {
         Calendar now = Calendar.getInstance();
         Date calendarDateTime = now.getTime();

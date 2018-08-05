@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
 /**
@@ -19,7 +19,7 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
         void OnClick(View view, int position);
     }
     private OnClickListener mOnClickListener;
-    private GuestEntity mGuestEntity;
+    private Collection mCollection;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -41,7 +41,7 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
 
     public ViewListedItemsGuestAdapter(OnClickListener onClickListener) {
         mOnClickListener = onClickListener;
-        mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance();
     }
 
     @Override
@@ -56,10 +56,10 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
 
     @Override
     public void onBindViewHolder(ViewListedItemsGuestAdapter.ViewHolder holder, int position) {
-        holder.textViewItemNameForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getitemName());
-        holder.textViewItemDescriptionForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getitemDescription());
-        holder.textViewItemContentsForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getItemIngredients());
-        holder.textViewItemPriceForGuest.setText(mGuestEntity.getGuestItemArrayList().get(position).getItemPrice());
+        holder.textViewItemNameForGuest.setText(mCollection.GetGuestItemArrayList().get(position).getitemName());
+        holder.textViewItemDescriptionForGuest.setText(mCollection.GetGuestItemArrayList().get(position).getitemDescription());
+        holder.textViewItemContentsForGuest.setText(mCollection.GetGuestItemArrayList().get(position).getItemIngredients());
+        holder.textViewItemPriceForGuest.setText(mCollection.GetGuestItemArrayList().get(position).getItemPrice());
         final int itemPosition = holder.getAdapterPosition();
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -72,7 +72,7 @@ public class ViewListedItemsGuestAdapter extends RecyclerView.Adapter<ViewListed
 
     @Override
     public int getItemCount() {
-        return mGuestEntity.getGuestItemArrayList().size();
+        return mCollection.GetGuestItemArrayList().size();
     }
 
 }

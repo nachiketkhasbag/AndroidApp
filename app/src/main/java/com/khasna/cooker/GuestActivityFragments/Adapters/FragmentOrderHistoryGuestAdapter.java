@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.khasna.cooker.GuestActivityFragments.ContainerClasses.OrderHistoryGuestItem;
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
 import java.util.regex.Pattern;
@@ -21,8 +21,8 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
         void onClick(int position);
     }
 
-    FragmentOrderHistoryGuestAdapter.onClickListener mOnClickListener;
-    GuestEntity mGuestEntity;
+    private FragmentOrderHistoryGuestAdapter.onClickListener mOnClickListener;
+    private Collection mCollection;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -50,7 +50,7 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     // Provide a suitable constructor (depends on the kind of dataset)
     public FragmentOrderHistoryGuestAdapter(FragmentOrderHistoryGuestAdapter.onClickListener onClickListener) {
         this.mOnClickListener = onClickListener;
-        this.mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
 
     @Override
     public void onBindViewHolder(FragmentOrderHistoryGuestAdapter.ViewHolder holder, int position) {
-        OrderHistoryGuestItem orderItem = mGuestEntity.getOrderHistoryGuestItemsArrayList().get(position);
+        OrderHistoryGuestItem orderItem = mCollection.GetOrderHistoryGuestItemsArrayList().get(position);
         holder.textViewItemName.setText(orderItem.getItemName());
         String quantity = "Number of items: " + String.valueOf(orderItem.getItemQuantity());
         holder.textViewQuantity.setText(quantity);
@@ -88,13 +88,13 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mOnClickListener.onClick(itemPosition);
+//                mOnClickListener.onClick(itemPosition);
             }
         });
     }
 
     @Override
     public int getItemCount() {
-        return mGuestEntity.getOrderHistoryGuestItemsArrayList().size();
+        return mCollection.GetOrderHistoryGuestItemsArrayList().size();
     }
 }

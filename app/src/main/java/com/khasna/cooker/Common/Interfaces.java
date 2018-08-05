@@ -45,24 +45,6 @@ public class Interfaces {
         void ReadFailed(DatabaseError databaseError);
     }
 
-    public interface UpdatePasswordInterface{
-        void UpdatePasswordSuccessful();
-
-        void UpdatePasswordFailed(String error);
-    }
-
-    public interface ReadGuestDataInterface{
-        void ReadComplete();
-
-        void ReadFailed(DatabaseError databaseError);
-    }
-
-    public interface ReadActiveChefsInterface{
-        void ReadComplete();
-
-        void ReadFailed(String error);
-    }
-
     public interface ReadChefItemsInterface{
         void ReadComplete();
 
@@ -73,17 +55,5 @@ public class Interfaces {
         void UploadComplete();
 
         void UploadFailed(String error);
-    }
-
-    public interface ReadGuestHistoryInterface{
-        void ReadComplete();
-
-        void ReadFailed(String error);
-    }
-
-    public interface SignUpUserInterface{
-        void SignUpComplete();
-
-        void SignUpFailed(String error);
     }
 }

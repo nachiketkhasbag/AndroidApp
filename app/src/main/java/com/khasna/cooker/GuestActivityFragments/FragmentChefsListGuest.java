@@ -3,7 +3,6 @@ package com.khasna.cooker.GuestActivityFragments;
 
 import android.os.Bundle;
 
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.LinearLayoutManager;
@@ -12,15 +11,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.khasna.cooker.Common.Interfaces;
 import com.khasna.cooker.Common.ProcessDialogBox;
 import com.khasna.cooker.GuestActivityFragments.Adapters.FragmentChefsListGuestAdapter;
 import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 
-import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -30,15 +28,18 @@ import java.util.TimeZone;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class FragmentChefsListGuest extends Fragment implements FragmentChefsListGuestAdapter.OnClickListener{
+public class FragmentChefsListGuest extends Fragment implements FragmentChefsListGuestAdapter.OnClickListener,
+        Interfaces.DataBaseReadInterface,
+        Interfaces.DownloadDP{
 
     private Fragment mActiveFragment;
     private View mView;
     private int orderDay;
     RecyclerView.LayoutManager mLayoutManager;
     ProcessDialogBox mProcessDialogBox;
+    RecyclerView mCooksList;
+    FragmentChefsListGuestAdapter mAdapter;
 
-    private DatabaseReference mDataBaseRefChefs;
     private Collection mCollection;
 
     public FragmentChefsListGuest() {
@@ -51,7 +52,6 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
                              Bundle savedInstanceState) {
 
         mView = inflater.inflate(R.layout.fragment_cooks_list_for_guest, container, false);
-        mDataBaseRefChefs = FirebaseDatabase.getInstance().getReference("cookProfile");
 
         mProcessDialogBox = new ProcessDialogBox(getActivity());
         mProcessDialogBox.ShowDialogBox();
@@ -71,28 +71,12 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
             orderDay += 1;
         }
 
-        final RecyclerView mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
-        final FragmentChefsListGuestAdapter adapter = new FragmentChefsListGuestAdapter(this);
+        mCooksList = (RecyclerView) mView.findViewById(R.id.CooksListForGuest);
+        mAdapter = new FragmentChefsListGuestAdapter(this);
 
-        DeleteLocalFiles();
+        mCollection.DeleteLocalFiles(getActivity());
 
-        mCollection.mGuestActivityFunctions.GetActiveChefs(
-                mDataBaseRefChefs,
-                new Interfaces.ReadActiveChefsInterface() {
-                    @Override
-                    public void ReadComplete() {
-                        mProcessDialogBox.DismissDialogBox();
-                        mCooksList.setAdapter(adapter);
-                        DownloadProfilePictures(adapter);
-                    }
-
-                    @Override
-                    public void ReadFailed(String error) {
-                        mProcessDialogBox.DismissDialogBox();
-                        System.out.println(error);
-                    }
-                }
-        );
+        mCollection.GetActiveChefs(this);
 
         // use a linear layout manager
         mLayoutManager = new LinearLayoutManager(getContext());
@@ -102,40 +86,14 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
         return mView;
     }
 
-    void DownloadProfilePictures(final FragmentChefsListGuestAdapter adapter)
-    {
-        final ProcessDialogBox processDialogBox = new ProcessDialogBox(this.getActivity());
-        processDialogBox.ShowDialogBox();
-
-        mCollection.mFireBaseStorageFunctions.DownloadDP(getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES),
-                new Interfaces.DownloadDP() {
-                    @Override
-                    public void TaskComplete() {
-                        adapter.notifyDataSetChanged();
-                        processDialogBox.DismissDialogBox();
-                    }
-
-                    @Override
-                    public void TaskFailed(String error) {
-                        processDialogBox.DismissDialogBox();
-                    }
-                });
+    @Override
+    public void TaskComplete() {
+        mAdapter.notifyDataSetChanged();
     }
 
-    void DeleteLocalFiles()
-    {
-        File myDir = getActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        if (myDir != null && myDir.exists()) {
-            if (myDir.isDirectory()) {
-                String[] children = myDir.list();
-                for (String child: children) {
-                    new File(myDir, child).delete();
-                }
-            }
-        }
-        else{
-            System.out.print("Files don't exist");
-        }
+    @Override
+    public void TaskFailed(String error) {
+        mProcessDialogBox.DismissDialogBox();
     }
 
     @Override
@@ -151,5 +109,19 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
 
         transaction.replace(R.id.guest_page, mActiveFragment);
         transaction.commit();
+    }
+
+    @Override
+    public void ReadSucceeded(DataSnapshot dataSnapshot) {
+        mCooksList.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
+        mProcessDialogBox.DismissDialogBox();
+        mCollection.DownloadDP(this.getActivity(), this);
+    }
+
+    @Override
+    public void ReadFailed(DatabaseError databaseError) {
+        mProcessDialogBox.DismissDialogBox();
+        System.out.println(databaseError);
     }
 }

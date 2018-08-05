@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.khasna.cooker.GuestActivityFragments.GuestEntity;
+import com.khasna.cooker.Models.Collection;
 import com.khasna.cooker.R;
 
 /**
@@ -15,7 +15,7 @@ import com.khasna.cooker.R;
 
 public class FragmentOrderHistoryEntryGuestAdapter extends RecyclerView.Adapter<FragmentOrderHistoryEntryGuestAdapter.ViewHolder>{
 
-    GuestEntity mGuestEntity;
+    Collection mCollection;
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
     // you provide access to all the views for a data item in a view holder
@@ -37,7 +37,7 @@ public class FragmentOrderHistoryEntryGuestAdapter extends RecyclerView.Adapter<
 
     // Provide a suitable constructor (depends on the kind of dataset)
     public FragmentOrderHistoryEntryGuestAdapter() {
-        mGuestEntity = GuestEntity.getInstance();
+        mCollection = Collection.getInstance();
     }
 
     @Override
@@ -53,14 +53,14 @@ public class FragmentOrderHistoryEntryGuestAdapter extends RecyclerView.Adapter<
 
     @Override
     public void onBindViewHolder(FragmentOrderHistoryEntryGuestAdapter.ViewHolder holder, int position) {
-        holder.textViewOrderHistoryChefName.setText(mGuestEntity.getOrderHistoryGuestItemDetails().get(position).getChefName());
-        holder.textViewOrderHistoryChefPhoneNumber.setText(mGuestEntity.getOrderHistoryGuestItemDetails().get(position).getChefPhoneNumber());
-        holder.textViewOrderHistoryItemName.setText(mGuestEntity.getOrderHistoryGuestItemDetails().get(position).getItemName());
-        holder.textViewOrderHistoryItemQuantity.setText(String.format("%s", mGuestEntity.getOrderHistoryGuestItemDetails().get(position).getNumberOfItems()));
+        holder.textViewOrderHistoryChefName.setText(mCollection.GetOrderHistoryGuestItemDetails().get(position).getChefName());
+        holder.textViewOrderHistoryChefPhoneNumber.setText(mCollection.GetOrderHistoryGuestItemDetails().get(position).getChefPhoneNumber());
+        holder.textViewOrderHistoryItemName.setText(mCollection.GetOrderHistoryGuestItemDetails().get(position).getItemName());
+        holder.textViewOrderHistoryItemQuantity.setText(String.format("%s", mCollection.GetOrderHistoryGuestItemDetails().get(position).getNumberOfItems()));
     }
 
     @Override
     public int getItemCount() {
-        return mGuestEntity.getOrderHistoryGuestItemDetails().size();
+        return mCollection.GetOrderHistoryGuestItemsArrayList().size();
     }
 }
