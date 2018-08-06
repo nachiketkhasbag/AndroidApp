@@ -17,8 +17,11 @@
     <string name="updateProfile">Update Profile</string>
     <string name="updateAccount">Update Account</string>
     <string name="orderHistory">Order History</string>
+    <string name="share">Share</string>
+    <string name="signout">Sign Out</string>
     <string name="receivedOrders">Received Orders</string>
     <string name="viewCart">View Cart</string>
+    <string name="cartactionbutton">Cart</string>
 
     <string name="viewChefs">View Chefs</string>
     <string name="default_notification_channel_id">fcm_default_channel</string>

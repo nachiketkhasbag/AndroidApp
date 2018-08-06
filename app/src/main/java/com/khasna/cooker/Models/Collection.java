@@ -171,10 +171,7 @@ public class Collection{
 
     public void CleanObjects()
     {
-        mChefsListForGuestArrayList.clear();
         mGuestProfile = null;
-        mCartItemArrayList.clear();
-        mGuestItemArrayList.clear();
         mOrderHistoryGuestItemDetails.clear();
         mOrderHistoryGuestItemsArrayList.clear();
     }
