@@ -34,13 +34,13 @@ android {
         development {
             dimension "flavor"
             applicationId "com.khasna.development"
-            versionCode 12
+            versionCode 13
             versionName "2.0"
         }
         releaseapp {
             dimension "flavor"
             applicationId "com.khasna.release"
-            versionCode 11
+            versionCode 12
             versionName "2.0"
             signingConfig signingConfigs.release
         }

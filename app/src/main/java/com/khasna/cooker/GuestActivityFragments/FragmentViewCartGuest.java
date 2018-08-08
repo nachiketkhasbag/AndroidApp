@@ -100,6 +100,11 @@ public class FragmentViewCartGuest extends Fragment implements
     }
 
     @Override
+    public void RefreshLayout() {
+        cartItemAdapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void RemoveOnClick(int itemPosition) {
         mCollection.GetCartItemArrayList().remove(itemPosition);
         cartItemAdapter.notifyDataSetChanged();
@@ -132,7 +137,9 @@ public class FragmentViewCartGuest extends Fragment implements
             numberOfItems += mCollection.GetCartItemArrayList().get(index).getItemQuantity();
         }
 
-        textViewTotalPrice.setText(String.valueOf(totalValue));
+        String total = totalValue.toEngineeringString();
+
+        textViewTotalPrice.setText(total);
         textViewNumberOfItems.setText(String.valueOf(numberOfItems));
     }
 

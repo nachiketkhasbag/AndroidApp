@@ -126,6 +126,7 @@ public class GuestActivity extends AppCompatActivity
         int id = item.getItemId();
 
         mActiveFragmentManager = getSupportFragmentManager();
+        processDialogBox.DismissDialogBox();
 
         switch(id)
         {

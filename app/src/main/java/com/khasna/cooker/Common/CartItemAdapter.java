@@ -5,11 +5,10 @@ import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.RadioButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.khasna.cooker.Models.Collection;
@@ -34,6 +33,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public interface OnCLickListener{
         void RemoveOnClick(int itemPosition);
         void UpdateFields();
+        void RefreshLayout();
     }
 
     // Provide a reference to the views for each data item
@@ -46,7 +46,9 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         public TextView textViewChefAddress;
         public TextView textViewItemPriceForGuest;
         public TextView textViewRemoveItemLink;
-        public Spinner spinner;
+        public Button buttonIncrease;
+        public Button buttonDecrease;
+        public TextView textViewCartItemAdapterQuantity;
         public ArrayAdapter adapter;
         public RadioButton radioButton0;
         public RadioButton radioButton1;
@@ -62,10 +64,11 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             radioButton0 = (RadioButton) v.findViewById(R.id.radioButton0);
             radioButton1 = (RadioButton) v.findViewById(R.id.radioButton1);
             radioButton2 = (RadioButton) v.findViewById(R.id.radioButton2);
-            spinner                     = (Spinner) v.findViewById(R.id.spinner);
+            buttonIncrease              = (Button) v.findViewById(R.id.buttonIncrease);
+            buttonDecrease              = (Button) v.findViewById(R.id.buttonDecrease);
+            textViewCartItemAdapterQuantity              = (TextView) v.findViewById(R.id.textViewCartItemAdapterQuantity);
 
             adapter                     = ArrayAdapter.createFromResource(v.getContext(), R.array.quantity, android.R.layout.simple_spinner_item);
-            spinner.setAdapter(adapter);
             radioButton0.setChecked(true);
         }
     }
@@ -96,25 +99,31 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.radioButton0.setText(orderTimeOptions.get(0));
         holder.radioButton1.setText(orderTimeOptions.get(1));
         holder.radioButton2.setText(orderTimeOptions.get(2));
+        holder.textViewCartItemAdapterQuantity.setText(String.format("%s", mCollection.GetCartItemArrayList().get(position).getItemQuantity()));
+        SetRadioButton(holder, itemPosition);
+        mOnCLickListener.UpdateFields();
 
-        mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(orderTimeOptions.get(0));
-
-        holder.spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        holder.buttonIncrease.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                mCollection.GetCartItemArrayList().get(itemPosition).setItemQuantity(position+1);
-
-                BigDecimal itemValue = new BigDecimal(mCollection.GetCartItemArrayList().get(itemPosition).getItemPrice());
-                BigDecimal itemQuantity = new BigDecimal(mCollection.GetCartItemArrayList().get(itemPosition).getItemQuantity());
-
-                itemValue = itemValue.multiply(itemQuantity);
-                mCollection.GetCartItemArrayList().get(itemPosition).setTotalPrice(String.valueOf(itemValue));
-                mOnCLickListener.UpdateFields();
+            public void onClick(View v) {
+                int quantity = mCollection.GetCartItemArrayList().get(itemPosition).getItemQuantity();
+                quantity++;
+                mCollection.GetCartItemArrayList().get(itemPosition).setItemQuantity(quantity);
+                UpdateTotal(itemPosition);
+                mOnCLickListener.RefreshLayout();
             }
+        });
 
+        holder.buttonDecrease.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                parent.setSelection(0);
+            public void onClick(View v) {
+                int quantity = mCollection.GetCartItemArrayList().get(itemPosition).getItemQuantity();
+                if(quantity > 1){
+                    quantity--;
+                    mCollection.GetCartItemArrayList().get(itemPosition).setItemQuantity(quantity);
+                    UpdateTotal(itemPosition);
+                    mOnCLickListener.RefreshLayout();
+                }
             }
         });
 
@@ -123,6 +132,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             public void onClick(View v) {
                 mOnCLickListener.RemoveOnClick(itemPosition);
                 mOnCLickListener.UpdateFields();
+                mOnCLickListener.RefreshLayout();
             }
         });
 
@@ -132,6 +142,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                 if (isChecked) {
                     mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
+                    mOnCLickListener.RefreshLayout();
                 }
             }
         });
@@ -142,6 +153,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                 if (isChecked) {
                     mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
+                    mOnCLickListener.RefreshLayout();
                 }
             }
         });
@@ -152,6 +164,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                 if (isChecked) {
                     mCollection.GetCartItemArrayList().get(itemPosition).setPickUpTime(buttonView.getText().toString());
                     mOnCLickListener.UpdateFields();
+                    mOnCLickListener.RefreshLayout();
                 }
             }
         });
@@ -160,6 +173,34 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     @Override
     public int getItemCount() {
         return mCollection.GetCartItemArrayList().size();
+    }
+
+    private void UpdateTotal(int itemPosition)
+    {
+        BigDecimal itemValue = new BigDecimal(mCollection.GetCartItemArrayList().get(itemPosition).getItemPrice());
+        BigDecimal itemQuantity = new BigDecimal(mCollection.GetCartItemArrayList().get(itemPosition).getItemQuantity());
+
+        itemValue = itemValue.multiply(itemQuantity);
+        mCollection.GetCartItemArrayList().get(itemPosition).setTotalPrice(String.valueOf(itemValue));
+    }
+    private void SetRadioButton(CartItemAdapter.ViewHolder holder, int position)
+    {
+        String pickupTIme = mCollection.GetCartItemArrayList().get(position).getPickUpTime();
+
+        if( holder.radioButton1.getText().equals(pickupTIme))
+        {
+            holder.radioButton1.setChecked(true);
+            mCollection.GetCartItemArrayList().get(position).setPickUpTime(orderTimeOptions.get(1));
+        }
+        else if( holder.radioButton2.getText().equals(pickupTIme))
+        {
+            holder.radioButton2.setChecked(true);
+            mCollection.GetCartItemArrayList().get(position).setPickUpTime(orderTimeOptions.get(2));
+        }
+        else {
+            holder.radioButton0.setChecked(true);
+            mCollection.GetCartItemArrayList().get(position).setPickUpTime(orderTimeOptions.get(0));
+        }
     }
 
     private void AdjustDatesForRadioButtons()

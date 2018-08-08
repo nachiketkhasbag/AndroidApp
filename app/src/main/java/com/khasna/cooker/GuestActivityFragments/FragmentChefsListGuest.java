@@ -88,6 +88,7 @@ public class FragmentChefsListGuest extends Fragment implements FragmentChefsLis
 
     @Override
     public void TaskComplete() {
+        mProcessDialogBox.DismissDialogBox();
         mAdapter.notifyDataSetChanged();
     }
 

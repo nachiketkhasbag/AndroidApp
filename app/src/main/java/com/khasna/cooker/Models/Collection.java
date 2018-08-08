@@ -194,6 +194,11 @@ public class Collection{
 
     public void GetActiveChefs(final Interfaces.DataBaseReadInterface readActiveChefsInterface)
     {
+        if(!mChefsListForGuestArrayList.isEmpty())
+        {
+            readActiveChefsInterface.ReadSucceeded(null);
+        }
+
         mTempDataBaseFunctions.TempReadChefDataBase(null, new Interfaces.DataBaseReadInterface() {
             @Override
             public void ReadSucceeded(DataSnapshot dataSnapshot) {
