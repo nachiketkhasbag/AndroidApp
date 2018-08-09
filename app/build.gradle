@@ -34,7 +34,7 @@ android {
         development {
             dimension "flavor"
             applicationId "com.khasna.development"
-            versionCode 13
+            versionCode 14
             versionName "2.0"
         }
         releaseapp {

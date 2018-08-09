@@ -44,14 +44,14 @@ public class Collection{
     private ArrayList<OrderHistoryGuestItem> mOrderHistoryGuestItemsArrayList = new ArrayList<>();
     private ArrayList<OrderHistoryGuestItemDetails> mOrderHistoryGuestItemDetails = new ArrayList<>();
 
-    public FireBaseFunctions mTempFireBaseFunctions;
-    public DataBaseFunctions mTempDataBaseFunctions;
-    public FireBaseStorageFunctions mTempFireBaseStorageFunctions;
+    protected FireBaseFunctions mFireBaseFunctions;
+    protected DataBaseFunctions mDataBaseFunctions;
+    protected FireBaseStorageFunctions mFireBaseStorageFunctions;
     protected Context mContext;
 
     private Collection(Context context) {
-        mTempFireBaseFunctions = new FireBaseFunctions<>(this);
-        mTempFireBaseStorageFunctions = new FireBaseStorageFunctions<>(this);
+        mFireBaseFunctions = new FireBaseFunctions<>(this);
+        mFireBaseStorageFunctions = new FireBaseStorageFunctions<>(this);
         mContext = context;
     }
 
@@ -116,22 +116,22 @@ public class Collection{
 
     public FirebaseUser GetFireBaseUser()
     {
-        return mTempFireBaseFunctions.getFireBaseUser();
+        return mFireBaseFunctions.getFireBaseUser();
     }
 
     public void WaitForUserLogin(Interfaces.AppUserInterface userInterface)
     {
-        mTempFireBaseFunctions.WaitForUserLogin(userInterface);
+        mFireBaseFunctions.WaitForUserLogin(userInterface);
     }
 
     public void InitDatabase()
     {
-        mTempDataBaseFunctions = new DataBaseFunctions<>(this);
+        mDataBaseFunctions = new DataBaseFunctions<>(this);
     }
 
     public void FillGuestProfile(final Interfaces.DataBaseReadInterface dataBaseReadInterface)
     {
-        mTempDataBaseFunctions.TempReadDataBase(null,
+        mDataBaseFunctions.TempReadDataBase(null,
                 new Interfaces.DataBaseReadInterface() {
                     @Override
                     public void ReadSucceeded(DataSnapshot dataSnapshot) {
@@ -161,12 +161,12 @@ public class Collection{
     public void PushToken()
     {
         String token = FirebaseInstanceId.getInstance().getToken();
-        mTempDataBaseFunctions.TempWriteToDataBase(GetFireBaseUser().getUid(), "token", token);
+        mDataBaseFunctions.TempWriteToDataBase(GetFireBaseUser().getUid(), "token", token);
     }
 
     public void SignOut(Interfaces.SignOutInterface signOutInterface)
     {
-        mTempFireBaseFunctions.signOut(mContext,signOutInterface);
+        mFireBaseFunctions.signOut(mContext,signOutInterface);
     }
 
     public void CleanObjects()
@@ -199,7 +199,7 @@ public class Collection{
             readActiveChefsInterface.ReadSucceeded(null);
         }
 
-        mTempDataBaseFunctions.TempReadChefDataBase(null, new Interfaces.DataBaseReadInterface() {
+        mDataBaseFunctions.TempReadChefDataBase(null, new Interfaces.DataBaseReadInterface() {
             @Override
             public void ReadSucceeded(DataSnapshot dataSnapshot) {
                 mChefsListForGuestArrayList.clear();
@@ -231,7 +231,7 @@ public class Collection{
     {
         if(!mChefsListForGuestArrayList.isEmpty())
         {
-            mTempFireBaseStorageFunctions.DownloadDP(
+            mFireBaseStorageFunctions.DownloadDP(
                     activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES),
                     downloadDP
             );
@@ -243,7 +243,7 @@ public class Collection{
     {
         String uId = GetChefsListForGuest().get(position).getuID();
 
-        mTempDataBaseFunctions.TempReadChefDataBase(uId, new Interfaces.DataBaseReadInterface() {
+        mDataBaseFunctions.TempReadChefDataBase(uId, new Interfaces.DataBaseReadInterface() {
             @Override
             public void ReadSucceeded(DataSnapshot dataSnapshot) {
                 for (DataSnapshot child : dataSnapshot.child("items").getChildren()) {
@@ -361,7 +361,7 @@ public class Collection{
 
     public void ReadGuestHistoryData( final Interfaces.DataBaseReadInterface dataBaseReadInterface )
     {
-        mTempDataBaseFunctions.TempReadDataBase("orderHistory",
+        mDataBaseFunctions.TempReadDataBase("orderHistory",
                 new Interfaces.DataBaseReadInterface() {
                     @Override
                     public void ReadSucceeded(DataSnapshot dataSnapshot) {
@@ -407,7 +407,7 @@ public class Collection{
 
     public void UpdateProfile(String newFname, String newLname, String newPhoneNumber)
     {
-        mTempFireBaseFunctions.UpdateProfile(newFname,newLname);
+        mFireBaseFunctions.UpdateProfile(newFname,newLname);
 
         mGuestProfile = new GuestProfile("",
                 "",
@@ -417,6 +417,6 @@ public class Collection{
                 newPhoneNumber,
                 "");
 
-        mTempDataBaseFunctions.TempWriteToDataBase(GetFireBaseUser().getUid(), "profile", mGuestProfile);
+        mDataBaseFunctions.TempWriteToDataBase(GetFireBaseUser().getUid(), "profile", mGuestProfile);
     }
 }

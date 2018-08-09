@@ -62,7 +62,7 @@ public class DataBaseFunctions<G extends Collection> {
         }
 
         mDatabaseReference
-                .child(databaseFunctionsGeneric.mTempFireBaseFunctions.getFireBaseUser().getUid())
+                .child(databaseFunctionsGeneric.mFireBaseFunctions.getFireBaseUser().getUid())
                 .child(extraParams).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
