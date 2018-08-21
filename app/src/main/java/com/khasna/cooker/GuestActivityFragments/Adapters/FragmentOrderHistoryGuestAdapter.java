@@ -29,8 +29,6 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     public static class ViewHolder extends RecyclerView.ViewHolder{
         // each data item is just a string in this case
         public TextView textViewItemName;
-        public TextView textViewQuantity;
-        public TextView textViewChefName;
         public TextView textViewPrice;
         public TextView textViewStatus;
         public TextView textViewOrderDate;
@@ -38,12 +36,9 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
         public ViewHolder(View v) {
             super(v);
             textViewItemName = (TextView)v.findViewById(R.id.textViewItemName);
-            textViewQuantity = (TextView)v.findViewById(R.id.textViewQuantity);
-            textViewChefName = (TextView)v.findViewById(R.id.textViewChefName);
             textViewPrice = (TextView)v.findViewById(R.id.textViewPrice);
             textViewStatus = (TextView)v.findViewById(R.id.textViewStatus);
             textViewOrderDate = (TextView)v.findViewById(R.id.textViewOrderDate);
-
         }
     }
 
@@ -67,10 +62,9 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
     @Override
     public void onBindViewHolder(FragmentOrderHistoryGuestAdapter.ViewHolder holder, int position) {
         OrderHistoryGuestItem orderItem = mCollection.GetOrderHistoryGuestItemsArrayList().get(position);
-        holder.textViewItemName.setText(orderItem.getItemName());
-        String quantity = "Number of items: " + String.valueOf(orderItem.getItemQuantity());
-        holder.textViewQuantity.setText(quantity);
-        holder.textViewChefName.setText(orderItem.getChefName());
+        String quantity = String.valueOf(orderItem.getItemQuantity());
+        String nameAndQuantity = quantity + " " + orderItem.getItemName();
+        holder.textViewItemName.setText(nameAndQuantity);
         holder.textViewPrice.setText(orderItem.getTotalPrice());
         holder.textViewStatus.setText(orderItem.getStatus());
 
@@ -88,7 +82,7 @@ public class FragmentOrderHistoryGuestAdapter extends RecyclerView.Adapter<Fragm
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                mOnClickListener.onClick(itemPosition);
+                mOnClickListener.onClick(itemPosition);
             }
         });
     }

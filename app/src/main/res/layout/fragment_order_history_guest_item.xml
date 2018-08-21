@@ -9,54 +9,28 @@
     android:visibility="visible">
 
     <TextView
-        android:id="@+id/textViewQuantity"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:text="Quantity : "
-        android:textStyle="italic"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewChefName" />
-
-    <TextView
         android:id="@+id/textViewItemName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
-        android:text="Item Name"
-        android:textSize="18sp"
-        android:textStyle="bold"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/textViewDollarSign"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewChefName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        android:text="ChefName"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewItemName" />
+        android:layout_marginTop="16dp"
+        android:text="Item Name"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toStartOf="@+id/textViewOrderDate"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toBottomOf="@+id/textViewStatus" />
 
     <TextView
         android:id="@+id/textViewPrice"
         android:layout_width="50dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="Price"
         android:textSize="18sp"
         android:textStyle="italic"
-        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -64,47 +38,59 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:text="$"
         android:textSize="18sp"
-        app:layout_constraintRight_toLeftOf="@+id/textViewPrice"
+        app:layout_constraintEnd_toStartOf="@+id/textViewPrice"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewStatus"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewQuantity"
+        android:layout_marginTop="16dp"
+        android:fontFamily="sans-serif"
+        android:textAlignment="viewStart"
+        android:textAppearance="@android:style/TextAppearance.Material.Large"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:typeface="normal"
+        app:layout_constraintEnd_toStartOf="@+id/textViewDollarSign"
+        app:layout_constraintStart_toEndOf="@+id/imageView3"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Status" />
 
     <TextView
         android:id="@+id/textViewOrderDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="8dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewStatus"
+        android:layout_marginTop="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textViewPrice"
         tools:text="Order date" />
 
     <View
         android:id="@+id/divider"
-        android:layout_width="0dp"
+        android:layout_width="352dp"
         android:layout_height="1dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
         android:layout_marginTop="16dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewOrderDate" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewItemName"
+        tools:layout_editor_absoluteX="16dp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/divider"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/logosmallredwbackground" />
 
 </android.support.constraint.ConstraintLayout>
