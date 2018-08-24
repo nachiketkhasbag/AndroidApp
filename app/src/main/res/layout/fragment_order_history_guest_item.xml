@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:text="Item Name"
-        android:textSize="14sp"
+        android:textAppearance="@android:style/TextAppearance"
         app:layout_constraintEnd_toStartOf="@+id/textViewOrderDate"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
         app:layout_constraintTop_toBottomOf="@+id/textViewStatus" />
@@ -52,22 +52,24 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:fontFamily="sans-serif"
+        android:text="Status"
         android:textAlignment="viewStart"
         android:textAppearance="@android:style/TextAppearance.Material.Large"
-        android:textSize="18sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         android:typeface="normal"
         app:layout_constraintEnd_toStartOf="@+id/textViewDollarSign"
         app:layout_constraintStart_toEndOf="@+id/imageView3"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Status" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/textViewOrderDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@android:style/TextAppearance"
+        android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textViewPrice"
         tools:text="Order date" />

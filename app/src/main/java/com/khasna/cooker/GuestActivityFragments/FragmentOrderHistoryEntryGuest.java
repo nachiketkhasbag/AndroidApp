@@ -18,15 +18,14 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
     View mView;
     int position;
 
-    public TextView textViewChefName;
-    public TextView textViewChefAddress;
-    public TextView textViewItemOrdered;
-    public TextView textViewItemQuantity;
-    public TextView textViewOrderTime;
-    public TextView textViewPickupTime;
-    public TextView textViewPrice;
-    public TextView textViewChefPhoneNumber;
-    public TextView textViewStatus;
+    public TextView textViewSnippetChefName;
+    public TextView textViewSnippetChefAddress;
+    public TextView textViewSnippetItemName;
+    public TextView textViewSnippetOrderTime;
+    public TextView textViewSnippetPickupTime;
+    public TextView textViewSnippetTotalPrice;
+    public TextView textViewSnippetChefPhoneNumber;
+    public TextView textViewSnippetStatus;
     private Collection mCollection;
 
     public FragmentOrderHistoryEntryGuest() {
@@ -38,26 +37,28 @@ public class FragmentOrderHistoryEntryGuest extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         mView = inflater.inflate(R.layout.fragment_order_history_guest_order_details, container, false);
 
-        textViewChefName = mView.findViewById(R.id.textViewChefName);
-        textViewChefAddress = mView.findViewById(R.id.textViewChefAddress);
-        textViewItemOrdered = mView.findViewById(R.id.textViewItemOrdered);
-        textViewItemQuantity = mView.findViewById(R.id.textViewItemQuantity);
-        textViewOrderTime = mView.findViewById(R.id.textViewOrderTime);
-        textViewPickupTime = mView.findViewById(R.id.textViewPickUpTime);
-        textViewPrice = mView.findViewById(R.id.textViewPrice);
-        textViewChefPhoneNumber = mView.findViewById(R.id.textViewChefPhoneNumber);
-        textViewStatus = mView.findViewById(R.id.textViewStatus);
+        textViewSnippetChefName = mView.findViewById(R.id.textViewSnippetChefName);
+        textViewSnippetChefAddress = mView.findViewById(R.id.textViewSnippetChefAddress);
+        textViewSnippetItemName = mView.findViewById(R.id.textViewSnippetItemName);
+        textViewSnippetOrderTime = mView.findViewById(R.id.textViewSnippetOrderTime);
+        textViewSnippetPickupTime = mView.findViewById(R.id.textViewSnippetPickupTime);
+        textViewSnippetTotalPrice = mView.findViewById(R.id.textViewSnippetTotalPrice);
+        textViewSnippetChefPhoneNumber = mView.findViewById(R.id.textViewSnippetChefPhoneNumber);
+        textViewSnippetStatus = mView.findViewById(R.id.textViewSnippetStatus);
 
         position = getArguments().getInt("position");
-        textViewChefName.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefName());
-        textViewChefAddress.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefAddress());
-        textViewItemOrdered.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getItemName());
-        textViewItemQuantity.setText(String.format("%s",mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getItemQuantity()));
-        textViewOrderTime.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getOrderTime());
-        textViewPrice.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getTotalPrice());
-        textViewPickupTime.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getPickUpTime());
-        textViewChefPhoneNumber.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefPhoneNumber());
-        textViewStatus.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getStatus());
+        textViewSnippetChefName.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefName());
+        textViewSnippetChefAddress.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefAddress());
+
+        String itemQuantityAndName = String.format("%s",mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getItemQuantity()) +
+                " " + mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getItemName();
+        textViewSnippetItemName.setText(itemQuantityAndName);
+
+        textViewSnippetOrderTime.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getOrderTime());
+        textViewSnippetTotalPrice.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getTotalPrice());
+        textViewSnippetPickupTime.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getPickUpTime());
+        textViewSnippetChefPhoneNumber.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getChefPhoneNumber());
+        textViewSnippetStatus.setText(mCollection.GetOrderHistoryGuestItemsArrayList().get(position).getStatus());
 
         return mView;
     }
